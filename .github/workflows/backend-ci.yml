@@ -13,6 +13,8 @@ jobs:
   test:
     name: Run Cargo Tests
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: ./backend

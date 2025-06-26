@@ -3,8 +3,9 @@ name: Frontend Build and Deploy Docker Image
 on:
   push:
     branches: ['main']
-  workflow_dispatch:
-
+    paths:
+      - ".github/workflows/frontend-build.yml"
+      - "frontend/**"
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
