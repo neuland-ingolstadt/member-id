@@ -1,0 +1,29 @@
+services:
+  member-id-backend:
+    image: 'ghcr.io/neuland-ingolstadt/member-id-backend:latest'
+    container_name: member-id-server
+    environment:
+      - 'RUST_LOG=${RUST_LOG:-info}'
+      - 'QR_PRIVATE_KEY_HEX=${QR_PRIVATE_KEY_HEX}'
+      - 'JWKS_URL=${JWKS_URL}'
+      - 'EXPECTED_AUDIENCE=${EXPECTED_AUDIENCE}'
+      - 'PKPASS_ORGANIZATION_NAME=${PKPASS_ORGANIZATION_NAME}'
+      - 'PKPASS_PASS_TYPE_IDENTIFIER=${PKPASS_PASS_TYPE_IDENTIFIER}'
+      - 'PKPASS_TEAM_IDENTIFIER=${PKPASS_TEAM_IDENTIFIER}'
+      - 'PKPASS_SIGN_CERT_PATH=${PKPASS_SIGN_CERT_PATH}'
+      - 'PKPASS_SIGN_KEY_PATH=${PKPASS_SIGN_KEY_PATH}'
+    volumes:
+      - ./certs:/app/certs:ro
+  member-id-frontend:
+    image: 'ghcr.io/neuland-ingolstadt/member-id-frontend:latest'
+    container_name: member-id-frontend
+  nginx:
+    image: nginx:alpine
+    container_name: member-id-nginx
+    ports:
+      - '8540:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - member-id-backend
+      - member-id-frontend

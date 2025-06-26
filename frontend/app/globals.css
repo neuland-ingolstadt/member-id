@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	.animate-fade-in {
+		animation: fadeIn 0.3s ease-in-out;
+	}
+
+	.animate-scale-up {
+		animation: scaleUp 0.4s ease-out;
+	}
+
+	.animate-bounce-gentle {
+		animation: bounceGentle 2s infinite ease-in-out;
+	}
+
+	.animate-slide-down {
+		animation: slideDown 0.3s ease-out;
+	}
+
+	.animate-slide-up {
+		animation: slideUp 0.3s ease-out;
+	}
+
+	.animate-pulse-corner {
+		animation: pulseCorner 2s infinite ease-in-out;
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	@keyframes scaleUp {
+		from {
+			transform: scale(0.9);
+			opacity: 0;
+		}
+		to {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+	@keyframes bounceGentle {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+
+	@keyframes slideDown {
+		from {
+			transform: translateY(-100%);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
+	@keyframes slideUp {
+		from {
+			transform: translateY(0);
+			opacity: 1;
+		}
+		to {
+			transform: translateY(-100%);
+			opacity: 0;
+		}
+	}
+
+	@keyframes pulseCorner {
+		0%,
+		100% {
+			opacity: 0.3;
+			transform: scale(1);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.1);
+		}
+	}
+}
+
+@layer base {
+	:root {
+		--background: 210 20% 98%;
+		--foreground: 215 15% 15%;
+		--card: 0 0% 100%;
+		--card-foreground: 215 15% 15%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 215 15% 15%;
+		--primary: 0 0% 0%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 210 20% 95%;
+		--secondary-foreground: 215 15% 20%;
+		--muted: 210 15% 92%;
+		--muted-foreground: 215 10% 40%;
+		--accent: 210 20% 95%;
+		--accent-foreground: 215 15% 20%;
+		--destructive: 0 80% 65%;
+		--destructive-foreground: 0 0% 100%;
+		--border: 210 16% 86%;
+		--input: 210 16% 86%;
+		--ring: 222 47% 50%;
+		--radius: 0.5rem;
+		--chart-1: 222 47% 50%;
+		--chart-2: 220 21% 45%;
+		--chart-3: 215 16% 60%;
+		--chart-4: 210 24% 70%;
+		--chart-5: 220 11% 30%;
+	}
+
+	.dark {
+		--background: 215 20% 12%;
+		--foreground: 210 15% 90%;
+		--card: 215 25% 16%;
+		--card-foreground: 210 15% 90%;
+		--popover: 215 25% 16%;
+		--popover-foreground: 210 15% 90%;
+		--primary: 0 0% 89.4%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 215 15% 25%;
+		--secondary-foreground: 210 15% 90%;
+		--muted: 215 15% 25%;
+		--muted-foreground: 210 10% 65%;
+		--accent: 215 15% 25%;
+		--accent-foreground: 210 15% 90%;
+		--destructive: 0 68.9% 46.7%;
+		--destructive-foreground: 0 0% 100%;
+		--border: 215 20% 30%;
+		--input: 215 20% 30%;
+		--ring: 222 47% 50%;
+		--chart-1: 217 90% 60%;
+		--chart-2: 210 50% 70%;
+		--chart-3: 220 20% 80%;
+		--chart-4: 215 15% 60%;
+		--chart-5: 210 15% 40%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
