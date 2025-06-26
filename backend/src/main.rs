@@ -1,5 +1,6 @@
 mod passes;
 mod utils;
+use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::{App, HttpResponse, HttpServer, Responder, web};
 use dotenv::dotenv;
 use log::error;
@@ -123,8 +124,15 @@ async fn main() -> std::io::Result<()> {
         error!("Failed to derive public key: {}", e);
     }
 
+    let governor_conf = GovernorConfigBuilder::default()
+        .requests_per_second(10)
+        .burst_size(15)
+        .finish()
+        .unwrap();
+
     HttpServer::new(move || {
         App::new()
+            .wrap(Governor::new(&governor_conf))
             .route("/qr", web::get().to(qr_endpoint))
             .route("/pkpass", web::get().to(pkpass_endpoint))
             .route("/public-key", web::get().to(public_key_endpoint))
