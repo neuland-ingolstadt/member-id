@@ -31,6 +31,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let team_identifier = env::var("PKPASS_TEAM_IDENTIFIER")?;
     let cert_path = env::var("PKPASS_SIGN_CERT_PATH")?;
     let key_path = env::var("PKPASS_SIGN_KEY_PATH")?;
+    let beacon_proximity_uuid = env::var("PKPASS_BEACON_PROXIMITY_UUID")?;
 
     let mut file_sign_cert = std::fs::File::open(std::path::Path::new(&cert_path))?;
     let mut sign_cert_data = Vec::new();
@@ -174,7 +175,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     .add_associated_store_identifier(1617096811)
     .app_launch_url("https://web.neuland.app/member".into())
     .add_beacon(beacon::Beacon {
-        proximity_uuid: "F7826DA6-4FA2-4E98-8024-BC5B71E0893E".to_string(),
+        proximity_uuid: beacon_proximity_uuid,
         major: Some(1),
         minor: Some(10),
         relevant_text: Some("Welcome to Neuland!".to_string()),

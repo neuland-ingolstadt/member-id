@@ -24,7 +24,7 @@ export interface ScannerSettings {
 const defaultSettings: ScannerSettings = {
 	soundOnScan: true,
 	soundVolume: 0.7,
-	onlyAllowAppQRCodes: true,
+	onlyAllowAppQRCodes: false,
 	strictValidation: false,
 	showScanFrame: true,
 	showDebugInfo: false,

@@ -12,6 +12,7 @@ services:
       - 'PKPASS_TEAM_IDENTIFIER=${PKPASS_TEAM_IDENTIFIER}'
       - 'PKPASS_SIGN_CERT_PATH=${PKPASS_SIGN_CERT_PATH}'
       - 'PKPASS_SIGN_KEY_PATH=${PKPASS_SIGN_KEY_PATH}'
+      - 'PKPASS_BEACON_PROXIMITY_UUID=${PKPASS_BEACON_PROXIMITY_UUID}'
     volumes:
       - ./certs:/app/certs:ro
   member-id-frontend:
