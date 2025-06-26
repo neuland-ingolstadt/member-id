@@ -131,8 +131,8 @@ pub async fn generate_qr(
 ) -> Result<QrResponse, Box<dyn std::error::Error>> {
     let token_data = verify_token::<Claims>(token).await?;
 
-    if !token_data.claims.groups.iter().any(|g| g == "mitglied") {
-        return Err("token missing required 'mitglied' group".into());
+    if !token_data.claims.groups.iter().any(|g| g == "mitglieder") {
+        return Err("token missing required 'mitglieder' group".into());
     }
 
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
