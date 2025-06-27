@@ -11,9 +11,11 @@ interface QRCodeReaderProps {
 }
 
 export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
+	const containerRef = useRef<HTMLDivElement>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [isScanning, setIsScanning] = useState(false)
+	const [isVisible, setIsVisible] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [isProcessing, setIsProcessing] = useState(false)
 	const lastScanTime = useRef<number>(0)
@@ -21,16 +23,16 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 	// Get settings
 	const settings = useSettings()
 
-	const stopCamera = () => {
+	const stopCamera = useCallback(() => {
 		if (videoRef.current?.srcObject) {
 			const stream = videoRef.current.srcObject as MediaStream
 			stream.getTracks().forEach((track) => track.stop())
 			videoRef.current.srcObject = null
 		}
 		setIsScanning(false)
-	}
+	}, [])
 
-	const startCamera = async () => {
+	const startCamera = useCallback(async () => {
 		try {
 			// Check if mediaDevices is supported
 			if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -101,16 +103,33 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 			setError(errorMessage)
 			console.error('Camera error:', err)
 		}
-	}
+	}, [settings.enableHighQualityScan, deviceId])
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: it's ok
+	// Start camera once and manage visibility
 	useEffect(() => {
 		startCamera()
-
 		return () => {
 			stopCamera()
 		}
-	}, [settings.enableHighQualityScan, deviceId])
+	}, [startCamera, stopCamera])
+
+	// Manage visibility state without stopping camera
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting)
+			},
+			{ threshold: 0.1 }
+		)
+
+		if (containerRef.current) {
+			observer.observe(containerRef.current)
+		}
+
+		return () => {
+			observer.disconnect()
+		}
+	}, [])
 
 	const captureFrame = useCallback(() => {
 		if (!videoRef.current || !canvasRef.current || isProcessing) return
@@ -176,8 +195,12 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 		let lastFrameTime = 0
 
 		const tick = (currentTime: number) => {
-			// Limit to ~10 FPS for QR scanning (reduces CPU usage and blinking)
-			if (currentTime - lastFrameTime >= 100) {
+			// Adjust frame rate based on visibility
+			// When visible: ~10 FPS for QR scanning
+			// When not visible: ~1 FPS to keep camera alive but reduce CPU usage
+			const frameInterval = isVisible ? 100 : 1000
+
+			if (currentTime - lastFrameTime >= frameInterval) {
 				captureFrame()
 				lastFrameTime = currentTime
 			}
@@ -186,7 +209,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 
 		raf = requestAnimationFrame(tick)
 		return () => cancelAnimationFrame(raf)
-	}, [isScanning, captureFrame, isProcessing])
+	}, [isScanning, captureFrame, isProcessing, isVisible])
 
 	if (error) {
 		return (
@@ -204,7 +227,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 	}
 
 	return (
-		<div className="relative w-full">
+		<div ref={containerRef} className="relative w-full">
 			<div className="relative overflow-hidden rounded-lg shadow-lg bg-black mx-auto max-w-md">
 				<video
 					ref={videoRef}
@@ -219,7 +242,11 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 				{/* Minimal status overlay */}
 				{isScanning && (
 					<div className="absolute top-3 right-3">
-						<div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
+						<div
+							className={`w-3 h-3 rounded-full shadow-lg ${
+								isVisible ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'
+							}`}
+						></div>
 					</div>
 				)}
 
@@ -234,7 +261,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 				)}
 
 				{/* QR Code targeting frame - only show if enabled in settings */}
-				{settings.showScanFrame && (
+				{settings.showScanFrame && isVisible && (
 					<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 						<div className="relative">
 							{/* Main scanner frame */}
@@ -255,7 +282,8 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 				{/* Debug info overlay - only show if enabled in settings */}
 				{settings.showDebugInfo && isScanning && (
 					<div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs p-2 rounded">
-						<div>FPS: ~10</div>
+						<div>FPS: {isVisible ? '~10' : '~1'}</div>
+						<div>Status: {isVisible ? 'Active' : 'Background'}</div>
 						<div>Throttle: {settings.scanThrottleMs}ms</div>
 						<div>
 							Quality: {settings.enableHighQualityScan ? 'High' : 'Standard'}

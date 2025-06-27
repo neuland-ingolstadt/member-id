@@ -10,6 +10,7 @@ import {
 	Trash2,
 	User
 } from 'lucide-react'
+import { memo } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -30,7 +31,7 @@ interface ScanHistoryItemProps {
 	onRemoveScan: (scanId: string) => void
 }
 
-export function ScanHistoryItem({
+export const ScanHistoryItem = memo(function ScanHistoryItem({
 	scan,
 	isLast,
 	onRemoveScan
@@ -401,4 +402,4 @@ export function ScanHistoryItem({
 			{!isLast && <Separator className="my-2" />}
 		</div>
 	)
-}
+})

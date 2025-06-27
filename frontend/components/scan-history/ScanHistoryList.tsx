@@ -3,7 +3,6 @@
 import { Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { ExportCsvButton } from './ExportCsvButton'
 import { ScanHistoryItem } from './ScanHistoryItem'
@@ -54,8 +53,8 @@ export function ScanHistoryList({
 				</div>
 			</CardHeader>
 			<CardContent className="p-0">
-				<ScrollArea className="h-[60vh] w-full">
-					<div className="space-y-2 p-4 w-full">
+				<div className="h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+					<div className="p-4 space-y-2">
 						{scanHistory.map((scan, index) => (
 							<ScanHistoryItem
 								key={scan.id}
@@ -65,7 +64,7 @@ export function ScanHistoryList({
 							/>
 						))}
 					</div>
-				</ScrollArea>
+				</div>
 			</CardContent>
 		</Card>
 	)
