@@ -21,16 +21,16 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 	// Get settings
 	const settings = useSettings()
 
-	const stopCamera = useCallback(() => {
+	const stopCamera = () => {
 		if (videoRef.current?.srcObject) {
 			const stream = videoRef.current.srcObject as MediaStream
 			stream.getTracks().forEach((track) => track.stop())
 			videoRef.current.srcObject = null
 		}
 		setIsScanning(false)
-	}, [])
+	}
 
-	const startCamera = useCallback(async () => {
+	const startCamera = async () => {
 		try {
 			// Check if mediaDevices is supported
 			if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -52,11 +52,27 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 					exact: deviceId
 				}
 			} else {
-				;(constraints.video as MediaTrackConstraints).facingMode = 'environment'
+				;(constraints.video as MediaTrackConstraints).facingMode = {
+					ideal: 'environment'
+				}
 			}
 
-			const stream = await navigator.mediaDevices.getUserMedia(constraints)
-			if (videoRef.current) {
+			let stream: MediaStream | null = null
+			try {
+				stream = await navigator.mediaDevices.getUserMedia(constraints)
+			} catch {
+				// Fallback to user-facing camera if environment is not available
+				if (!deviceId) {
+					;(constraints.video as MediaTrackConstraints).facingMode = {
+						ideal: 'user'
+					}
+					stream = await navigator.mediaDevices.getUserMedia(constraints)
+				} else {
+					throw new Error('No camera found on this device.')
+				}
+			}
+
+			if (videoRef.current && stream) {
 				videoRef.current.srcObject = stream
 				setIsScanning(true)
 				setError(null)
@@ -84,6 +100,15 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 
 			setError(errorMessage)
 			console.error('Camera error:', err)
+		}
+	}
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: it's ok
+	useEffect(() => {
+		startCamera()
+
+		return () => {
+			stopCamera()
 		}
 	}, [settings.enableHighQualityScan, deviceId])
 
@@ -143,13 +168,6 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 		settings.soundOnScan,
 		settings.soundVolume
 	])
-
-	useEffect(() => {
-		startCamera()
-		return () => {
-			stopCamera()
-		}
-	}, [startCamera, stopCamera])
 
 	useEffect(() => {
 		if (!isScanning || isProcessing) return

@@ -44,11 +44,16 @@ export function CameraSelector({
 				}
 
 				// Request camera permission first to get labeled devices
-				await navigator.mediaDevices.getUserMedia({
-					video: {
-						facingMode: 'environment'
-					}
-				})
+				try {
+					await navigator.mediaDevices.getUserMedia({
+						video: {
+							facingMode: { ideal: 'environment' }
+						}
+					})
+				} catch {
+					// Fallback to any camera if environment facing mode fails
+					await navigator.mediaDevices.getUserMedia({ video: true })
+				}
 
 				const devices = await navigator.mediaDevices.enumerateDevices()
 				const videoDevices = devices
