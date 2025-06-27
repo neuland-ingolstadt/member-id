@@ -66,7 +66,7 @@ async function fetchPublicKey(): Promise<string> {
 
 	publicKeyPromise = (async () => {
 		try {
-			const response = await fetch('https://id.neuland.ing/api/public-key', {
+			const response = await fetch('/api/public-key', {
 				method: 'GET',
 				headers: {
 					Accept: 'text/plain'
