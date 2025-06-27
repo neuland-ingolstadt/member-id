@@ -33,7 +33,7 @@ export function ScanHistoryList({
 						<Clock className="h-12 w-12 mx-auto mb-3 opacity-50 transition-transform duration-300 hover:rotate-12" />
 						<p className="text-sm">No scans recorded yet</p>
 						<p className="text-xs mt-1">
-							Scan QR codes to see them listed here
+							Scan Member IDs to see them listed here
 						</p>
 					</div>
 				</CardContent>

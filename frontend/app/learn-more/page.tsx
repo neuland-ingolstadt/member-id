@@ -4,7 +4,7 @@ import {
 	CheckCircle,
 	Info,
 	Lock,
-	Shield,
+	ShieldX,
 	Users,
 	Zap
 } from 'lucide-react'
@@ -83,7 +83,7 @@ export default function LearnMorePage() {
 							</div>
 							<div className="text-center p-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-orange-500/20 hover:border-orange-500/30 border border-transparent">
 								<div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
-									<Shield className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+									<ShieldX className="h-6 w-6 text-orange-600 dark:text-orange-400" />
 								</div>
 								<h4 className="font-semibold text-gray-900 dark:text-white mb-2">
 									Advanced Security
@@ -156,10 +156,10 @@ export default function LearnMorePage() {
 									</span>
 								</div>
 								<h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-									Scan QR Code
+									Scan Member ID
 								</h4>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
-									Point your camera at any member's QR code to capture it
+									Point your camera at any member's member ID to capture it
 								</p>
 							</div>
 							<div className="text-center p-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-green-500/20 hover:border-green-500/30 border border-transparent">
@@ -173,8 +173,8 @@ export default function LearnMorePage() {
 								</h4>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
 									Our system verifies the digital signature using a secure
-									public key to ensure the QR code is authentic and hasn't been
-									tampered with
+									public key to ensure the member ID is authentic and hasn't
+									been tampered with
 								</p>
 							</div>
 							<div className="text-center p-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/30 border border-transparent">
@@ -248,7 +248,7 @@ export default function LearnMorePage() {
 							Ready to Start?
 						</h2>
 						<p className="text-gray-600 dark:text-gray-300">
-							Begin scanning member QR codes to verify their authenticity
+							Begin scanning Member IDs to verify their authenticity
 						</p>
 						<Button
 							asChild

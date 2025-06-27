@@ -1,12 +1,13 @@
 'use client'
 
+import { QrCodeIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CameraSelector } from '@/components/camera-selector'
 import { FloatingSettingsButton } from '@/components/floating-settings-button'
 import { QRCodeReader } from '@/components/qr-reader'
 import { ScanHistoryList } from '@/components/scan-history'
 import { ScanStatsDisplay } from '@/components/scan-stats-display'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { useScanHistory } from '@/hooks/use-scan-history'
 import { useSettings } from '@/hooks/use-settings'
@@ -221,17 +222,29 @@ export function QRScanner() {
 			<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 				<div className="lg:col-span-3 space-y-6">
 					<Card>
-						<CardContent className="p-6">
-							<div className="relative">
-								{/* Camera selector positioned at top-left with better spacing */}
-								<div className="absolute bottom-12 right-4 z-20">
+						<CardHeader className="pb-4">
+							<div className="flex items-center justify-between gap-4">
+								<div className="flex items-center gap-3">
+									<div className="p-2 bg-primary rounded-full text-background">
+										<QrCodeIcon className="h-5 w-5" />
+									</div>
+									<div className="flex flex-col">
+										<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+											Member ID
+										</CardTitle>
+									</div>
+								</div>
+								<div className="flex justify-end">
 									<CameraSelector
 										onCameraChange={handleCameraChange}
 										currentDeviceId={selectedCameraId}
 										className="bg-background/90 backdrop-blur-md border border-border/60 shadow-lg hover:bg-background/95 transition-colors"
 									/>
 								</div>
-
+							</div>
+						</CardHeader>
+						<CardContent className="p-6">
+							<div className="relative">
 								<QRCodeReader
 									onScan={handleQRScan}
 									deviceId={selectedCameraId}

@@ -19,6 +19,9 @@ export interface ScannerSettings {
 	// Performance settings
 	scanThrottleMs: number
 	enableHighQualityScan: boolean
+	
+	// Camera settings
+	selectedCameraId?: string
 }
 
 const defaultSettings: ScannerSettings = {
@@ -30,8 +33,9 @@ const defaultSettings: ScannerSettings = {
 	showDebugInfo: false,
 	autoCloseResults: true,
 	resultDisplayTime: 2500,
-	scanThrottleMs: 1000,
+	scanThrottleMs: 3000,
 	enableHighQualityScan: false,
+	selectedCameraId: undefined,
 }
 
 interface SettingsStore extends ScannerSettings {

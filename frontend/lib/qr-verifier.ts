@@ -66,7 +66,7 @@ async function fetchPublicKey(): Promise<string> {
 
 	publicKeyPromise = (async () => {
 		try {
-			const response = await fetch('/api/public-key', {
+			const response = await fetch('https://id.neuland.ing/api/public-key', {
 				method: 'GET',
 				headers: {
 					Accept: 'text/plain'
@@ -136,13 +136,13 @@ export async function verifyQRCode(
 			typeof qrString !== 'string' ||
 			qrString.trim().length === 0
 		) {
-			throw new Error('Invalid QR code data: empty or null string')
+			throw new Error('Invalid Member ID: empty or null string')
 		}
 
 		const cleanQrString = qrString.trim()
 
 		if (cleanQrString.length < 10) {
-			throw new Error('Invalid QR code data: string too short')
+			throw new Error('Invalid Member ID: string too short')
 		}
 
 		const base45Decoded = base45DecodeLib(cleanQrString)
@@ -178,7 +178,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: `Only app QR codes are allowed. Found: ${payload.type}`,
+					error: `Only app Member IDs are allowed. Found: ${payload.type}`,
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -205,7 +205,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'QR code issued in the future (possible clock skew)',
+					error: 'Member ID issued in the future (possible clock skew)',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -222,7 +222,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'QR code expires too far in the future',
+					error: 'Member ID expires too far in the future',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -239,7 +239,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'QR code has expired',
+					error: 'Member ID has expired',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,

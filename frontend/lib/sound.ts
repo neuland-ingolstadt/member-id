@@ -25,9 +25,10 @@ class SoundManager {
 	}
 
 	playScanSound(
-		volume: number = 0.7,
+		volume: number = 0.3,
 		frequency: number = 800,
-		duration: number = 150
+		duration: number = 150,
+		waveform: OscillatorType = 'sine'
 	) {
 		if (!this.audioContext || !this.gainNode) {
 			// Try to initialize on first play
@@ -43,14 +44,18 @@ class SoundManager {
 
 			// Create oscillator
 			this.oscillator = this.audioContext.createOscillator()
-			this.oscillator.type = 'sine'
+			this.oscillator.type = waveform
 			this.oscillator.frequency.setValueAtTime(
 				frequency,
 				this.audioContext.currentTime
 			)
 
-			// Set volume
-			this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime)
+			// Set volume with smoother envelope
+			this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime)
+			this.gainNode.gain.linearRampToValueAtTime(
+				volume,
+				this.audioContext.currentTime + 0.01
+			)
 			this.gainNode.gain.exponentialRampToValueAtTime(
 				0.01,
 				this.audioContext.currentTime + duration / 1000
@@ -70,24 +75,34 @@ class SoundManager {
 		}
 	}
 
-	playSuccessSound(volume: number = 0.7) {
-		// Play a pleasant ascending chord for successful verification
-		this.playScanSound(volume, 523, 100) // C5
-		setTimeout(() => this.playScanSound(volume, 659, 100), 100) // E5
-		setTimeout(() => this.playScanSound(volume, 784, 200), 200) // G5
+	playSuccessSound(volume: number = 0.5) {
+		// Success: Bright ping sound (like a notification)
+		this.playScanSound(volume, 800, 100, 'sine')
+		setTimeout(() => this.playScanSound(volume, 1000, 80, 'sine'), 50)
 	}
 
-	playDuplicateSound(volume: number = 0.7) {
-		// Play a warning sound for duplicates
-		this.playScanSound(volume, 400, 150) // Lower frequency
-		setTimeout(() => this.playScanSound(volume, 350, 200), 150) // Even lower
+	playDuplicateSound(volume: number = 0.35) {
+		// Duplicate: Quick double beep (like a warning)
+		this.playScanSound(volume, 600, 60, 'square')
+		setTimeout(() => this.playScanSound(volume, 600, 60, 'square'), 120)
 	}
 
-	playErrorSound(volume: number = 0.7) {
-		// Play descending tones for errors
-		this.playScanSound(volume, 400, 150)
-		setTimeout(() => this.playScanSound(volume, 300, 150), 150)
-		setTimeout(() => this.playScanSound(volume, 200, 200), 300)
+	playErrorSound(volume: number = 0.35) {
+		// Error: Low buzz sound (like an error alert)
+		this.playScanSound(volume, 200, 200, 'sawtooth')
+		setTimeout(() => this.playScanSound(volume, 150, 200, 'sawtooth'), 100)
+	}
+
+	playScanStartSound(volume: number = 0.3) {
+		// Start: Gentle chime (like a bell)
+		this.playScanSound(volume, 440, 120, 'triangle')
+		setTimeout(() => this.playScanSound(volume, 660, 100, 'triangle'), 80)
+	}
+
+	playScanEndSound(volume: number = 0.3) {
+		// End: Soft click sound (like a button press)
+		this.playScanSound(volume, 300, 50, 'sine')
+		setTimeout(() => this.playScanSound(volume, 200, 50, 'sine'), 30)
 	}
 
 	dispose() {

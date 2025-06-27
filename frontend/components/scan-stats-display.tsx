@@ -5,7 +5,7 @@ import {
 	CheckCircle,
 	Copy,
 	RotateCcw,
-	Shield,
+	ShieldX,
 	Users
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -52,9 +52,9 @@ export function ScanStatsDisplay({
 							variant="outline"
 							size="sm"
 							onClick={onClearHistory}
-							className="text-destructive hover:bg-destructive/10"
+							className="text-destructive hover:bg-destructive/10 group"
 						>
-							<RotateCcw className="h-4 w-4 mr-1" />
+							<RotateCcw className="h-4 w-4 mr-1 group-hover:-rotate-12 transition-transform duration-300" />
 							Clear
 						</Button>
 					)}
@@ -91,7 +91,7 @@ export function ScanStatsDisplay({
 					{/* Invalid Scans */}
 					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-red-500/20 hover:border-red-500/30">
 						<div className="flex items-center justify-center mb-2">
-							<Shield className="h-5 w-5 text-destructive" />
+							<ShieldX className="h-5 w-5 text-destructive" />
 						</div>
 						<div className="text-2xl font-bold text-red-600 dark:text-red-500">
 							{stats.invalidScans}

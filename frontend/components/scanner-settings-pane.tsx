@@ -2,6 +2,7 @@
 
 import { Eye, QrCode, RotateCcw, Settings, Volume2, X, Zap } from 'lucide-react'
 import { useId, useState } from 'react'
+import { CameraSelector } from '@/components/camera-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -95,7 +96,7 @@ export function ScannerSettingsPane({
 								<CardContent className="space-y-4">
 									<div className="flex items-center justify-between">
 										<Label htmlFor={`sound-toggle-${id}`} className="text-sm">
-											Play sound when QR code is detected
+											Play sound when a digital code is detected
 										</Label>
 										<Switch
 											id={`sound-toggle-${id}`}
@@ -148,13 +149,13 @@ export function ScannerSettingsPane({
 								<CardHeader className="pb-3">
 									<CardTitle className="text-base flex items-center gap-2">
 										<QrCode className="h-4 w-4" />
-										QR Code Validation
+										Member ID Validation
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-4">
 									<div className="flex items-center justify-between">
 										<Label htmlFor={`app-only-${id}`} className="text-sm">
-											Only allow app QR codes
+											Only allow app Member IDs
 										</Label>
 										<Switch
 											id={`app-only-${id}`}
@@ -184,8 +185,8 @@ export function ScannerSettingsPane({
 									<div className="text-xs text-muted-foreground space-y-1">
 										<p className="mt-2 text-xs">
 											<strong>App-only validation:</strong> Rejects Apple Wallet
-											and Android Wallet QR codes, only accepts direct app QR
-											codes.
+											and Android Wallet passes, only accepts direct app Member
+											IDs codes.
 										</p>
 										<p className="text-xs">
 											<strong>Strict validation:</strong> Checks for
@@ -208,6 +209,17 @@ export function ScannerSettingsPane({
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-4">
+									<div className="space-y-2">
+										<Label className="text-sm">Camera Selection</Label>
+										<CameraSelector
+											onCameraChange={(deviceId) =>
+												settings.updateSetting('selectedCameraId', deviceId)
+											}
+											currentDeviceId={settings.selectedCameraId}
+											className="w-full"
+										/>
+									</div>
+
 									<div className="flex items-center justify-between">
 										<Label htmlFor={`show-frame-${id}`} className="text-sm">
 											Show scan frame
@@ -316,15 +328,15 @@ export function ScannerSettingsPane({
 											onValueChange={([value]) =>
 												settings.updateSetting('scanThrottleMs', value)
 											}
-											max={2000}
-											min={100}
-											step={100}
+											max={5000}
+											min={500}
+											step={500}
 											className="w-full"
 										/>
 										<div className="flex justify-between text-xs text-muted-foreground">
-											<span>100ms</span>
+											<span>500ms</span>
 											<span>{settings.scanThrottleMs}ms</span>
-											<span>2000ms</span>
+											<span>5000ms</span>
 										</div>
 									</div>
 

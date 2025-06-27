@@ -4,9 +4,10 @@ import {
 	CheckCircle,
 	Clock,
 	Info,
-	Shield,
+	ShieldX,
 	Smartphone,
 	Ticket,
+	TriangleAlert,
 	User
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -60,7 +61,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 										{duplicateWarning?.result?.payload
 											? `Originally verified with ${
 													duplicateWarning.result.payload.type === QRType.APP
-														? 'App QR Code'
+														? 'App Member ID'
 														: duplicateWarning.result.payload.type ===
 																QRType.APPLE_WALLET
 															? 'Apple Wallet Pass'
@@ -69,14 +70,14 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 																? 'Android Wallet Pass'
 																: duplicateWarning.result.payload.type
 												} at ${new Date(duplicateWarning.timestamp).toLocaleTimeString()}`
-											: 'QR code signature is valid'}
+											: 'Member ID signature is valid'}
 									</p>
 								</div>
 							</div>
 						) : (
 							<div className="flex items-center gap-2">
 								<div className="p-2 bg-destructive rounded-full text-destructive-foreground">
-									<Shield className="h-6 w-6" />
+									<ShieldX className="h-6 w-6" />
 								</div>
 								<div>
 									<h3 className="text-xl font-bold text-destructive">
@@ -99,7 +100,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 								{result.success ? (
 									duplicateWarning ? (
 										<>
-											<Info className="h-3 w-3" /> Already Verified
+											<TriangleAlert className="h-3 w-3" /> Duplicate
 										</>
 									) : (
 										<>
@@ -108,7 +109,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 									)
 								) : (
 									<>
-										<Shield className="h-3 w-3" /> Invalid
+										<ShieldX className="h-3 w-3" /> Invalid
 									</>
 								)}
 							</Badge>
@@ -160,7 +161,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<Shield className="h-4 w-4 text-gray-500" />
+											<ShieldX className="h-4 w-4 text-gray-500" />
 											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												User ID
 											</span>
@@ -231,7 +232,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 											) : result.payload.type === QRType.ANDROID_WALLET ? (
 												<Smartphone className="h-4 w-4 text-gray-500" />
 											) : (
-												<Shield className="h-4 w-4 text-gray-500" />
+												<ShieldX className="h-4 w-4 text-gray-500" />
 											)}
 											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												QR Type
@@ -239,7 +240,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 										</div>
 										<p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
 											{result.payload.type === QRType.APP
-												? 'App QR Code'
+												? 'App Member ID'
 												: result.payload.type === QRType.APPLE_WALLET
 													? 'Apple Wallet Pass'
 													: result.payload.type === QRType.ANDROID_WALLET
@@ -263,6 +264,9 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 			<CardContent className="p-6 text-center">
 				<p className="font-medium text-gray-900 dark:text-white">
 					Scan a Neuland Ingolstadt member's digital ID card to verify.
+				</p>
+				<p className="text-xs text-gray-600 dark:text-gray-400">
+					You can tap on the the code sh Neuland Next
 				</p>
 			</CardContent>
 		</Card>

@@ -9,9 +9,9 @@ import { Navbar } from '@/components/navbar'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-	title: 'Neuland Ingolstadt QR Code Verification',
+	title: 'Neuland Ingolstadt Member ID Verification',
 	description:
-		'Scan and verify QR codes on Neuland Ingolstadt e.V. member passes.'
+		'Scan and verify Member IDs of Neuland Ingolstadt e.V. member passes.'
 }
 
 export default function RootLayout({

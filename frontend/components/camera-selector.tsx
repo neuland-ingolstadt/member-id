@@ -44,7 +44,11 @@ export function CameraSelector({
 				}
 
 				// Request camera permission first to get labeled devices
-				await navigator.mediaDevices.getUserMedia({ video: true })
+				await navigator.mediaDevices.getUserMedia({
+					video: {
+						facingMode: 'environment'
+					}
+				})
 
 				const devices = await navigator.mediaDevices.enumerateDevices()
 				const videoDevices = devices

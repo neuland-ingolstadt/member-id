@@ -4,7 +4,7 @@ import {
 	CheckCircle,
 	Clock,
 	Info,
-	Shield,
+	ShieldX,
 	Smartphone,
 	Ticket,
 	Trash2,
@@ -55,7 +55,7 @@ export function ScanHistoryItem({
 									{scan.result.success ? (
 										<CheckCircle className="h-5 w-5 text-green-500" />
 									) : (
-										<Shield className="h-5 w-5 text-red-500" />
+										<ShieldX className="h-5 w-5 text-red-500" />
 									)}
 								</div>
 
@@ -68,7 +68,7 @@ export function ScanHistoryItem({
 											</p>
 										) : (
 											<p className="font-medium text-red-700 dark:text-red-400 truncate min-w-0">
-												Invalid QR Code
+												Invalid Member ID
 											</p>
 										)}
 
@@ -127,11 +127,11 @@ export function ScanHistoryItem({
 							{scan.result.success ? (
 								<CheckCircle className="h-5 w-5 text-green-500" />
 							) : (
-								<Shield className="h-5 w-5 text-red-500" />
+								<ShieldX className="h-5 w-5 text-red-500" />
 							)}
 							{scan.result.success && scan.result.payload
 								? scan.result.payload.name
-								: 'Invalid QR Code'}
+								: 'Invalid Member ID'}
 							{scan.isDuplicate && (
 								<Badge
 									variant="outline"
@@ -160,7 +160,7 @@ export function ScanHistoryItem({
 
 								<div>
 									<div className="flex items-center gap-2 mb-1">
-										<Shield className="h-4 w-4 text-gray-500" />
+										<ShieldX className="h-4 w-4 text-gray-500" />
 										<span className="font-medium text-gray-700 dark:text-gray-300">
 											User ID
 										</span>
@@ -179,7 +179,7 @@ export function ScanHistoryItem({
 										) : scan.result.payload.type === 'android_wallet' ? (
 											<Smartphone className="h-4 w-4 text-gray-500" />
 										) : (
-											<Shield className="h-4 w-4 text-gray-500" />
+											<ShieldX className="h-4 w-4 text-gray-500" />
 										)}
 										<span className="font-medium text-gray-700 dark:text-gray-300">
 											QR Type
@@ -230,28 +230,28 @@ export function ScanHistoryItem({
 							{/* Full QR Data */}
 							<div className="pt-4 border-t border-gray-200 dark:border-gray-700">
 								<p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-									QR Code Data:
+									Full Data:
 								</p>
 
 								{/* Info box for truncated data */}
-								{scan.qrData === '[QR data truncated for security]' && (
+								{scan.qrData === '[QR data truncated for security]' ? (
 									<Alert className="mb-3 bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
 										<Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
 										<AlertTitle className="text-blue-800 dark:text-blue-200">
 											Data Hidden for Security
 										</AlertTitle>
 										<AlertDescription className="text-blue-700 dark:text-blue-300 text-sm">
-											The QR code data has been hidden to protect sensitive
+											The Member ID data has been hidden to protect sensitive
 											information.
 										</AlertDescription>
 									</Alert>
+								) : (
+									<div className="bg-gray-100 dark:bg-gray-800 rounded p-3 max-h-48 overflow-auto">
+										<code className="text-xs text-gray-800 dark:text-gray-200 break-all whitespace-pre-wrap">
+											{scan.qrData}
+										</code>
+									</div>
 								)}
-
-								<div className="bg-gray-100 dark:bg-gray-800 rounded p-3 max-h-48 overflow-auto">
-									<code className="text-xs text-gray-800 dark:text-gray-200 break-all whitespace-pre-wrap">
-										{scan.qrData}
-									</code>
-								</div>
 							</div>
 						</div>
 					) : (
@@ -292,7 +292,7 @@ export function ScanHistoryItem({
 
 									<div>
 										<div className="flex items-center gap-2 mb-1">
-											<Shield className="h-4 w-4 text-gray-500" />
+											<ShieldX className="h-4 w-4 text-gray-500" />
 											<span className="font-medium text-gray-700 dark:text-gray-300">
 												User ID
 											</span>
@@ -311,7 +311,7 @@ export function ScanHistoryItem({
 											) : scan.result.payload.type === 'android_wallet' ? (
 												<Smartphone className="h-4 w-4 text-gray-500" />
 											) : (
-												<Shield className="h-4 w-4 text-gray-500" />
+												<ShieldX className="h-4 w-4 text-gray-500" />
 											)}
 											<span className="font-medium text-gray-700 dark:text-gray-300">
 												QR Type
@@ -371,7 +371,7 @@ export function ScanHistoryItem({
 							{/* Full QR Data */}
 							<div className="pt-4 border-t border-gray-200 dark:border-gray-700">
 								<p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-									QR Code Data:
+									Full Data:
 								</p>
 
 								{/* Info box for truncated data */}
@@ -382,8 +382,8 @@ export function ScanHistoryItem({
 											Data Hidden for Security
 										</AlertTitle>
 										<AlertDescription className="text-blue-700 dark:text-blue-300 text-sm">
-											The QR code data has been hidden to prevent identify
-											theft.
+											The Member ID data has been hidden to protect sensitive
+											information.
 										</AlertDescription>
 									</Alert>
 								) : (
