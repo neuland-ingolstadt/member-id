@@ -61,7 +61,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 										{duplicateWarning?.result?.payload
 											? `Originally verified with ${
 													duplicateWarning.result.payload.type === QRType.APP
-														? 'App Member ID'
+														? 'App Neuland ID'
 														: duplicateWarning.result.payload.type ===
 																QRType.APPLE_WALLET
 															? 'Apple Wallet Pass'
@@ -70,7 +70,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 																? 'Android Wallet Pass'
 																: duplicateWarning.result.payload.type
 												} at ${new Date(duplicateWarning.timestamp).toLocaleTimeString()}`
-											: 'Member ID signature is valid'}
+											: 'Neuland ID signature is valid'}
 									</p>
 								</div>
 							</div>
@@ -240,7 +240,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 										</div>
 										<p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
 											{result.payload.type === QRType.APP
-												? 'App Member ID'
+												? 'App Neuland ID'
 												: result.payload.type === QRType.APPLE_WALLET
 													? 'Apple Wallet Pass'
 													: result.payload.type === QRType.ANDROID_WALLET

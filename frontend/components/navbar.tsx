@@ -23,7 +23,7 @@ export function Navbar() {
 						</div>
 						<div className="hidden sm:block">
 							<h1 className="font-semibold text-gray-900 dark:text-white text-lg">
-								Member ID Verificator
+								Neuland ID Verificator
 							</h1>
 							<p className="text-xs text-gray-600 dark:text-gray-400">
 								Neuland Ingolstadt e.V.

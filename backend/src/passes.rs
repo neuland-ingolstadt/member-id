@@ -62,7 +62,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "username",
         &username,
         ContentOptions {
-            label: Some("USERNAME".into()),
+            label: Some("BENUTZERNAME".into()),
             ..Default::default()
         },
     ));
@@ -81,7 +81,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "groups_label",
         &groups_label,
         ContentOptions {
-            label: Some("GROUPS".into()),
+            label: Some("GRUPPEN".into()),
             ..Default::default()
         },
     ));
@@ -97,7 +97,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     field_type = field_type.add_back_field(Content::new(
         "description",
-        "Member ID for Neuland Ingolstadt e.V.",
+        "Neuland ID für Neuland Ingolstadt e.V.",
         ContentOptions {
             ..Default::default()
         },
@@ -107,7 +107,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "organization",
         "Neuland Ingolstadt e.V.",
         ContentOptions {
-            label: Some("Organization".into()),
+            label: Some("Organisation".into()),
             ..Default::default()
         },
     ));
@@ -116,7 +116,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "member_id",
         &token_data.claims.sub,
         ContentOptions {
-            label: Some("Member ID".into()),
+            label: Some("Neuland ID".into()),
             ..Default::default()
         },
     ));
@@ -125,7 +125,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "groups",
         &token_data.claims.groups.join(", "),
         ContentOptions {
-            label: Some("Groups".into()),
+            label: Some("Gruppen".into()),
             ..Default::default()
         },
     ));
@@ -134,7 +134,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "valid_until",
         &expiration_date.format("%Y-%m-%d").to_string(),
         ContentOptions {
-            label: Some("Valid Until".into()),
+            label: Some("Gültig bis".into()),
             ..Default::default()
         },
     ));
@@ -157,7 +157,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     let pass = PassBuilder::new(PassConfig {
         organization_name,
-        description: "Member ID".into(),
+        description: "Neuland ID".into(),
         pass_type_identifier,
         team_identifier,
         serial_number: token_data.claims.sub,
@@ -166,7 +166,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     .fields(field_type)
     .set_sharing_prohibited(true)
     .add_barcode(barcode)
-    .logo_text("Neuland Member ID".into())
+    .logo_text("Neuland ID".into())
     .appearance(visual_appearance::VisualAppearance {
         label_color: visual_appearance::Color::new(0, 221, 0),
         foreground_color: visual_appearance::Color::white(),
@@ -178,7 +178,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         proximity_uuid: beacon_proximity_uuid,
         major: Some(1),
         minor: Some(10),
-        relevant_text: Some("Welcome to Neuland!".to_string()),
+        relevant_text: Some("Willkommen bei Neuland!".to_string()),
     })
     .build();
 

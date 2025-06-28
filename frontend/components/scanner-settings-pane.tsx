@@ -149,13 +149,13 @@ export function ScannerSettingsPane({
 								<CardHeader className="pb-3">
 									<CardTitle className="text-base flex items-center gap-2">
 										<QrCode className="h-4 w-4" />
-										Member ID Validation
+										Neuland ID Validation
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-4">
 									<div className="flex items-center justify-between">
 										<Label htmlFor={`app-only-${id}`} className="text-sm">
-											Only allow app Member IDs
+											Only allow app Neuland IDs
 										</Label>
 										<Switch
 											id={`app-only-${id}`}

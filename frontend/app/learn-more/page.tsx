@@ -22,7 +22,7 @@ export default function LearnMorePage() {
 							<SvgIcon size={64} color="currentColor" className="pr-1" />
 						</div>
 						<h1 className="text-5xl font-bold text-gray-900 dark:text-white">
-							Member ID Verificator
+							Neuland ID Verificator
 						</h1>
 						<p className="text-lg text-gray-600 dark:text-gray-300">
 							Cryptographically signed digital membership cards
@@ -156,10 +156,10 @@ export default function LearnMorePage() {
 									</span>
 								</div>
 								<h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-									Scan Member ID
+									Scan Neuland ID
 								</h4>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
-									Point your camera at any member's member ID to capture it
+									Point your camera at any member's Neuland ID to capture it
 								</p>
 							</div>
 							<div className="text-center p-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-green-500/20 hover:border-green-500/30 border border-transparent">
@@ -173,7 +173,7 @@ export default function LearnMorePage() {
 								</h4>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
 									Our system verifies the digital signature using a secure
-									public key to ensure the member ID is authentic and hasn't
+									public key to ensure the Neuland ID is authentic and hasn't
 									been tampered with
 								</p>
 							</div>
@@ -248,7 +248,7 @@ export default function LearnMorePage() {
 							Ready to Start?
 						</h2>
 						<p className="text-gray-600 dark:text-gray-300">
-							Begin scanning Member IDs to verify their authenticity
+							Begin scanning Neuland IDs to verify their authenticity
 						</p>
 						<Button
 							asChild

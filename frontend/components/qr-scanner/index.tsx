@@ -230,7 +230,7 @@ export function QRScanner() {
 									</div>
 									<div className="flex flex-col">
 										<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-											Member ID
+											Neuland ID
 										</CardTitle>
 									</div>
 								</div>

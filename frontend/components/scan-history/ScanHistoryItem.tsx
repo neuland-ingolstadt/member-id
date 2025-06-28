@@ -69,7 +69,7 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 											</p>
 										) : (
 											<p className="font-medium text-red-700 dark:text-red-400 truncate min-w-0">
-												Invalid Member ID
+												Invalid Neuland ID
 											</p>
 										)}
 
@@ -132,7 +132,7 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 							)}
 							{scan.result.success && scan.result.payload
 								? scan.result.payload.name
-								: 'Invalid Member ID'}
+								: 'Invalid Neuland ID'}
 							{scan.isDuplicate && (
 								<Badge
 									variant="outline"
@@ -242,7 +242,7 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 											Data Hidden for Security
 										</AlertTitle>
 										<AlertDescription className="text-blue-700 dark:text-blue-300 text-sm">
-											The Member ID data has been hidden to protect sensitive
+											The Neuland ID data has been hidden to protect sensitive
 											information.
 										</AlertDescription>
 									</Alert>
@@ -383,7 +383,7 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 											Data Hidden for Security
 										</AlertTitle>
 										<AlertDescription className="text-blue-700 dark:text-blue-300 text-sm">
-											The Member ID data has been hidden to protect sensitive
+											The Neuland ID data has been hidden to protect sensitive
 											information.
 										</AlertDescription>
 									</Alert>

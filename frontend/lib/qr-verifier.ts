@@ -136,13 +136,13 @@ export async function verifyQRCode(
 			typeof qrString !== 'string' ||
 			qrString.trim().length === 0
 		) {
-			throw new Error('Invalid Member ID: empty or null string')
+			throw new Error('Invalid Neuland ID: empty or null string')
 		}
 
 		const cleanQrString = qrString.trim()
 
 		if (cleanQrString.length < 10) {
-			throw new Error('Invalid Member ID: string too short')
+			throw new Error('Invalid Neuland ID: string too short')
 		}
 
 		const base45Decoded = base45DecodeLib(cleanQrString)
@@ -178,7 +178,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: `Only app Member IDs are allowed. Found: ${payload.type}`,
+					error: `Only app Neuland IDs are allowed. Found: ${payload.type}`,
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -205,7 +205,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'Member ID issued in the future (possible clock skew)',
+					error: 'Neuland ID issued in the future (possible clock skew)',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -222,7 +222,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'Member ID expires too far in the future',
+					error: 'Neuland ID expires too far in the future',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,
@@ -239,7 +239,7 @@ export async function verifyQRCode(
 				return {
 					success: false,
 					payload: null,
-					error: 'Member ID has expired',
+					error: 'Neuland ID has expired',
 					debugInfo: {
 						base45DecodedLength: base45Decoded.length,
 						decompressedLength: decompressed.length,

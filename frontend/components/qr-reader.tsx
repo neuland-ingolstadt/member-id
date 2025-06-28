@@ -234,7 +234,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 					autoPlay
 					playsInline
 					muted
-					aria-label="Member ID camera feed"
+					aria-label="Neuland ID camera feed"
 					className="w-full aspect-[4/3] object-cover"
 				/>
 				<canvas ref={canvasRef} className="hidden" />
@@ -298,7 +298,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 			{/* Bottom instruction text */}
 			<div className="mt-4 text-center">
 				<p className="text-gray-700 dark:text-gray-300 text-sm font-medium">
-					Hold a member ID up to the camera to scan it.
+					Hold a Neuland ID up to the camera to scan it.
 				</p>
 				<p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
 					{settings.showScanFrame

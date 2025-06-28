@@ -11,7 +11,7 @@ export function VerifyingOverlay() {
 			<div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
 				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
 				<p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-					Verifying Member ID...
+					Verifying Neuland ID...
 				</p>
 			</div>
 		</div>
@@ -49,7 +49,7 @@ export function SuccessOverlay({
 				</div>
 				<h3 className="text-2xl font-bold mb-1">Verified!</h3>
 				<p className="text-white/90 text-base">
-					Member ID is valid and authenticated
+					Neuland ID is valid and authenticated
 				</p>
 				{result.payload && (
 					<div className="mt-3 pt-3 border-t border-white/20">
@@ -58,7 +58,7 @@ export function SuccessOverlay({
 						</p>
 						<p className="text-white/80 text-sm mt-1">
 							{result.payload.type === QRType.APP
-								? 'App Member ID'
+								? 'App Neuland ID'
 								: result.payload.type === QRType.APPLE_WALLET
 									? 'Apple Wallet Pass'
 									: result.payload.type === QRType.ANDROID_WALLET
@@ -110,7 +110,7 @@ export function DuplicateOverlay({
 					</p>
 				) : (
 					<p className="text-white/90 text-base">
-						This user has already been verified with another Member ID
+						This user has already been verified with another Neuland ID
 					</p>
 				)}
 				{warning.result.success && warning.result.payload && (
@@ -119,7 +119,7 @@ export function DuplicateOverlay({
 							Originally verified with{' '}
 							<span className="font-semibold">
 								{warning.result.payload.type === QRType.APP
-									? 'App Member ID'
+									? 'App Neuland ID'
 									: warning.result.payload.type === QRType.APPLE_WALLET
 										? 'Apple Wallet Pass'
 										: warning.result.payload.type === QRType.ANDROID_WALLET
@@ -167,7 +167,9 @@ export function ErrorOverlay({
 					<ShieldX className="h-12 w-12" strokeWidth={2.5} />
 				</div>
 				<h3 className="text-2xl font-bold mb-1">Invalid!</h3>
-				<p className="text-white/90 text-base">Member ID verification failed</p>
+				<p className="text-white/90 text-base">
+					Neuland ID verification failed
+				</p>
 				<p className="text-white/90 text-xs mt-1">{message}</p>
 			</div>
 		</div>

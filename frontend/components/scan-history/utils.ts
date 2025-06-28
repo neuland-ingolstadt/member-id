@@ -3,7 +3,7 @@ import { QRType } from '@/lib/qr-verifier'
 export function getQRTypeDisplayName(type: string): string {
 	switch (type) {
 		case QRType.APP:
-			return 'App Member ID'
+			return 'App Neuland ID'
 		case QRType.APPLE_WALLET:
 			return 'Apple Wallet Pass'
 		case QRType.ANDROID_WALLET:

@@ -15,7 +15,7 @@ export function Footer() {
 					<div className="flex items-center justify-center gap-2 mb-3">
 						<SvgIcon size={20} color="currentColor" />
 						<span className="text-sm font-medium">
-							Member ID Verification System
+							Neuland ID Verification System
 						</span>
 					</div>
 					<p className="text-xs mb-2">© {year} Neuland Ingolstadt e.V.</p>
