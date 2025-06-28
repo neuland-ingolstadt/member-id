@@ -1,5 +1,6 @@
 'use client'
 
+import NumberFlow from '@number-flow/react'
 import {
 	BarChart3,
 	CheckCircle,
@@ -68,7 +69,12 @@ export function ScanStatsDisplay({
 							<Users className="h-5 w-5 text-primary" />
 						</div>
 						<div className="text-2xl font-bold text-gray-900 dark:text-white">
-							{stats.totalScans}
+							<NumberFlow
+								value={stats.totalScans}
+								format={{ notation: 'compact' }}
+								transformTiming={{ duration: 600, easing: 'ease-out' }}
+								spinTiming={{ duration: 800, easing: 'ease-out' }}
+							/>
 						</div>
 						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Total Scans
@@ -81,7 +87,12 @@ export function ScanStatsDisplay({
 							<CheckCircle className="h-5 w-5 text-green-500" />
 						</div>
 						<div className="text-2xl font-bold text-green-600 dark:text-green-500">
-							{stats.validScans}
+							<NumberFlow
+								value={stats.validScans}
+								format={{ notation: 'compact' }}
+								transformTiming={{ duration: 600, easing: 'ease-out' }}
+								spinTiming={{ duration: 800, easing: 'ease-out' }}
+							/>
 						</div>
 						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Valid ({validRate}%)
@@ -94,7 +105,12 @@ export function ScanStatsDisplay({
 							<ShieldX className="h-5 w-5 text-destructive" />
 						</div>
 						<div className="text-2xl font-bold text-red-600 dark:text-red-500">
-							{stats.invalidScans}
+							<NumberFlow
+								value={stats.invalidScans}
+								format={{ notation: 'compact' }}
+								transformTiming={{ duration: 600, easing: 'ease-out' }}
+								spinTiming={{ duration: 800, easing: 'ease-out' }}
+							/>
 						</div>
 						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Invalid ({100 - validRate}%)
@@ -107,7 +123,12 @@ export function ScanStatsDisplay({
 							<Copy className="h-5 w-5 text-blue-600" />
 						</div>
 						<div className="text-2xl font-bold text-blue-600 dark:text-blue-500">
-							{stats.duplicateScans}
+							<NumberFlow
+								value={stats.duplicateScans}
+								format={{ notation: 'compact' }}
+								transformTiming={{ duration: 600, easing: 'ease-out' }}
+								spinTiming={{ duration: 800, easing: 'ease-out' }}
+							/>
 						</div>
 						<div className="text-xs text-gray-600 dark:text-gray-400 break-words leading-tight">
 							<div>Duplicates</div>
