@@ -8,10 +8,22 @@ import {
 	Smartphone,
 	Ticket,
 	Trash2,
-	User
+	User,
+	X
 } from 'lucide-react'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -36,9 +48,16 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 	isLast,
 	onRemoveScan
 }: ScanHistoryItemProps) {
+	const [isOpen, setIsOpen] = useState(false)
+
+	const handleDelete = () => {
+		onRemoveScan(scan.id)
+		setIsOpen(false)
+	}
+
 	return (
-		<div className="group w-full">
-			<Dialog>
+		<div className="w-full">
+			<Dialog open={isOpen} onOpenChange={setIsOpen}>
 				<DialogTrigger asChild>
 					<div
 						className={`w-full text-left p-4 rounded-lg border transition-all cursor-pointer ${
@@ -49,80 +68,64 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 								: 'border-red-200 bg-red-50/50 hover:bg-red-50 dark:border-red-800 dark:bg-red-900/10'
 						}`}
 					>
-						<div className="flex items-start justify-between gap-2">
-							<div className="flex items-start gap-3 flex-1 min-w-0">
-								{/* Status Icon */}
-								<div className="flex-shrink-0 mt-1">
-									{scan.result.success ? (
-										<CheckCircle className="h-5 w-5 text-green-500" />
+						<div className="flex items-start gap-3">
+							{/* Status Icon */}
+							<div className="flex-shrink-0 mt-1">
+								{scan.result.success ? (
+									<CheckCircle className="h-5 w-5 text-green-500" />
+								) : (
+									<ShieldX className="h-5 w-5 text-red-500" />
+								)}
+							</div>
+
+							{/* Scan Info */}
+							<div className="flex-1 min-w-0 overflow-hidden">
+								<div className="flex items-center gap-2 mb-1 min-w-0">
+									{scan.result.success && scan.result.payload ? (
+										<p className="font-medium text-gray-900 dark:text-white truncate min-w-0">
+											{scan.result.payload.name}
+										</p>
 									) : (
-										<ShieldX className="h-5 w-5 text-red-500" />
+										<p className="font-medium text-red-700 dark:text-red-400 truncate min-w-0">
+											Invalid Neuland ID
+										</p>
+									)}
+
+									{/* Duplicate Warning */}
+									{scan.isDuplicate && (
+										<Badge
+											variant="outline"
+											className="text-xs border-blue-400 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 flex items-center flex-shrink-0"
+										>
+											<Info className="h-3 w-3 mr-1" />
+											<span className="hidden sm:inline">Already Verified</span>
+											<span className="sm:hidden">Duplicate</span>
+										</Badge>
 									)}
 								</div>
 
-								{/* Scan Info */}
-								<div className="flex-1 min-w-0 overflow-hidden">
-									<div className="flex items-center gap-2 mb-1 min-w-0">
-										{scan.result.success && scan.result.payload ? (
-											<p className="font-medium text-gray-900 dark:text-white truncate min-w-0">
-												{scan.result.payload.name}
-											</p>
-										) : (
-											<p className="font-medium text-red-700 dark:text-red-400 truncate min-w-0">
-												Invalid Neuland ID
-											</p>
-										)}
+								<p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+									{new Date(scan.timestamp).toLocaleString()}
+								</p>
 
-										{/* Duplicate Warning */}
-										{scan.isDuplicate && (
-											<Badge
-												variant="outline"
-												className="text-xs border-blue-400 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 flex items-center flex-shrink-0"
-											>
-												<Info className="h-3 w-3 mr-1" />
-												<span className="hidden sm:inline">
-													Already Verified
-												</span>
-												<span className="sm:hidden">Duplicate</span>
-											</Badge>
-										)}
-									</div>
-
-									<p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-										{new Date(scan.timestamp).toLocaleString()}
+								{/* QR Data Preview */}
+								<div className="mt-2 min-w-0">
+									<p className="text-xs text-gray-600 dark:text-gray-400 font-mono truncate break-all">
+										{scan.result.success && scan.result.payload
+											? getQRTypeDisplayName(scan.result.payload.type)
+											: scan.qrData.length > 30
+												? `${scan.qrData.slice(0, 30)}...`
+												: scan.qrData}
 									</p>
-
-									{/* QR Data Preview */}
-									<div className="mt-2 min-w-0">
-										<p className="text-xs text-gray-600 dark:text-gray-400 font-mono truncate break-all">
-											{scan.result.success && scan.result.payload
-												? getQRTypeDisplayName(scan.result.payload.type)
-												: scan.qrData.length > 30
-													? `${scan.qrData.slice(0, 30)}...`
-													: scan.qrData}
-										</p>
-									</div>
 								</div>
-							</div>
-
-							{/* Actions */}
-							<div className="flex-shrink-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={(e) => {
-										e.stopPropagation()
-										onRemoveScan(scan.id)
-									}}
-									className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-								>
-									<Trash2 className="h-4 w-4" />
-								</Button>
 							</div>
 						</div>
 					</div>
 				</DialogTrigger>
-				<DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+				<DialogContent
+					className="max-w-2xl max-h-[80vh] overflow-y-auto"
+					onPointerDownOutside={(e) => e.preventDefault()}
+				>
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
 							{scan.result.success ? (
@@ -253,6 +256,42 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 										</code>
 									</div>
 								)}
+							</div>
+
+							{/* Delete Button */}
+							<div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+								<div className="flex justify-start gap-2">
+									<AlertDialog>
+										<AlertDialogTrigger asChild>
+											<Button
+												variant="destructive"
+												size="sm"
+												className="flex items-center gap-2"
+											>
+												<Trash2 className="h-4 w-4" />
+												Delete Scan
+											</Button>
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>Delete Scan Record</AlertDialogTitle>
+												<AlertDialogDescription>
+													Are you sure you want to delete this scan record? This
+													action cannot be undone.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Cancel</AlertDialogCancel>
+												<AlertDialogAction
+													onClick={handleDelete}
+													className="bg-red-600 hover:bg-red-700"
+												>
+													Delete
+												</AlertDialogAction>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								</div>
 							</div>
 						</div>
 					) : (
@@ -394,6 +433,51 @@ export const ScanHistoryItem = memo(function ScanHistoryItem({
 										</code>
 									</div>
 								)}
+							</div>
+
+							{/* Delete Button */}
+							<div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+								<div className="flex justify-end gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => setIsOpen(false)}
+										className="flex items-center gap-2"
+									>
+										<X className="h-4 w-4" />
+										Close
+									</Button>
+									<AlertDialog>
+										<AlertDialogTrigger asChild>
+											<Button
+												variant="destructive"
+												size="sm"
+												className="flex items-center gap-2"
+											>
+												<Trash2 className="h-4 w-4" />
+												Delete Scan
+											</Button>
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>Delete Scan Record</AlertDialogTitle>
+												<AlertDialogDescription>
+													Are you sure you want to delete this scan record? This
+													action cannot be undone.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Cancel</AlertDialogCancel>
+												<AlertDialogAction
+													onClick={handleDelete}
+													className="bg-red-600 hover:bg-red-700"
+												>
+													Delete
+												</AlertDialogAction>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								</div>
 							</div>
 						</div>
 					)}

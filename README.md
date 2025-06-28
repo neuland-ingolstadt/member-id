@@ -216,7 +216,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Made with ❤️ by the Member-ID Team**
+**Made by [Robert Eggl](https://eggl.dev) for Neuland Ingolstadt e.V.**
 
 [![GitHub stars](https://img.shields.io/github/stars/neuland-ingolstadt/member-id?style=social)](https://github.com/neuland-ingolstadt/member-id)
 [![GitHub forks](https://img.shields.io/github/forks/neuland-ingolstadt/member-id?style=social)](https://github.com/neuland-ingolstadt/member-id)

@@ -9,6 +9,17 @@ import {
 	ShieldX,
 	Users
 } from 'lucide-react'
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ScanStats } from '@/hooks/use-scan-history'
@@ -49,15 +60,36 @@ export function ScanStatsDisplay({
 						</div>
 					</div>
 					{stats.totalScans > 0 && (
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={onClearHistory}
-							className="text-destructive hover:bg-destructive/10 group"
-						>
-							<RotateCcw className="h-4 w-4 mr-1 group-hover:-rotate-12 transition-transform duration-300" />
-							Clear
-						</Button>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button
+									variant="outline"
+									size="sm"
+									className="text-destructive hover:bg-destructive/10 group"
+								>
+									<RotateCcw className="h-4 w-4 mr-1 group-hover:-rotate-12 transition-transform duration-300" />
+									Clear
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Clear Scan History</AlertDialogTitle>
+									<AlertDialogDescription>
+										Are you sure you want to clear all scan history? This will
+										permanently delete all scan records and cannot be undone.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={onClearHistory}
+										className="bg-red-600 hover:bg-red-700"
+									>
+										Clear All
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					)}
 				</div>
 			</CardHeader>
