@@ -5,7 +5,7 @@ generate signed QR codes from a JWT. The QR code can be retrieved via a simple
 HTTP GET request:
 
 ```bash
-curl "http://localhost:8000/qr?token=<jwt>"
+curl -H "Authorization: Bearer <jwt>" "http://localhost:8000/qr"
 ```
 
 The token is verified against the JWKS endpoint
@@ -77,8 +77,8 @@ Run the server with:
 cargo run
 ```
 
-The server listens on port `8000`. Send GET requests to `/qr` with a `token`
-query parameter to obtain the QR code data.
+The server listens on port `8000`. Send GET requests to `/qr` with the
+`Authorization` header set to `Bearer <jwt>` to obtain the QR code data.
 
 ## Apple Wallet Pass
 

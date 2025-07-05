@@ -145,7 +145,7 @@ cargo run
 
 ### **QR Code Generation**
 ```bash
-curl "http://localhost:8000/qr?token=<jwt_token>"
+curl -H "Authorization: Bearer <jwt_token>" "http://localhost:8000/qr"
 ```
 
 **Response:**

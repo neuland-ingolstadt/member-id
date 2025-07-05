@@ -1,10 +1,9 @@
 mod passes;
 mod utils;
 use actix_governor::{Governor, GovernorConfigBuilder};
-use actix_web::{App, HttpResponse, HttpServer, Responder, web};
+use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use dotenv::dotenv;
 use log::error;
-
 use serde::Deserialize;
 
 use utils::{log_public_key, public_key_hex};
@@ -13,29 +12,33 @@ use passes::generate_pkpass;
 
 use utils::{QrResponse, generate_qr};
 
-use utoipa::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
-
 #[derive(Deserialize, utoipa::ToSchema)]
 struct TokenQuery {
     #[schema(example = "abc123")]
     token: String,
 }
 
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
+
 #[utoipa::path(
     get,
     path = "/qr",
     params(
-        ("token" = String, Query, description = "Authentication token")
+        ("Authorization" = String, Header, description = "Bearer token")
     ),
     responses(
         (status = 200, description = "QR code generated successfully with issue and expiration timestamps", body = QrResponse),
         (status = 400, description = "Bad request")
     )
 )]
-async fn qr_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
+async fn qr_endpoint(req: HttpRequest) -> impl Responder {
     const MAX_AGE_APP: u64 = 60 * 60 * 24 * 3; // 3 days
-    match generate_qr(&query.token, "a", MAX_AGE_APP).await {
+    let token = match extract_token(&req) {
+        Ok(t) => t,
+        Err(resp) => return resp,
+    };
+    match generate_qr(&token, "a", MAX_AGE_APP).await {
         Ok(qr_response) => HttpResponse::Ok().json(qr_response),
         Err(e) => {
             error!("QR generation error: {}", e);
@@ -93,6 +96,19 @@ async fn public_key_endpoint() -> impl Responder {
             error!("Public key error: {}", e);
             HttpResponse::InternalServerError().body("Internal server error")
         }
+    }
+}
+
+fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
+    let auth = req
+        .headers()
+        .get("Authorization")
+        .and_then(|h| h.to_str().ok())
+        .ok_or_else(|| HttpResponse::BadRequest().body("Missing Authorization header"))?;
+    if let Some(token) = auth.strip_prefix("Bearer ") {
+        Ok(token.to_string())
+    } else {
+        Err(HttpResponse::BadRequest().body("Invalid Authorization header"))
     }
 }
 
