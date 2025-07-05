@@ -170,3 +170,16 @@ pub async fn generate_qr(
         exp: payload.exp,
     })
 }
+
+pub fn capitalize_groups(groups: &[String]) -> Vec<String> {
+    groups
+        .iter()
+        .map(|group| {
+            let mut chars: Vec<char> = group.chars().collect();
+            if let Some(first_char) = chars.first_mut() {
+                *first_char = first_char.to_uppercase().next().unwrap_or(*first_char);
+            }
+            chars.into_iter().collect()
+        })
+        .collect()
+}

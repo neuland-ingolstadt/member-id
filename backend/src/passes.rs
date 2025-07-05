@@ -1,4 +1,4 @@
-use crate::utils::{Claims, current_semester, generate_qr, verify_token};
+use crate::utils::{Claims, capitalize_groups, current_semester, generate_qr, verify_token};
 use chrono::Utc;
 use passes::beacon;
 use passes::sign;
@@ -67,17 +67,18 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         },
     ));
 
-    let groups_text = token_data.claims.groups.join(", ");
+    let capitalized_groups = capitalize_groups(&token_data.claims.groups);
+    let groups_text = capitalized_groups.join(", ");
 
-    let groups_label = if token_data.claims.groups.len() > 3 {
-        let first_groups = token_data.claims.groups[..3].join(", ");
-        let remaining = token_data.claims.groups.len() - 3;
+    let groups_label = if capitalized_groups.len() > 3 {
+        let first_groups = capitalized_groups[..3].join(", ");
+        let remaining = capitalized_groups.len() - 3;
         format!("{} +{}", first_groups, remaining)
     } else {
         groups_text.clone()
     };
 
-    field_type = field_type.add_secondary_field(Content::new(
+    field_type = field_type.add_auxiliary_field(Content::new(
         "groups_label",
         &groups_label,
         ContentOptions {
@@ -97,7 +98,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     field_type = field_type.add_back_field(Content::new(
         "description",
-        "Neuland ID für Neuland Ingolstadt e.V.",
+        "Der digitale Mitgliedsausweis von Neuland Ingolstadt e.V.",
         ContentOptions {
             ..Default::default()
         },
@@ -116,14 +117,14 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         "member_id",
         &token_data.claims.sub,
         ContentOptions {
-            label: Some("Neuland ID".into()),
+            label: Some("Mitgliedsnummer ID".into()),
             ..Default::default()
         },
     ));
 
     field_type = field_type.add_back_field(Content::new(
         "groups",
-        &token_data.claims.groups.join(", "),
+        &capitalized_groups.join(", "),
         ContentOptions {
             label: Some("Gruppen".into()),
             ..Default::default()
@@ -166,7 +167,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     .fields(field_type)
     .set_sharing_prohibited(true)
     .add_barcode(barcode)
-    .logo_text("Neuland ID".into())
+    .logo_text("Neuland Ingolstadt".into())
     .appearance(visual_appearance::VisualAppearance {
         label_color: visual_appearance::Color::new(0, 221, 0),
         foreground_color: visual_appearance::Color::white(),
@@ -185,16 +186,38 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let mut package = Package::new(pass);
 
     let icon_path = "./resources/icon.png";
-    if Path::new(&icon_path).exists() {
-        let file = File::open(Path::new(&icon_path))?;
-        package.add_resource(resource::Type::Icon(resource::Version::Standard), file)?;
-    }
+    let icon_path_2x = "./resources/icon@2x.png";
+    let icon_path_3x = "./resources/icon@3x.png";
+
+    let icon_file = File::open(Path::new(&icon_path))?;
+    package.add_resource(resource::Type::Icon(resource::Version::Standard), icon_file)?;
+    let icon_file_2x = File::open(Path::new(&icon_path_2x))?;
+    package.add_resource(
+        resource::Type::Icon(resource::Version::Size2X),
+        icon_file_2x,
+    )?;
+    let icon_file_3x = File::open(Path::new(&icon_path_3x))?;
+    package.add_resource(
+        resource::Type::Icon(resource::Version::Size3X),
+        icon_file_3x,
+    )?;
 
     let logo_path = "./resources/logo.png";
-    if Path::new(logo_path).exists() {
-        let logo_file = File::open(Path::new(logo_path))?;
-        package.add_resource(resource::Type::Logo(resource::Version::Standard), logo_file)?;
-    }
+    let logo_path_2x = "./resources/logo@2x.png";
+    let logo_path_3x = "./resources/logo@3x.png";
+
+    let logo_file = File::open(Path::new(logo_path))?;
+    package.add_resource(resource::Type::Logo(resource::Version::Standard), logo_file)?;
+    let logo_file_2x = File::open(Path::new(logo_path_2x))?;
+    package.add_resource(
+        resource::Type::Logo(resource::Version::Size2X),
+        logo_file_2x,
+    )?;
+    let logo_file_3x = File::open(Path::new(logo_path_3x))?;
+    package.add_resource(
+        resource::Type::Logo(resource::Version::Size3X),
+        logo_file_3x,
+    )?;
 
     let mut file_sign_cert = File::open(Path::new(&cert_path))?;
     let mut sign_cert_data = Vec::new();
