@@ -42,7 +42,7 @@ async fn qr_endpoint(req: HttpRequest) -> impl Responder {
     match generate_qr(&token, "a", MAX_AGE_APP).await {
         Ok(qr_response) => HttpResponse::Ok().json(qr_response),
         Err(e) => {
-            error!("QR generation error: {}", e);
+            error!("QR generation error: {e}");
             HttpResponse::BadRequest().body("Invalid request")
         }
     }
@@ -66,7 +66,7 @@ async fn pkpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
             .append_header(("Content-Disposition", "attachment; filename=member.pkpass"))
             .body(data),
         Err(e) => {
-            error!("PKPASS generation error: {}", e);
+            error!("PKPASS generation error: {e}");
             HttpResponse::BadRequest().body("Invalid request")
         }
     }
@@ -87,7 +87,7 @@ async fn gpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
     match generate_gpass(&query.token).await {
         Ok(url) => HttpResponse::Ok().body(url),
         Err(e) => {
-            error!("GPASS generation error: {}", e);
+            error!("GPASS generation error: {e}");
             HttpResponse::BadRequest().body("Invalid request")
         }
     }
@@ -115,7 +115,7 @@ async fn public_key_endpoint() -> impl Responder {
     match public_key_hex() {
         Ok(hex) => HttpResponse::Ok().body(hex),
         Err(e) => {
-            error!("Public key error: {}", e);
+            error!("Public key error: {e}");
             HttpResponse::InternalServerError().body("Internal server error")
         }
     }
@@ -153,13 +153,13 @@ struct ApiDoc;
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     if let Err(e) = dotenv() {
-        eprintln!("Failed to load .env file: {}", e);
+        eprintln!("Failed to load .env file: {e}");
     }
 
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
 
     if let Err(e) = log_public_key() {
-        error!("Failed to derive public key: {}", e);
+        error!("Failed to derive public key: {e}");
     }
 
     let governor_conf = GovernorConfigBuilder::default()

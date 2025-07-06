@@ -73,7 +73,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let groups_label = if capitalized_groups.len() > 3 {
         let first_groups = capitalized_groups[..3].join(", ");
         let remaining = capitalized_groups.len() - 3;
-        format!("{} +{}", first_groups, remaining)
+        format!("{first_groups} +{remaining}")
     } else {
         groups_text.clone()
     };
@@ -297,5 +297,5 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         &claims,
         &encoding_key,
     )?;
-    Ok(format!("https://pay.google.com/gp/v/save/{}", jwt))
+    Ok(format!("https://pay.google.com/gp/v/save/{jwt}"))
 }

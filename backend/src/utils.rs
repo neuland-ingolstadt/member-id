@@ -51,7 +51,7 @@ struct Jwks {
 
 pub fn log_public_key() -> Result<(), Box<dyn std::error::Error>> {
     let hex = public_key_hex()?;
-    info!("QR public key: {}", hex);
+    info!("QR public key: {hex}");
     Ok(())
 }
 
