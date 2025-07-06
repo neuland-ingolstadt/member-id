@@ -24,6 +24,7 @@ Neuland Member-ID is a comprehensive digital identity solution that combines the
 - **🔐 Secure QR Generation**: Creates cryptographically signed QR codes from JWT tokens
 - **📱 Real-time Verification**: Instant QR code scanning and validation with live camera feed
 - **🍎 Apple Wallet Integration**: Generate downloadable Apple Wallet passes
+- **🤖 Google Wallet Integration**: Save passes directly to Google Wallet
 - **📊 Dashboard**: Track scan history, statistics, and verification results
 - **🎨 Modern UI/UX**: Beautiful, responsive interface with dark/light theme support
 - **🔒 Enterprise Security**: JWT validation, ECDSA signatures, and comprehensive audit trails
@@ -90,7 +91,7 @@ cargo run
 
 ### 📱 **QR Code System**
 - **Live Camera Scanning**: Real-time QR code detection
-- **Multiple QR Types**: Support for app, Apple Wallet, and Android Wallet
+- **Multiple QR Types**: Support for app, Apple Wallet, and Google Wallet
 - **Base45 Encoding**: Industry-standard QR code format
 - **Compression**: Efficient data storage with zlib compression
 - **CBOR Serialization**: Compact binary data representation
@@ -139,6 +140,7 @@ cargo run
 |----------|--------|-------------|----------|
 | `/api/qr` | GET | Generate signed QR code | JSON with QR data |
 | `/api/pkpass` | GET | Create Apple Wallet pass | PKPass file |
+| `/api/gpass` | GET | Create Google Wallet pass link | URL |
 | `/api/public-key` | GET | Get public key for verification | Hex string |
 | `/api/health` | GET | Health check | "OK" |
 | `/api/swagger-ui` | GET | Swagger UI | HTML |
@@ -161,6 +163,11 @@ curl -H "Authorization: Bearer <jwt_token>" "http://localhost:8000/qr"
 ### **Apple Wallet Pass**
 ```bash
 curl -o member.pkpass "http://localhost:8000/pkpass?token=<jwt_token>"
+```
+
+### **Google Wallet Pass**
+```bash
+curl "http://localhost:8000/gpass?token=<jwt_token>"
 ```
 
 ### **OpenAPI Documentation**

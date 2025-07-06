@@ -234,3 +234,68 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     package.write(&mut cursor)?;
     Ok(cursor.into_inner())
 }
+
+pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::Error>> {
+    let token_data = verify_token::<Claims>(token).await?;
+
+    if !token_data.claims.groups.iter().any(|g| g == "mitglieder") {
+        return Err("token missing required 'mitglieder' group".into());
+    }
+
+    let (semester_name, semester_end) = current_semester();
+    let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
+
+    let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
+
+    let issuer_id = env::var("GOOGLE_WALLET_ISSUER_ID")?;
+    let class_id = env::var("GOOGLE_WALLET_CLASS_ID")?;
+    let service_account_email = env::var("GOOGLE_SERVICE_ACCOUNT_EMAIL")?;
+    let private_key_pem = env::var("GOOGLE_SERVICE_ACCOUNT_KEY")?;
+    let logo_url = env::var("GOOGLE_WALLET_LOGO_URL")?;
+
+    let pem = pem::parse(private_key_pem)?;
+    let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(pem.contents())?;
+
+    let object_id = format!("{}.member-{}", issuer_id, token_data.claims.sub);
+
+    let groups = capitalize_groups(&token_data.claims.groups).join(", ");
+
+    let object = serde_json::json!({
+        "id": object_id,
+        "classId": format!("{}.{}", issuer_id, class_id),
+        "cardTitle": {"defaultValue": {"language": "de", "value": "Neuland ID"}},
+        "header": {
+            "defaultValue": {
+                "language": "de",
+                "value": semester_name
+            }
+        },
+        "logo": {
+            "sourceUri": {
+                "uri": logo_url
+            }
+        },
+        "hexBackgroundColor": "#000000",
+        "barcode": {"type": "qrCode", "value": qr},
+        "textModulesData": [
+            {"header": "Name", "body": token_data.claims.given_name},
+            {"header": "Benutzername", "body": token_data.claims.preferred_username.to_lowercase()},
+            {"header": "Gruppen", "body": groups},
+            {"header": "Gültig", "body": semester_end.format("%Y-%m-%d").to_string()}
+        ]
+    });
+
+    let claims = serde_json::json!({
+        "iss": service_account_email,
+        "aud": "google",
+        "typ": "savetowallet",
+        "payload": {"genericObjects": [object]}
+    });
+
+    let jwt = jsonwebtoken::encode(
+        &jsonwebtoken::Header::new(jsonwebtoken::Algorithm::RS256),
+        &claims,
+        &encoding_key,
+    )?;
+    Ok(format!("https://pay.google.com/gp/v/save/{}", jwt))
+}

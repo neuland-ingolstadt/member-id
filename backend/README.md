@@ -103,3 +103,23 @@ The pass shows the member name, a short summary of the user's roles and encodes
 the QR code valid for the current semester. Up to three roles are listed on the
 front of the pass followed by a "+N" suffix when more roles exist. The complete
 list is available on the back of the pass.
+
+## Google Wallet Pass
+
+You can also create a Google Wallet pass. Configure your service account credentials:
+
+```
+export GOOGLE_WALLET_ISSUER_ID="<issuer-id>"
+export GOOGLE_WALLET_CLASS_ID="member"
+export GOOGLE_SERVICE_ACCOUNT_EMAIL="example@project.iam.gserviceaccount.com"
+export GOOGLE_SERVICE_ACCOUNT_KEY="$(cat service-account-private-key.pem)"
+export GOOGLE_WALLET_LOGO_URL="https://your-domain.com/path/to/logo.png"
+```
+
+Retrieve the pass link via:
+
+```bash
+curl "http://localhost:8000/gpass?token=<jwt>"
+```
+
+The endpoint returns a `https://pay.google.com/gp/v/save/<jwt>` URL which users can open to save the pass to their Google Wallet.

@@ -8,6 +8,7 @@ use serde::Deserialize;
 
 use utils::{log_public_key, public_key_hex};
 
+use passes::generate_gpass;
 use passes::generate_pkpass;
 
 use utils::{QrResponse, generate_qr};
@@ -73,6 +74,27 @@ async fn pkpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
 
 #[utoipa::path(
     get,
+    path = "/gpass",
+    params(
+        ("token" = String, Query, description = "Authentication token")
+    ),
+    responses(
+        (status = 200, description = "Google Wallet pass link", body = String),
+        (status = 400, description = "Bad request")
+    )
+)]
+async fn gpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
+    match generate_gpass(&query.token).await {
+        Ok(url) => HttpResponse::Ok().body(url),
+        Err(e) => {
+            error!("GPASS generation error: {}", e);
+            HttpResponse::BadRequest().body("Invalid request")
+        }
+    }
+}
+
+#[utoipa::path(
+    get,
     path = "/health",
     responses(
         (status = 200, description = "API is healthy", body = String)
@@ -115,7 +137,7 @@ fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
 // Define OpenAPI documentation
 #[derive(OpenApi)]
 #[openapi(
-    paths(qr_endpoint, pkpass_endpoint, health, public_key_endpoint),
+    paths(qr_endpoint, pkpass_endpoint, gpass_endpoint, health, public_key_endpoint),
     components(schemas(TokenQuery, QrResponse)),
     tags(
         (name = "Member-ID API", description = "Member ID API endpoints")
@@ -123,7 +145,7 @@ fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
     info(
         title = "Member-ID API",
         version = "1.0.0",
-        description = "API for generating QR codes and PKPass files"
+        description = "API for generating QR codes and Wallet passes"
     )
 )]
 struct ApiDoc;
@@ -151,6 +173,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Governor::new(&governor_conf))
             .route("/qr", web::get().to(qr_endpoint))
             .route("/pkpass", web::get().to(pkpass_endpoint))
+            .route("/gpass", web::get().to(gpass_endpoint))
             .route("/public-key", web::get().to(public_key_endpoint))
             .route("/health", web::get().to(health))
             .service(
