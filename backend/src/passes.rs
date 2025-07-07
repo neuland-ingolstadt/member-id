@@ -12,6 +12,7 @@ use passes::{
 };
 use std::env;
 use std::fs::File;
+use std::io::Read;
 use std::path::Path;
 
 pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
@@ -73,7 +74,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let groups_label = if capitalized_groups.len() > 3 {
         let first_groups = capitalized_groups[..3].join(", ");
         let remaining = capitalized_groups.len() - 3;
-        format!("{} +{}", first_groups, remaining)
+        format!("{first_groups} +{remaining}")
     } else {
         groups_text.clone()
     };
@@ -233,4 +234,106 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let mut cursor = std::io::Cursor::new(Vec::new());
     package.write(&mut cursor)?;
     Ok(cursor.into_inner())
+}
+
+pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::Error>> {
+    let token_data = verify_token::<Claims>(token).await?;
+
+    if !token_data.claims.groups.iter().any(|g| g == "mitglieder") {
+        return Err("token missing required 'mitglieder' group".into());
+    }
+
+    let (semester_name, semester_end) = current_semester();
+    let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
+
+    let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
+
+    let issuer_id = env::var("GOOGLE_WALLET_ISSUER_ID")?;
+    let class_id = env::var("GOOGLE_WALLET_CLASS_ID")?;
+    let service_account_email = env::var("GOOGLE_SERVICE_ACCOUNT_EMAIL")?;
+    let private_key_path = env::var("GOOGLE_SERVICE_ACCOUNT_KEY_PATH")?;
+    let mut private_key_file = std::fs::File::open(&private_key_path)?;
+    let mut private_key_pem = String::new();
+    private_key_file.read_to_string(&mut private_key_pem)?;
+    let logo_url = env::var("GOOGLE_WALLET_LOGO_URL")?;
+
+    let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
+
+    let object_id = format!("{}.member-{}", issuer_id, token_data.claims.sub);
+
+    let groups = capitalize_groups(&token_data.claims.groups).join(", ");
+
+    let object = serde_json::json!({
+        "id": object_id,
+        "classId": format!("{}.{}", issuer_id, class_id),
+        "state": "ACTIVE",
+        "cardTitle": {
+            "defaultValue": {
+                "language": "de",
+                "value": "Neuland ID"
+            }
+        },
+        "header": {
+            "defaultValue": {
+                "language": "de",
+                "value": semester_name
+            }
+        },
+        "logo": {
+            "sourceUri": {
+                "uri": logo_url
+            },
+            "contentDescription": {
+                "defaultValue": {
+                    "language": "de",
+                    "value": "Neuland Ingolstadt e.V. Logo"
+                }
+            }
+        },
+        "hexBackgroundColor": "#000000",
+        "barcode": {
+            "type": "QR_CODE",
+            "value": qr
+        },
+        "validTimeInterval": {
+            "start": Utc::now().to_rfc3339(),
+            "end": semester_end.to_rfc3339()
+        },
+        "textModulesData": [
+            {
+                "header": "Name",
+                "body": token_data.claims.given_name,
+                "id": "NAME"
+            },
+            {
+                "header": "Benutzername",
+                "body": token_data.claims.preferred_username.to_lowercase(),
+                "id": "USERNAME"
+            },
+            {
+                "header": "Gruppen",
+                "body": groups,
+                "id": "GROUPS"
+            },
+            {
+                "header": "Gültig",
+                "body": semester_end.format("%Y-%m-%d").to_string(),
+                "id": "VALID_UNTIL"
+            }
+        ]
+    });
+
+    let claims = serde_json::json!({
+        "iss": service_account_email,
+        "aud": "google",
+        "typ": "savetowallet",
+        "payload": {"genericObjects": [object]}
+    });
+
+    let jwt = jsonwebtoken::encode(
+        &jsonwebtoken::Header::new(jsonwebtoken::Algorithm::RS256),
+        &claims,
+        &encoding_key,
+    )?;
+    Ok(format!("https://pay.google.com/gp/v/save/{jwt}"))
 }

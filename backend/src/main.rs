@@ -8,6 +8,7 @@ use serde::Deserialize;
 
 use utils::{log_public_key, public_key_hex};
 
+use passes::generate_gpass;
 use passes::generate_pkpass;
 
 use utils::{QrResponse, generate_qr};
@@ -41,7 +42,7 @@ async fn qr_endpoint(req: HttpRequest) -> impl Responder {
     match generate_qr(&token, "a", MAX_AGE_APP).await {
         Ok(qr_response) => HttpResponse::Ok().json(qr_response),
         Err(e) => {
-            error!("QR generation error: {}", e);
+            error!("QR generation error: {e}");
             HttpResponse::BadRequest().body("Invalid request")
         }
     }
@@ -65,7 +66,28 @@ async fn pkpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
             .append_header(("Content-Disposition", "attachment; filename=member.pkpass"))
             .body(data),
         Err(e) => {
-            error!("PKPASS generation error: {}", e);
+            error!("PKPASS generation error: {e}");
+            HttpResponse::BadRequest().body("Invalid request")
+        }
+    }
+}
+
+#[utoipa::path(
+    get,
+    path = "/gpass",
+    params(
+        ("token" = String, Query, description = "Authentication token")
+    ),
+    responses(
+        (status = 200, description = "Google Wallet pass link", body = String),
+        (status = 400, description = "Bad request")
+    )
+)]
+async fn gpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
+    match generate_gpass(&query.token).await {
+        Ok(url) => HttpResponse::Ok().body(url),
+        Err(e) => {
+            error!("GPASS generation error: {e}");
             HttpResponse::BadRequest().body("Invalid request")
         }
     }
@@ -93,7 +115,7 @@ async fn public_key_endpoint() -> impl Responder {
     match public_key_hex() {
         Ok(hex) => HttpResponse::Ok().body(hex),
         Err(e) => {
-            error!("Public key error: {}", e);
+            error!("Public key error: {e}");
             HttpResponse::InternalServerError().body("Internal server error")
         }
     }
@@ -115,7 +137,7 @@ fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
 // Define OpenAPI documentation
 #[derive(OpenApi)]
 #[openapi(
-    paths(qr_endpoint, pkpass_endpoint, health, public_key_endpoint),
+    paths(qr_endpoint, pkpass_endpoint, gpass_endpoint, health, public_key_endpoint),
     components(schemas(TokenQuery, QrResponse)),
     tags(
         (name = "Member-ID API", description = "Member ID API endpoints")
@@ -123,7 +145,7 @@ fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
     info(
         title = "Member-ID API",
         version = "1.0.0",
-        description = "API for generating QR codes and PKPass files"
+        description = "API for generating QR codes and Wallet passes"
     )
 )]
 struct ApiDoc;
@@ -131,13 +153,13 @@ struct ApiDoc;
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     if let Err(e) = dotenv() {
-        eprintln!("Failed to load .env file: {}", e);
+        eprintln!("Failed to load .env file: {e}");
     }
 
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
 
     if let Err(e) = log_public_key() {
-        error!("Failed to derive public key: {}", e);
+        error!("Failed to derive public key: {e}");
     }
 
     let governor_conf = GovernorConfigBuilder::default()
@@ -151,6 +173,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Governor::new(&governor_conf))
             .route("/qr", web::get().to(qr_endpoint))
             .route("/pkpass", web::get().to(pkpass_endpoint))
+            .route("/gpass", web::get().to(gpass_endpoint))
             .route("/public-key", web::get().to(public_key_endpoint))
             .route("/health", web::get().to(health))
             .service(
