@@ -112,7 +112,7 @@ You can also create a Google Wallet pass. Configure your service account credent
 export GOOGLE_WALLET_ISSUER_ID="<issuer-id>"
 export GOOGLE_WALLET_CLASS_ID="member"
 export GOOGLE_SERVICE_ACCOUNT_EMAIL="example@project.iam.gserviceaccount.com"
-export GOOGLE_SERVICE_ACCOUNT_KEY="$(cat service-account-private-key.pem)"
+export GOOGLE_SERVICE_ACCOUNT_KEY_PATH="certs/google-private.pem"
 export GOOGLE_WALLET_LOGO_URL="https://your-domain.com/path/to/logo.png"
 ```
 
