@@ -12,6 +12,7 @@ use passes::{
 };
 use std::env;
 use std::fs::File;
+use std::io::Read;
 use std::path::Path;
 
 pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
@@ -250,11 +251,13 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let issuer_id = env::var("GOOGLE_WALLET_ISSUER_ID")?;
     let class_id = env::var("GOOGLE_WALLET_CLASS_ID")?;
     let service_account_email = env::var("GOOGLE_SERVICE_ACCOUNT_EMAIL")?;
-    let private_key_pem = env::var("GOOGLE_SERVICE_ACCOUNT_KEY")?;
+    let private_key_path = env::var("GOOGLE_SERVICE_ACCOUNT_KEY_PATH")?;
+    let mut private_key_file = std::fs::File::open(&private_key_path)?;
+    let mut private_key_pem = String::new();
+    private_key_file.read_to_string(&mut private_key_pem)?;
     let logo_url = env::var("GOOGLE_WALLET_LOGO_URL")?;
 
-    let pem = pem::parse(private_key_pem)?;
-    let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(pem.contents())?;
+    let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
     let object_id = format!("{}.member-{}", issuer_id, token_data.claims.sub);
 
@@ -263,7 +266,13 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let object = serde_json::json!({
         "id": object_id,
         "classId": format!("{}.{}", issuer_id, class_id),
-        "cardTitle": {"defaultValue": {"language": "de", "value": "Neuland ID"}},
+        "state": "ACTIVE",
+        "cardTitle": {
+            "defaultValue": {
+                "language": "de",
+                "value": "Neuland ID"
+            }
+        },
         "header": {
             "defaultValue": {
                 "language": "de",
@@ -273,15 +282,44 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         "logo": {
             "sourceUri": {
                 "uri": logo_url
+            },
+            "contentDescription": {
+                "defaultValue": {
+                    "language": "de",
+                    "value": "Neuland Ingolstadt e.V. Logo"
+                }
             }
         },
         "hexBackgroundColor": "#000000",
-        "barcode": {"type": "qrCode", "value": qr},
+        "barcode": {
+            "type": "QR_CODE",
+            "value": qr
+        },
+        "validTimeInterval": {
+            "start": Utc::now().to_rfc3339(),
+            "end": semester_end.to_rfc3339()
+        },
         "textModulesData": [
-            {"header": "Name", "body": token_data.claims.given_name},
-            {"header": "Benutzername", "body": token_data.claims.preferred_username.to_lowercase()},
-            {"header": "Gruppen", "body": groups},
-            {"header": "Gültig", "body": semester_end.format("%Y-%m-%d").to_string()}
+            {
+                "header": "Name",
+                "body": token_data.claims.given_name,
+                "id": "NAME"
+            },
+            {
+                "header": "Benutzername",
+                "body": token_data.claims.preferred_username.to_lowercase(),
+                "id": "USERNAME"
+            },
+            {
+                "header": "Gruppen",
+                "body": groups,
+                "id": "GROUPS"
+            },
+            {
+                "header": "Gültig",
+                "body": semester_end.format("%Y-%m-%d").to_string(),
+                "id": "VALID_UNTIL"
+            }
         ]
     });
 
