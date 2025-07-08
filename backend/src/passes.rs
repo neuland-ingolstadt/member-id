@@ -1,5 +1,9 @@
 use crate::utils::{Claims, capitalize_groups, current_semester, generate_qr, verify_token};
 use chrono::Utc;
+use google_walletobjects1::api::{
+    Barcode as GBarcode, DateTime, GenericObject, Image, ImageUri, LocalizedString, TextModuleData,
+    TimeInterval, TranslatedString,
+};
 use passes::beacon;
 use passes::sign;
 use passes::visual_appearance;
@@ -10,10 +14,34 @@ use passes::{
     resource,
     sign::WWDR,
 };
+use serde_json::json;
 use std::env;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+
+fn remove_nulls(value: &mut serde_json::Value) {
+    match value {
+        serde_json::Value::Object(map) => {
+            let keys: Vec<String> = map.keys().cloned().collect();
+            for k in keys {
+                if let Some(v) = map.get_mut(&k) {
+                    if v.is_null() {
+                        map.remove(&k);
+                    } else {
+                        remove_nulls(v);
+                    }
+                }
+            }
+        }
+        serde_json::Value::Array(arr) => {
+            for v in arr.iter_mut() {
+                remove_nulls(v);
+            }
+        }
+        _ => {}
+    }
+}
 
 pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let token_data = verify_token::<Claims>(token).await?;
@@ -263,72 +291,106 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
 
     let groups = capitalize_groups(&token_data.claims.groups).join(", ");
 
-    let object = serde_json::json!({
-        "id": object_id,
-        "classId": format!("{}.{}", issuer_id, class_id),
-        "state": "ACTIVE",
-        "cardTitle": {
-            "defaultValue": {
-                "language": "de",
-                "value": "Neuland ID"
-            }
-        },
-        "header": {
-            "defaultValue": {
-                "language": "de",
-                "value": semester_name
-            }
-        },
-        "logo": {
-            "sourceUri": {
-                "uri": logo_url
-            },
-            "contentDescription": {
-                "defaultValue": {
-                    "language": "de",
-                    "value": "Neuland Ingolstadt e.V. Logo"
-                }
-            }
-        },
-        "hexBackgroundColor": "#000000",
-        "barcode": {
-            "type": "QR_CODE",
-            "value": qr
-        },
-        "validTimeInterval": {
-            "start": Utc::now().to_rfc3339(),
-            "end": semester_end.to_rfc3339()
-        },
-        "textModulesData": [
-            {
-                "header": "Name",
-                "body": token_data.claims.given_name,
-                "id": "NAME"
-            },
-            {
-                "header": "Benutzername",
-                "body": token_data.claims.preferred_username.to_lowercase(),
-                "id": "USERNAME"
-            },
-            {
-                "header": "Gruppen",
-                "body": groups,
-                "id": "GROUPS"
-            },
-            {
-                "header": "Gültig",
-                "body": semester_end.format("%Y-%m-%d").to_string(),
-                "id": "VALID_UNTIL"
-            }
-        ]
-    });
+    let card_title = LocalizedString {
+        default_value: Some(TranslatedString {
+            language: Some("de".into()),
+            value: Some("Neuland ID".into()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
 
-    let claims = serde_json::json!({
+    let header = LocalizedString {
+        default_value: Some(TranslatedString {
+            language: Some("de".into()),
+            value: Some(semester_name.clone()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
+    let logo = Image {
+        source_uri: Some(ImageUri {
+            uri: Some(logo_url),
+            ..Default::default()
+        }),
+        content_description: Some(LocalizedString {
+            default_value: Some(TranslatedString {
+                language: Some("de".into()),
+                value: Some("Neuland Ingolstadt e.V. Logo".into()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
+    let barcode = GBarcode {
+        type_: Some("QR_CODE".into()),
+        value: Some(qr),
+        ..Default::default()
+    };
+
+    let valid_time_interval = TimeInterval {
+        start: Some(DateTime {
+            date: Some(Utc::now().to_rfc3339()),
+        }),
+        end: Some(DateTime {
+            date: Some(semester_end.to_rfc3339()),
+        }),
+        ..Default::default()
+    };
+
+    let text_modules = vec![
+        TextModuleData {
+            header: Some("Name".into()),
+            body: Some(token_data.claims.given_name),
+            id: Some("NAME".into()),
+            ..Default::default()
+        },
+        TextModuleData {
+            header: Some("Benutzername".into()),
+            body: Some(token_data.claims.preferred_username.to_lowercase()),
+            id: Some("USERNAME".into()),
+            ..Default::default()
+        },
+        TextModuleData {
+            header: Some("Gruppen".into()),
+            body: Some(groups),
+            id: Some("GROUPS".into()),
+            ..Default::default()
+        },
+        TextModuleData {
+            header: Some("Gültig".into()),
+            body: Some(semester_end.format("%Y-%m-%d").to_string()),
+            id: Some("VALID_UNTIL".into()),
+            ..Default::default()
+        },
+    ];
+
+    let object = GenericObject {
+        id: Some(object_id),
+        class_id: Some(format!("{issuer_id}.{class_id}")),
+        state: Some("ACTIVE".into()),
+        card_title: Some(card_title),
+        header: Some(header),
+        logo: Some(logo),
+        hex_background_color: Some("#000000".into()),
+        barcode: Some(barcode),
+        valid_time_interval: Some(valid_time_interval),
+        text_modules_data: Some(text_modules),
+        ..Default::default()
+    };
+
+    let mut object_value = serde_json::to_value(object)?;
+    remove_nulls(&mut object_value);
+
+    let claims = json!({
         "iss": service_account_email,
         "iat": Utc::now().timestamp(),
         "aud": "google",
         "typ": "savetowallet",
-        "payload": {"genericObjects": [object]}
+        "payload": {"genericObjects": [object_value]},
     });
 
     let jwt = jsonwebtoken::encode(
