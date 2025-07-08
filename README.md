@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-black?style=for-the-badge&logo=typescript)
 
 
-**A modern, full-stack member identification system with QR code generation, verification, and Apple Wallet integration**
+**A modern, full-stack member identification system with QR code generation, verification, and Apple / Google Wallet integration**
 
 [🚀 Quick Start](#-quick-start) • [📋 Features](#-features) • [📦 Technology Stack](#-technology-stack) • [🔧 API](#-api) • [🤝 Contributing](#-contributing)
 

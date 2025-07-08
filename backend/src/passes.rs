@@ -325,6 +325,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
 
     let claims = serde_json::json!({
         "iss": service_account_email,
+        "iat": Utc::now().timestamp(),
         "aud": "google",
         "typ": "savetowallet",
         "payload": {"genericObjects": [object]}
