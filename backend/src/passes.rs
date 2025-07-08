@@ -398,5 +398,5 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         &claims,
         &encoding_key,
     )?;
-    Ok(format!("https://pay.google.com/gp/v/save/{jwt}"))
+    Ok(jwt)
 }

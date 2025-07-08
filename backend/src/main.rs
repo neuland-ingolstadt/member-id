@@ -79,7 +79,7 @@ async fn pkpass_endpoint(query: web::Query<TokenQuery>) -> impl Responder {
         ("token" = String, Query, description = "Authentication token")
     ),
     responses(
-        (status = 200, description = "Google Wallet pass link", body = String),
+        (status = 200, description = "Google Wallet pass jwt", body = String),
         (status = 400, description = "Bad request")
     )
 )]
