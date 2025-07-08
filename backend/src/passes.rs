@@ -287,7 +287,10 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
 
     let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
-    let object_id = format!("{}.member-{}", issuer_id, token_data.claims.sub);
+    let object_id = format!("{}.{}", issuer_id, token_data.claims.sub)
+        .chars()
+        .take(60)
+        .collect();
 
     let groups = capitalize_groups(&token_data.claims.groups).join(", ");
 
@@ -303,7 +306,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let header = LocalizedString {
         default_value: Some(TranslatedString {
             language: Some("de".into()),
-            value: Some(semester_name.clone()),
+            value: Some(token_data.claims.given_name.clone()),
             ..Default::default()
         }),
         ..Default::default()
@@ -352,6 +355,12 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
             header: Some("Benutzername".into()),
             body: Some(token_data.claims.preferred_username.to_lowercase()),
             id: Some("USERNAME".into()),
+            ..Default::default()
+        },
+        TextModuleData {
+            header: Some("Semester".into()),
+            body: Some(semester_name),
+            id: Some("SEMESTER".into()),
             ..Default::default()
         },
         TextModuleData {
