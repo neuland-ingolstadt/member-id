@@ -283,13 +283,13 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let mut private_key_file = std::fs::File::open(&private_key_path)?;
     let mut private_key_pem = String::new();
     private_key_file.read_to_string(&mut private_key_pem)?;
-    let logo_url = env::var("GOOGLE_WALLET_LOGO_URL")?;
+    let logo_url = "https://raw.githubusercontent.com/neuland-ingolstadt/member-id/9548e607dc2c3da786b82d26b585d2a539f9197c/backend/resources/logo@3x.png".to_string();
 
     let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
     let object_id = format!("{}.{}", issuer_id, token_data.claims.sub)
         .chars()
-        .take(60)
+        .take(50)
         .collect();
 
     let groups = capitalize_groups(&token_data.claims.groups).join(", ");
@@ -307,6 +307,18 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         default_value: Some(TranslatedString {
             language: Some("de".into()),
             value: Some(token_data.claims.given_name.clone()),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
+    let subheader = LocalizedString {
+        default_value: Some(TranslatedString {
+            language: Some("de".into()),
+            value: Some(format!(
+                "@{}",
+                token_data.claims.preferred_username.to_lowercase()
+            )),
             ..Default::default()
         }),
         ..Default::default()
@@ -383,6 +395,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         state: Some("ACTIVE".into()),
         card_title: Some(card_title),
         header: Some(header),
+        subheader: Some(subheader),
         logo: Some(logo),
         hex_background_color: Some("#000000".into()),
         barcode: Some(barcode),
