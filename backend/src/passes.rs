@@ -5,6 +5,7 @@ use google_walletobjects1::api::{
     ClassTemplateInfo, DateTime, FieldReference, FieldSelector, GenericClass, GenericObject, Image,
     ImageUri, LocalizedString, TemplateItem, TextModuleData, TimeInterval, TranslatedString,
 };
+use log::debug;
 use passes::beacon;
 use passes::sign;
 use passes::visual_appearance;
@@ -51,7 +52,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         return Err("token missing required 'mitglieder' group".into());
     }
 
-    let (_, semester_end, semester_name_long) = current_semester();
+    let (semester_name, semester_end, semester_name_long) = current_semester();
     let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
 
     let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
@@ -119,7 +120,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     field_type = field_type.add_header_field(Content::new(
         "semester",
-        &semester_name_long,
+        &semester_name,
         ContentOptions {
             label: Some("Semester".into()),
             ..Default::default()
@@ -157,6 +158,15 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         &capitalized_groups.join(", "),
         ContentOptions {
             label: Some("Gruppen".into()),
+            ..Default::default()
+        },
+    ));
+
+    field_type = field_type.add_back_field(Content::new(
+        "semester_name_long",
+        &semester_name_long,
+        ContentOptions {
+            label: Some("Semester".into()),
             ..Default::default()
         },
     ));
@@ -262,6 +272,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     let mut cursor = std::io::Cursor::new(Vec::new());
     package.write(&mut cursor)?;
+    debug!("PKPASS issued.");
     Ok(cursor.into_inner())
 }
 
@@ -284,7 +295,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let mut private_key_file = std::fs::File::open(&private_key_path)?;
     let mut private_key_pem = String::new();
     private_key_file.read_to_string(&mut private_key_pem)?;
-    let logo_url = "https://raw.githubusercontent.com/neuland-ingolstadt/member-id/9548e607dc2c3da786b82d26b585d2a539f9197c/backend/resources/logo@3x.png".to_string();
+    let logo_url = "https://id.neuland-ingolstadt.de/gpass-logo.png".to_string();
 
     let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
@@ -446,7 +457,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     ];
 
     let class = GenericClass {
-        id: Some(format!("{issuer_id}.{class_id}")),
+        id: Some(format!("{issuer_id}.{class_id}.{semester_name}.1")),
         class_template_info: Some(ClassTemplateInfo {
             card_template_override: Some(CardTemplateOverride {
                 card_row_template_infos: Some(card_rows),
@@ -472,5 +483,6 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         &claims,
         &encoding_key,
     )?;
+    debug!("GPASS issued.");
     Ok(jwt)
 }
