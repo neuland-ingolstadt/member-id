@@ -1,8 +1,9 @@
 use crate::utils::{Claims, capitalize_groups, current_semester, generate_qr, verify_token};
 use chrono::Utc;
 use google_walletobjects1::api::{
-    Barcode as GBarcode, DateTime, GenericObject, Image, ImageUri, LocalizedString, TextModuleData,
-    TimeInterval, TranslatedString,
+    Barcode as GBarcode, CardRowOneItem, CardRowTemplateInfo, CardTemplateOverride,
+    ClassTemplateInfo, DateTime, FieldReference, FieldSelector, GenericClass, GenericObject, Image,
+    ImageUri, LocalizedString, TemplateItem, TextModuleData, TimeInterval, TranslatedString,
 };
 use passes::beacon;
 use passes::sign;
@@ -50,7 +51,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         return Err("token missing required 'mitglieder' group".into());
     }
 
-    let (semester_name, semester_end) = current_semester();
+    let (_, semester_end, semester_name_long) = current_semester();
     let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
 
     let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
@@ -118,7 +119,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     field_type = field_type.add_header_field(Content::new(
         "semester",
-        &semester_name,
+        &semester_name_long,
         ContentOptions {
             label: Some("Semester".into()),
             ..Default::default()
@@ -187,7 +188,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     let pass = PassBuilder::new(PassConfig {
         organization_name,
-        description: "Neuland ID".into(),
+        description: "Neuland Mitgliedsausweis".into(),
         pass_type_identifier,
         team_identifier,
         serial_number: token_data.claims.sub,
@@ -271,7 +272,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         return Err("token missing required 'mitglieder' group".into());
     }
 
-    let (semester_name, semester_end) = current_semester();
+    let (semester_name, semester_end, semester_name_long) = current_semester();
     let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
 
     let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
@@ -287,17 +288,14 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
 
     let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
-    let object_id = format!("{}.{}", issuer_id, token_data.claims.sub)
-        .chars()
-        .take(50)
-        .collect();
+    let object_id = format!("{}.{}.{}", issuer_id, token_data.claims.sub, semester_name);
 
     let groups = capitalize_groups(&token_data.claims.groups).join(", ");
 
     let card_title = LocalizedString {
         default_value: Some(TranslatedString {
             language: Some("de".into()),
-            value: Some("Neuland ID".into()),
+            value: Some("Neuland Ingolstadt e.V.".into()),
             ..Default::default()
         }),
         ..Default::default()
@@ -371,7 +369,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         },
         TextModuleData {
             header: Some("Semester".into()),
-            body: Some(semester_name),
+            body: Some(semester_name_long),
             id: Some("SEMESTER".into()),
             ..Default::default()
         },
@@ -382,9 +380,15 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
             ..Default::default()
         },
         TextModuleData {
-            header: Some("Gültig".into()),
+            header: Some("Gültig bis".into()),
             body: Some(semester_end.format("%Y-%m-%d").to_string()),
             id: Some("VALID_UNTIL".into()),
+            ..Default::default()
+        },
+        TextModuleData {
+            header: Some("Mitgliedsnummer".into()),
+            body: Some(token_data.claims.sub),
+            id: Some("MEMBER_ID".into()),
             ..Default::default()
         },
     ];
@@ -397,7 +401,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         header: Some(header),
         subheader: Some(subheader),
         logo: Some(logo),
-        hex_background_color: Some("#000000".into()),
+        hex_background_color: Some("#031c07".into()),
         barcode: Some(barcode),
         valid_time_interval: Some(valid_time_interval),
         text_modules_data: Some(text_modules),
@@ -407,12 +411,60 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let mut object_value = serde_json::to_value(object)?;
     remove_nulls(&mut object_value);
 
+    let groups_selector = FieldSelector {
+        fields: Some(vec![FieldReference {
+            field_path: Some("object.textModulesData['GROUPS']".into()),
+            ..Default::default()
+        }]),
+    };
+    let semester_selector = FieldSelector {
+        fields: Some(vec![FieldReference {
+            field_path: Some("object.textModulesData['SEMESTER']".into()),
+            ..Default::default()
+        }]),
+    };
+
+    let card_rows = vec![
+        CardRowTemplateInfo {
+            one_item: Some(CardRowOneItem {
+                item: Some(TemplateItem {
+                    first_value: Some(groups_selector),
+                    ..Default::default()
+                }),
+            }),
+            ..Default::default()
+        },
+        CardRowTemplateInfo {
+            one_item: Some(CardRowOneItem {
+                item: Some(TemplateItem {
+                    first_value: Some(semester_selector),
+                    ..Default::default()
+                }),
+            }),
+            ..Default::default()
+        },
+    ];
+
+    let class = GenericClass {
+        id: Some(format!("{issuer_id}.{class_id}")),
+        class_template_info: Some(ClassTemplateInfo {
+            card_template_override: Some(CardTemplateOverride {
+                card_row_template_infos: Some(card_rows),
+            }),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
+    let mut class_value = serde_json::to_value(class)?;
+    remove_nulls(&mut class_value);
+
     let claims = json!({
         "iss": service_account_email,
         "iat": Utc::now().timestamp(),
         "aud": "google",
         "typ": "savetowallet",
-        "payload": {"genericObjects": [object_value]},
+        "payload": {"genericObjects": [object_value], "genericClasses": [class_value]},
     });
 
     let jwt = jsonwebtoken::encode(

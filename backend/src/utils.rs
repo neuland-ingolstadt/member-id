@@ -68,7 +68,7 @@ pub fn public_key_hex() -> Result<String, Box<dyn std::error::Error>> {
     Ok(hex::encode(encoded.as_bytes()))
 }
 
-pub fn current_semester() -> (String, chrono::DateTime<Utc>) {
+pub fn current_semester() -> (String, chrono::DateTime<Utc>, String) {
     let today = Utc::now().date_naive();
     let year = today.year();
 
@@ -80,19 +80,31 @@ pub fn current_semester() -> (String, chrono::DateTime<Utc>) {
             .with_ymd_and_hms(year, 9, 30, 23, 59, 59)
             .single()
             .unwrap();
-        (format!("SS{:02}", year % 100), end)
+        (
+            format!("SS{:02}", year % 100),
+            end,
+            format!("Sommersemester {year}"),
+        )
     } else if today > summer_end {
         let end = Utc
             .with_ymd_and_hms(year + 1, 3, 14, 23, 59, 59)
             .single()
             .unwrap();
-        (format!("WS{:02}", year % 100), end)
+        (
+            format!("WS{:02}", year % 100),
+            end,
+            format!("Wintersemester {}/{}", year, year + 1),
+        )
     } else {
         let end = Utc
             .with_ymd_and_hms(year, 3, 14, 23, 59, 59)
             .single()
             .unwrap();
-        (format!("WS{:02}", (year - 1) % 100), end)
+        (
+            format!("WS{:02}", (year - 1) % 100),
+            end,
+            format!("Wintersemester {}/{}", year - 1, year),
+        )
     }
 }
 
