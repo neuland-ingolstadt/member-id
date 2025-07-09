@@ -286,7 +286,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let (semester_name, semester_end, _semester_name_long) = current_semester();
     let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
 
-    let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
+    let qr = generate_qr(token, "wa", max_age_wallet).await?.qr;
 
     let issuer_id = env::var("GOOGLE_WALLET_ISSUER_ID")?;
     let class_id = env::var("GOOGLE_WALLET_CLASS_ID")?;
