@@ -1,7 +1,7 @@
 use crate::utils::{Claims, capitalize_groups, current_semester, generate_qr, verify_token};
 use chrono::Utc;
 use google_walletobjects1::api::{
-    Barcode as GBarcode, CardRowOneItem, CardRowTemplateInfo, CardTemplateOverride,
+    Barcode as GBarcode, CardRowTemplateInfo, CardRowTwoItems, CardTemplateOverride,
     ClassTemplateInfo, DateTime, FieldReference, FieldSelector, GenericClass, GenericObject, Image,
     ImageUri, LocalizedString, TemplateItem, TextModuleData, TimeInterval, TranslatedString,
 };
@@ -283,7 +283,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         return Err("token missing required 'mitglieder' group".into());
     }
 
-    let (semester_name, semester_end, semester_name_long) = current_semester();
+    let (semester_name, semester_end, _semester_name_long) = current_semester();
     let max_age_wallet = (semester_end.timestamp() - Utc::now().timestamp()) as u64;
 
     let qr = generate_qr(token, "wi", max_age_wallet).await?.qr;
@@ -296,10 +296,14 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let mut private_key_pem = String::new();
     private_key_file.read_to_string(&mut private_key_pem)?;
     let logo_url = "https://id.neuland-ingolstadt.de/gpass-logo.png".to_string();
+    let hero_image_url = "https://id.neuland-ingolstadt.de/gpass-hero.png".to_string();
 
     let encoding_key = jsonwebtoken::EncodingKey::from_rsa_pem(private_key_pem.as_bytes())?;
 
-    let object_id = format!("{}.{}.{}", issuer_id, token_data.claims.sub, semester_name);
+    let object_id = format!(
+        "{}.{}.{}.10",
+        issuer_id, token_data.claims.sub, semester_name
+    );
 
     let groups = capitalize_groups(&token_data.claims.groups).join(", ");
 
@@ -380,7 +384,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         },
         TextModuleData {
             header: Some("Semester".into()),
-            body: Some(semester_name_long),
+            body: Some(semester_name),
             id: Some("SEMESTER".into()),
             ..Default::default()
         },
@@ -404,12 +408,21 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         },
     ];
 
+    let hero_image = Image {
+        source_uri: Some(ImageUri {
+            uri: Some(hero_image_url),
+            ..Default::default()
+        }),
+        ..Default::default()
+    };
+
     let object = GenericObject {
         id: Some(object_id),
         class_id: Some(format!("{issuer_id}.{class_id}")),
         state: Some("ACTIVE".into()),
         card_title: Some(card_title),
         header: Some(header),
+        hero_image: Some(hero_image),
         subheader: Some(subheader),
         logo: Some(logo),
         hex_background_color: Some("#031c07".into()),
@@ -435,29 +448,22 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         }]),
     };
 
-    let card_rows = vec![
-        CardRowTemplateInfo {
-            one_item: Some(CardRowOneItem {
-                item: Some(TemplateItem {
-                    first_value: Some(groups_selector),
-                    ..Default::default()
-                }),
+    let card_rows = vec![CardRowTemplateInfo {
+        two_items: Some(CardRowTwoItems {
+            start_item: Some(TemplateItem {
+                first_value: Some(groups_selector),
+                ..Default::default()
             }),
-            ..Default::default()
-        },
-        CardRowTemplateInfo {
-            one_item: Some(CardRowOneItem {
-                item: Some(TemplateItem {
-                    first_value: Some(semester_selector),
-                    ..Default::default()
-                }),
+            end_item: Some(TemplateItem {
+                first_value: Some(semester_selector),
+                ..Default::default()
             }),
-            ..Default::default()
-        },
-    ];
+        }),
+        ..Default::default()
+    }];
 
     let class = GenericClass {
-        id: Some(format!("{issuer_id}.{class_id}.{semester_name}.1")),
+        id: Some(format!("{issuer_id}.{class_id}")),
         class_template_info: Some(ClassTemplateInfo {
             card_template_override: Some(CardTemplateOverride {
                 card_row_template_infos: Some(card_rows),
