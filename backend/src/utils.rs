@@ -195,3 +195,11 @@ pub fn capitalize_groups(groups: &[String]) -> Vec<String> {
         })
         .collect()
 }
+
+pub fn filter_groups(groups: &[String]) -> Vec<String> {
+    groups
+        .iter()
+        .filter(|g| !g.starts_with("Authentik"))
+        .map(|g| g.to_string())
+        .collect()
+}
