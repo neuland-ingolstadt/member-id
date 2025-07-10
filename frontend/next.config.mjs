@@ -13,7 +13,7 @@ const nextConfig = {
 	experimental: {
 		reactCompiler: true,
 	},
-
+	poweredByHeader: false,
 };
 
 export default nextConfig;
