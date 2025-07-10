@@ -25,43 +25,55 @@ export function Footer() {
 					</p>
 
 					{/* Links and additional info */}
-					<div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xs">
-						<div className="flex items-center gap-4">
-							<a
-								href="https://neuland-ingolstadt.de/legal/impressum"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-							>
-								<ExternalLink className="h-3 w-3" />
-								Imprint
-							</a>
-							<a
-								href="https://neuland-ingolstadt.de/legal/datenschutz"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-							>
-								<ExternalLink className="h-3 w-3" />
-								Privacy
-							</a>
-							<a
-								href="https://github.com/neuland-ingolstadt/member-id"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-							>
-								<Github className="h-3 w-3" />
-								GitHub
-							</a>
+					<div className="flex items-center justify-center gap-2 mb-3  text-xs flex-col">
+						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+							<div className="flex items-center gap-4">
+								<a
+									href="https://neuland-ingolstadt.de/legal/impressum"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+								>
+									<ExternalLink className="h-3 w-3" />
+									Imprint
+								</a>
+								<a
+									href="https://neuland-ingolstadt.de/legal/datenschutz"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+								>
+									<ExternalLink className="h-3 w-3" />
+									Privacy
+								</a>
+								<a
+									href="https://github.com/neuland-ingolstadt/member-id"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+								>
+									<Github className="h-3 w-3" />
+									GitHub
+								</a>
+							</div>
 						</div>
-
-						{/* Commit hash */}
+						{/* Version info */}
 						<div className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
 							<span>Build:</span>
-							<code className="text-xs bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">
+							<code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">
 								{shortCommitHash}
 							</code>
+						</div>
+						<div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 mt-2">
+							Created by{' '}
+							<a
+								href="https://eggl.dev"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+							>
+								Robert Eggl
+							</a>
 						</div>
 					</div>
 				</div>

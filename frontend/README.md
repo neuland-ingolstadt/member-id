@@ -74,7 +74,7 @@ qr-validation/
 
 1. **Scan:** Open the app and point your camera at a QR code.
 2. **Verify:** The app checks the QR code's validity using cryptographic methods.
-3. **Feedback:** See instant feedback—success, error, or duplicate—with overlays.
+3. **Feedback:** See instant feedback-success, error, or duplicate-with overlays.
 4. **History:** View all past scans, including details and statistics.
 5. **Manage:** Remove individual scans or clear your scan history.
 
