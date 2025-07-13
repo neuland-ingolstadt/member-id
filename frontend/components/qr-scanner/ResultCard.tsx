@@ -266,7 +266,8 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 					Scan a Neuland Ingolstadt member's digital ID card to verify.
 				</p>
 				<p className="text-xs text-gray-600 dark:text-gray-400">
-					You can tap on the the code sh Neuland Next
+					Tap on the QR code shown in Neuland Next to view it in full-screen
+					mode.
 				</p>
 			</CardContent>
 		</Card>
