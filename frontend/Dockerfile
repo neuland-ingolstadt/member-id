@@ -27,6 +27,8 @@ WORKDIR /srv
 
 COPY --from=builder /app/out /srv
 
+COPY Caddyfile /etc/caddy/Caddyfile
+
 EXPOSE 3000
 
-CMD ["caddy", "file-server", "--root", "/srv", "--listen", ":3000"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

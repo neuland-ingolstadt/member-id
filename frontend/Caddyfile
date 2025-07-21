@@ -1,0 +1,5 @@
+:3000 {
+  root * /srv
+  file_server
+  try_files {path} {path}/ {path}.html /index.html
+}
