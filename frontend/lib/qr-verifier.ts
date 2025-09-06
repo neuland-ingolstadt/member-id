@@ -348,17 +348,21 @@ async function verifySignature(
 
 		const cryptoKey = await crypto.subtle.importKey(
 			'raw',
-			keyBytes,
+			new Uint8Array(keyBytes),
 			{ name: 'ECDSA', namedCurve: 'P-256' },
 			false,
 			['verify']
 		)
 
+		// Normalize to Uint8Array backed by ArrayBuffer to satisfy BufferSource
+		const sigBytes = new Uint8Array(signature)
+		const dataBytes = new Uint8Array(data)
+
 		const result = await crypto.subtle.verify(
 			{ name: 'ECDSA', hash: 'SHA-256' },
 			cryptoKey,
-			signature,
-			data
+			sigBytes,
+			dataBytes
 		)
 
 		return result
