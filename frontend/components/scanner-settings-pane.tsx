@@ -37,6 +37,7 @@ export function ScannerSettingsPane({
 	return (
 		<div className="fixed inset-0 z-50 flex items-end justify-end">
 			{/* Backdrop */}
+			{/** biome-ignore lint/a11y/useSemanticElements: okay */}
 			<div
 				className="absolute inset-0 bg-black/20 backdrop-blur-sm"
 				onClick={onClose}
