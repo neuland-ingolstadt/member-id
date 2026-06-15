@@ -64,7 +64,7 @@ pub fn public_key_hex() -> Result<String, Box<dyn std::error::Error>> {
     let arr: [u8; 32] = key_bytes.try_into().map_err(|_| "invalid key length")?;
     let signing_key = SigningKey::from_bytes((&arr).into())?;
     let verifying_key = signing_key.verifying_key();
-    let encoded = verifying_key.to_encoded_point(false);
+    let encoded = verifying_key.to_sec1_point(false);
     Ok(hex::encode(encoded.as_bytes()))
 }
 
