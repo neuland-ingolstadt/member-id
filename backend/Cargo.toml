@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+actix-cors = "0.7"
 actix-web = "4"
 jsonwebtoken = { version = "10.3", features = ["aws_lc_rs"] }
 reqwest = { version = "0.12", features = ["json"] }

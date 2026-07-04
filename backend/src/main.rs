@@ -1,6 +1,8 @@
 mod passes;
 mod utils;
+use actix_cors::Cors;
 use actix_governor::{Governor, GovernorConfigBuilder};
+use actix_web::http::header;
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, web};
 use dotenv::dotenv;
 use log::error;
@@ -170,6 +172,16 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(
+                Cors::default()
+                    .allowed_origin("https://dev.neuland.app")
+                    .allowed_origin("https://web.neuland.app")
+                    .allowed_origin("http://localhost:3000")
+                    .allowed_origin("http://localhost:8540")
+                    .allowed_methods(vec!["GET", "OPTIONS"])
+                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+                    .max_age(3600),
+            )
             .wrap(Governor::new(&governor_conf))
             .route("/qr", web::get().to(qr_endpoint))
             .route("/pkpass", web::get().to(pkpass_endpoint))
