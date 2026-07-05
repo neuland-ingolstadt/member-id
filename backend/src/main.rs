@@ -172,6 +172,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(Governor::new(&governor_conf))
             .wrap(
                 Cors::default()
                     .allowed_origin("https://dev.neuland.app")
@@ -179,10 +180,13 @@ async fn main() -> std::io::Result<()> {
                     .allowed_origin("http://localhost:3000")
                     .allowed_origin("http://localhost:8540")
                     .allowed_methods(vec!["GET", "OPTIONS"])
-                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+                    .allowed_headers(vec![
+                        header::AUTHORIZATION,
+                        header::ACCEPT,
+                        header::CONTENT_TYPE,
+                    ])
                     .max_age(3600),
             )
-            .wrap(Governor::new(&governor_conf))
             .route("/qr", web::get().to(qr_endpoint))
             .route("/pkpass", web::get().to(pkpass_endpoint))
             .route("/gpass", web::get().to(gpass_endpoint))
