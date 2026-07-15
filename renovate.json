@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits"
+  ],
+  "packageRules": [
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "ci"
+    },
+    {
+      "description": "Group frontend dependency updates",
+      "matchManagers": ["bun", "npm"],
+      "matchFileNames": ["frontend/**"],
+      "groupName": "frontend",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "frontend"
+    },
+    {
+      "description": "Group backend dependency updates",
+      "matchManagers": ["cargo", "rust-toolchain"],
+      "matchFileNames": ["backend/**"],
+      "groupName": "backend",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "backend"
+    },
+    {
+      "description": "Group Docker image updates",
+      "matchManagers": ["docker-compose", "dockerfile"],
+      "groupName": "docker",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "docker"
+    }
+  ]
+}
