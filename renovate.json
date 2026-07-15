@@ -2,7 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    ":semanticCommits"
+    ":semanticCommits",
+    "customManagers:biomeVersions"
   ],
   "packageRules": [
     {
@@ -14,8 +15,15 @@
     },
     {
       "description": "Group frontend dependency updates",
-      "matchManagers": ["bun", "npm"],
+      "matchManagers": ["bun", "npm", "custom.jsonata"],
       "matchFileNames": ["frontend/**"],
+      "groupName": "frontend",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "frontend"
+    },
+    {
+      "description": "Keep Biome package and biome.json schema version in sync",
+      "matchPackageNames": ["@biomejs/biome"],
       "groupName": "frontend",
       "semanticCommitType": "chore",
       "semanticCommitScope": "frontend"
