@@ -16,7 +16,7 @@ env:
 jobs:
   build-and-deploy:
     name: Build and Deploy Docker Image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -24,9 +24,9 @@ jobs:
       run:
         working-directory: ./backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: nixbuild/nix-quick-install-action@v33
+      - uses: nixbuild/nix-quick-install-action@v35
 
       - name: Fix Nix Store Permissions
         run: |
@@ -34,7 +34,7 @@ jobs:
           sudo chown -R runner:runner /nix
 
       - name: Cache Nix Store
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             /nix/store
