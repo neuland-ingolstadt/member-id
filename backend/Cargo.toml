@@ -7,7 +7,7 @@ edition = "2024"
 actix-cors = "0.7"
 actix-web = "4"
 jsonwebtoken = { version = "10.3", features = ["aws_lc_rs"] }
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.13", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 log = "0.4"
@@ -23,6 +23,6 @@ chrono = { version = "0.4", features = ["serde"] }
 dotenv = "0.15"
 utoipa = { version = "3", features = ["actix_extras"] }
 utoipa-swagger-ui = { version = "3.1", features = ["actix-web"] }
-actix-governor = "0.8"
+actix-governor = "0.10"
 google-walletobjects1 = "6"
 pem = "3"
