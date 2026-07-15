@@ -21,8 +21,8 @@ hex = "0.4"
 passes = "1"
 chrono = { version = "0.4", features = ["serde"] }
 dotenv = "0.15"
-utoipa = { version = "3", features = ["actix_extras"] }
-utoipa-swagger-ui = { version = "3.1", features = ["actix-web"] }
+utoipa = { version = "5", features = ["actix_extras"] }
+utoipa-swagger-ui = { version = "9.0", features = ["actix-web"] }
 actix-governor = "0.10"
-google-walletobjects1 = "6"
+google-walletobjects1 = "7"
 pem = "3"
