@@ -34,7 +34,7 @@
     "@radix-ui/react-toast": "1.2.19",
     "@radix-ui/react-tooltip": "1.2.12",
     "autoprefixer": "^10.4.21",
-    "babel-plugin-react-compiler": "^19.1.0-rc.1-rc-af1b7da-20250421",
+    "babel-plugin-react-compiler": "^1.0.0",
     "base45": "^2.0.1",
     "cborg": "^4.2.18",
     "class-variance-authority": "^0.7.1",
