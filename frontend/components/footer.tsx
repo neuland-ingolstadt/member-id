@@ -1,4 +1,5 @@
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
+import { GitHubIcon } from '@/components/github-icon'
 import SvgIcon from '@/components/neuland-palm'
 
 export function Footer() {
@@ -52,7 +53,7 @@ export function Footer() {
 									rel="noopener noreferrer"
 									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
 								>
-									<Github className="h-3 w-3" />
+									<GitHubIcon className="h-3 w-3" />
 									GitHub
 								</a>
 							</div>
