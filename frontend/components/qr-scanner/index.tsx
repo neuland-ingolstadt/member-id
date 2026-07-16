@@ -150,7 +150,7 @@ export function QRScanner() {
 
 				const { isDuplicate, originalScan } = addScan(trimmedData, errorResult)
 
-				if (isDuplicate && originalScan && originalScan.result.success) {
+				if (isDuplicate && originalScan?.result.success) {
 					setDuplicateWarning(originalScan)
 					setShowDuplicate(true)
 					// Play duplicate sound for duplicate

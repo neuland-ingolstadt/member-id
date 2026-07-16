@@ -36,10 +36,7 @@ export function CameraSelector({
 				setError(null)
 
 				// Check if mediaDevices is supported
-				if (
-					!navigator.mediaDevices ||
-					!navigator.mediaDevices.enumerateDevices
-				) {
+				if (!navigator.mediaDevices?.enumerateDevices) {
 					throw new Error('Camera API not supported')
 				}
 

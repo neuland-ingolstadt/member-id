@@ -37,7 +37,7 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 	const startCamera = useCallback(async () => {
 		try {
 			// Check if mediaDevices is supported
-			if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+			if (!navigator.mediaDevices?.getUserMedia) {
 				throw new Error(
 					'Camera API not supported. Please use HTTPS or a modern browser.'
 				)
