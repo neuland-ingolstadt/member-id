@@ -22,7 +22,7 @@ passes = "1"
 chrono = { version = "0.4", features = ["serde"] }
 dotenv = "0.15"
 utoipa = { version = "5", features = ["actix_extras"] }
-utoipa-swagger-ui = { version = "9.0", features = ["actix-web"] }
+utoipa-swagger-ui = { version = "9.0", features = ["actix-web", "vendored"] }
 actix-governor = "0.10"
 google-walletobjects1 = "7"
 pem = "3"
