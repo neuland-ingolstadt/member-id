@@ -11,7 +11,8 @@
       "matchManagers": ["github-actions"],
       "groupName": "github-actions",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "ci"
+      "semanticCommitScope": "ci",
+      "automerge": true
     },
     {
       "description": "Group frontend dependency updates",
@@ -19,14 +20,16 @@
       "matchFileNames": ["frontend/**"],
       "groupName": "frontend",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "frontend"
+      "semanticCommitScope": "frontend",
+      "automerge": true
     },
     {
       "description": "Keep Biome package and biome.json schema version in sync",
       "matchPackageNames": ["@biomejs/biome"],
       "groupName": "frontend",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "frontend"
+      "semanticCommitScope": "frontend",
+      "automerge": true
     },
     {
       "description": "Group backend dependency updates",
@@ -34,14 +37,16 @@
       "matchFileNames": ["backend/**"],
       "groupName": "backend",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "backend"
+      "semanticCommitScope": "backend",
+      "automerge": true
     },
     {
       "description": "Group Docker image updates",
       "matchManagers": ["docker-compose", "dockerfile"],
       "groupName": "docker",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "docker"
+      "semanticCommitScope": "docker",
+      "automerge": true
     }
   ]
 }
