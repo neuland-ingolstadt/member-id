@@ -8,61 +8,63 @@ interface DebugInfoProps {
 
 export function DebugInfo({ info }: DebugInfoProps) {
 	return (
-		<details className="group">
-			<summary className="cursor-pointer p-4 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-				<span className="font-medium text-gray-900 dark:text-white">
-					Technical Details
+		<details className="group font-mono">
+			<summary className="cursor-pointer border border-terminal-window-border bg-terminal-card p-4 transition-colors hover:border-terminal-cyan/40">
+				<span className="font-medium text-terminal-text">
+					<span className="text-terminal-cyan">&gt;</span> Technical Details
 				</span>
 			</summary>
-			<div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+			<div className="mt-4 border border-terminal-window-border bg-terminal-bg/50 p-4">
 				<div className="grid grid-cols-2 gap-4 text-xs">
 					<div>
-						<span className="font-medium text-gray-600 dark:text-gray-400">
+						<span className="font-medium text-terminal-text/50">
 							Base45 Decoded:
 						</span>
-						<p className="text-gray-800 dark:text-gray-200">
+						<p className="text-terminal-text/80">
 							{info.base45DecodedLength} bytes
 						</p>
 					</div>
 					<div>
-						<span className="font-medium text-gray-600 dark:text-gray-400">
+						<span className="font-medium text-terminal-text/50">
 							Decompressed:
 						</span>
-						<p className="text-gray-800 dark:text-gray-200">
+						<p className="text-terminal-text/80">
 							{info.decompressedLength} bytes
 						</p>
 					</div>
 					<div>
-						<span className="font-medium text-gray-600 dark:text-gray-400">
+						<span className="font-medium text-terminal-text/50">
 							CBOR Data:
 						</span>
-						<p className="text-gray-800 dark:text-gray-200">
-							{info.cborLength} bytes
-						</p>
+						<p className="text-terminal-text/80">{info.cborLength} bytes</p>
 					</div>
 					<div>
-						<span className="font-medium text-gray-600 dark:text-gray-400">
+						<span className="font-medium text-terminal-text/50">
 							Signature:
 						</span>
-						<p className="text-gray-800 dark:text-gray-200">
+						<p className="text-terminal-text/80">
 							{info.signatureLength} bytes
 						</p>
 					</div>
 				</div>
 
 				{info.validationChecks && (
-					<div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-						<h4 className="font-medium text-gray-900 dark:text-white mb-2">
+					<div className="mt-4 border-t border-terminal-window-border pt-4">
+						<h4 className="mb-2 font-medium text-terminal-text">
 							Validation Checks
 						</h4>
 						<div className="grid grid-cols-2 gap-4 text-xs">
 							{info.validationChecks.appOnlyCheck !== undefined && (
 								<div>
-									<span className="font-medium text-gray-600 dark:text-gray-400">
+									<span className="font-medium text-terminal-text/50">
 										App-only Check:
 									</span>
 									<p
-										className={`font-medium ${info.validationChecks.appOnlyCheck ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
+										className={`font-medium ${
+											info.validationChecks.appOnlyCheck
+												? 'text-terminal-cyan'
+												: 'text-destructive'
+										}`}
 									>
 										{info.validationChecks.appOnlyCheck ? 'Passed' : 'Failed'}
 									</p>
@@ -70,12 +72,10 @@ export function DebugInfo({ info }: DebugInfoProps) {
 							)}
 							{info.validationChecks.strictValidation && (
 								<div>
-									<span className="font-medium text-gray-600 dark:text-gray-400">
+									<span className="font-medium text-terminal-text/50">
 										Strict Validation:
 									</span>
-									<p className="text-green-600 dark:text-green-400 font-medium">
-										Enabled
-									</p>
+									<p className="font-medium text-terminal-cyan">Enabled</p>
 								</div>
 							)}
 						</div>

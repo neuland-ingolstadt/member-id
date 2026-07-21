@@ -50,12 +50,14 @@ export function ScannerSettingsPane({
 			/>
 
 			{/* Settings Panel */}
-			<div className="relative w-full max-w-sm h-full bg-background border-l shadow-xl animate-in slide-in-from-right duration-300 flex flex-col">
+			<div className="relative flex h-full w-full max-w-sm animate-in flex-col border-l border-terminal-window-border bg-terminal-window font-mono shadow-xl slide-in-from-right duration-300">
 				{/* Header */}
-				<div className="flex items-center justify-between p-4 border-b bg-background sticky top-0 z-10">
+				<div className="sticky top-0 z-10 flex items-center justify-between border-b border-terminal-window-border bg-terminal-windowTitle p-4">
 					<div className="flex items-center gap-2">
-						<Settings className="h-5 w-5 text-primary" />
-						<h2 className="text-lg font-semibold">Scanner Settings</h2>
+						<Settings className="h-5 w-5 text-terminal-cyan" />
+						<h2 className="text-lg font-semibold text-terminal-text">
+							Scanner Settings
+						</h2>
 					</div>
 					<Button variant="ghost" size="sm" onClick={onClose} type="button">
 						<X className="h-4 w-4" />
@@ -63,17 +65,17 @@ export function ScannerSettingsPane({
 				</div>
 
 				{/* Navigation Tabs */}
-				<div className="flex border-b bg-background sticky top-14 z-10">
+				<div className="sticky top-14 z-10 flex border-b border-terminal-window-border bg-terminal-window">
 					{sections.map((section) => {
 						const Icon = section.icon
 						return (
 							<button
 								key={section.id}
 								onClick={() => setActiveSection(section.id)}
-								className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 text-sm font-medium transition-colors ${
+								className={`flex flex-1 items-center justify-center gap-2 px-2 py-3 text-sm font-medium transition-colors ${
 									activeSection === section.id
-										? 'text-primary border-b-2 border-primary bg-primary/5'
-										: 'text-muted-foreground hover:text-foreground'
+										? 'border-b-2 border-terminal-cyan bg-terminal-cyan/5 text-terminal-cyan'
+										: 'text-terminal-text/50 hover:text-terminal-text'
 								}`}
 								type="button"
 							>

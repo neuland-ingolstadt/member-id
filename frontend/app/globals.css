@@ -27,6 +27,14 @@
 		animation: pulseCorner 2s infinite ease-in-out;
 	}
 
+	.animate-cursor {
+		animation: cursor 1s infinite step-end;
+	}
+
+	.animate-cyberpunk {
+		animation: cyberpunk-glow 1.5s ease-in-out infinite;
+	}
+
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -90,62 +98,170 @@
 			transform: scale(1.1);
 		}
 	}
+
+	@keyframes cursor {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes cyberpunk-glow {
+		0%,
+		100% {
+			filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))
+				drop-shadow(0 0 3px rgba(74, 222, 128, 0.8));
+		}
+		33% {
+			filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))
+				drop-shadow(0 0 6px rgba(34, 197, 94, 0.9));
+		}
+		66% {
+			filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7))
+				drop-shadow(0 0 6px rgba(21, 128, 61, 0.7));
+		}
+	}
+
+	@keyframes grid-line-horizontal {
+		0% {
+			opacity: 0;
+			transform: translateX(-100%);
+		}
+		10% {
+			opacity: 0.55;
+		}
+		85% {
+			opacity: 0.55;
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(100%);
+		}
+	}
+
+	@keyframes grid-line-vertical {
+		0% {
+			opacity: 0;
+			transform: translateY(-100%);
+		}
+		10% {
+			opacity: 0.55;
+		}
+		85% {
+			opacity: 0.55;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(100%);
+		}
+	}
 }
 
 @layer base {
 	:root {
-		--background: 210 20% 98%;
-		--foreground: 215 15% 15%;
+		color-scheme: light;
+		--background: 145 40% 97%;
+		--foreground: 155 24% 12%;
 		--card: 0 0% 100%;
-		--card-foreground: 215 15% 15%;
+		--card-foreground: 155 24% 12%;
 		--popover: 0 0% 100%;
-		--popover-foreground: 215 15% 15%;
-		--primary: 0 0% 0%;
-		--primary-foreground: 0 0% 100%;
-		--secondary: 210 20% 95%;
-		--secondary-foreground: 215 15% 20%;
-		--muted: 210 15% 92%;
-		--muted-foreground: 215 10% 40%;
-		--accent: 210 20% 95%;
-		--accent-foreground: 215 15% 20%;
-		--destructive: 0 80% 65%;
-		--destructive-foreground: 0 0% 100%;
-		--border: 210 16% 86%;
-		--input: 210 16% 86%;
-		--ring: 222 47% 50%;
-		--radius: 0.5rem;
-		--chart-1: 222 47% 50%;
-		--chart-2: 220 21% 45%;
-		--chart-3: 215 16% 60%;
-		--chart-4: 210 24% 70%;
-		--chart-5: 220 11% 30%;
+		--popover-foreground: 155 24% 12%;
+		--primary: 150 55% 40%;
+		--primary-foreground: 140 50% 98%;
+		--secondary: 150 18% 86%;
+		--secondary-foreground: 150 28% 20%;
+		--muted: 145 26% 90%;
+		--muted-foreground: 150 20% 32%;
+		--accent: 150 55% 40%;
+		--accent-foreground: 140 40% 96%;
+		--destructive: 0 70% 40%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 145 20% 82%;
+		--input: 145 20% 82%;
+		--ring: 149 45% 40%;
+		--radius: 0rem;
+		--chart-1: 150 55% 40%;
+		--chart-2: 149 45% 50%;
+		--chart-3: 145 30% 60%;
+		--chart-4: 150 20% 70%;
+		--chart-5: 155 15% 35%;
+
+		--terminal-bg: #f5f8f5;
+		--terminal-text: #0b1d14;
+		--terminal-cyan: oklch(0.72 0.24 142.83);
+		--terminal-highlight: oklch(0.64 0.2 142.83);
+		--terminal-darkGreen: #0a4a2e;
+		--terminal-mutedGreen: #1a6b40;
+		--terminal-lightGreen: #0d8f5c;
+		--terminal-mediumGreen: #0c6b46;
+		--terminal-window: #ffffff;
+		--terminal-window-border: #c7d3c8;
+		--terminal-window-title: #e3ede6;
+		--terminal-overlay: rgba(7, 24, 19, 0.55);
+		--terminal-card: #eff4ef;
+		--terminal-onAccent: #042011;
+		--terminal-paper: #ffe88c;
+		--terminal-paper-text: #3c3100;
+
+		--ambient-background: #fafafa;
+		--ambient-grid-line: rgba(13, 50, 36, 0.08);
+		--ambient-grid-highlight: rgba(19, 119, 75, 0.25);
+		--ambient-grid-cross: rgba(6, 89, 58, 0.35);
+		--ambient-grid-glow: rgba(25, 141, 94, 0.55);
 	}
 
 	.dark {
-		--background: 215 20% 12%;
-		--foreground: 210 15% 90%;
-		--card: 215 25% 16%;
-		--card-foreground: 210 15% 90%;
-		--popover: 215 25% 16%;
-		--popover-foreground: 210 15% 90%;
-		--primary: 0 0% 89.4%;
-		--primary-foreground: 0 0% 100%;
-		--secondary: 215 15% 25%;
-		--secondary-foreground: 210 15% 90%;
-		--muted: 215 15% 25%;
-		--muted-foreground: 210 10% 65%;
-		--accent: 215 15% 25%;
-		--accent-foreground: 210 15% 90%;
-		--destructive: 0 68.9% 46.7%;
-		--destructive-foreground: 0 0% 100%;
-		--border: 215 20% 30%;
-		--input: 215 20% 30%;
-		--ring: 222 47% 50%;
-		--chart-1: 217 90% 60%;
-		--chart-2: 210 50% 70%;
-		--chart-3: 220 20% 80%;
-		--chart-4: 215 15% 60%;
-		--chart-5: 210 15% 40%;
+		color-scheme: dark;
+		--background: 150 9% 4%;
+		--foreground: 150 25% 95%;
+		--card: 150 8% 6%;
+		--card-foreground: 150 25% 95%;
+		--popover: 150 8% 6%;
+		--popover-foreground: 150 25% 95%;
+		--primary: 149 65% 52%;
+		--primary-foreground: 160 30% 12%;
+		--secondary: 150 9% 22%;
+		--secondary-foreground: 160 20% 94%;
+		--muted: 150 9% 12%;
+		--muted-foreground: 150 9% 70%;
+		--accent: 149 80% 55%;
+		--accent-foreground: 160 35% 12%;
+		--destructive: 0 70% 45%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 150 7% 20%;
+		--input: 150 7% 20%;
+		--ring: 149 65% 52%;
+		--chart-1: 149 65% 52%;
+		--chart-2: 150 50% 45%;
+		--chart-3: 145 40% 55%;
+		--chart-4: 150 20% 40%;
+		--chart-5: 155 15% 70%;
+
+		--terminal-bg: #020302;
+		--terminal-text: #f6fff8;
+		--terminal-cyan: oklch(0.825 0.3281 142.83);
+		--terminal-highlight: oklch(0.8544 0.3379 142.83);
+		--terminal-darkGreen: #003300;
+		--terminal-mutedGreen: #0a4f2b;
+		--terminal-lightGreen: oklch(0.79 0.2935 142.83);
+		--terminal-mediumGreen: oklch(0.72 0.2837 142.83);
+		--terminal-window: #0b0b0b;
+		--terminal-window-border: #333333;
+		--terminal-window-title: #414141;
+		--terminal-overlay: rgba(0, 0, 0, 0.8);
+		--terminal-card: #101413;
+		--terminal-onAccent: #001f12;
+		--terminal-paper: #ffe44a;
+		--terminal-paper-text: #2a1f00;
+
+		--ambient-background: #010101;
+		--ambient-grid-line: rgba(156, 163, 175, 0.15);
+		--ambient-grid-highlight: rgba(74, 222, 128, 0.35);
+		--ambient-grid-cross: rgba(99, 255, 192, 0.35);
+		--ambient-grid-glow: rgba(74, 222, 128, 0.8);
 	}
 }
 
@@ -153,7 +269,84 @@
 	* {
 		@apply border-border;
 	}
+
+	html {
+		@apply scroll-smooth;
+	}
+
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-terminal-bg text-terminal-text font-mono antialiased;
+		background-color: var(--terminal-bg);
+		color: var(--terminal-text);
+		position: relative;
+		overflow-x: hidden;
+	}
+
+	a {
+		@apply text-terminal-cyan transition-colors duration-300;
+	}
+
+	a:hover {
+		color: var(--terminal-highlight);
+	}
+}
+
+@layer components {
+	.terminal-window {
+		@apply relative bg-terminal-window border border-terminal-window-border overflow-hidden;
+	}
+
+	.terminal-corner {
+		@apply pointer-events-none absolute z-0;
+	}
+
+	.grid-line-horizontal {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			color-mix(in srgb, var(--terminal-lightGreen) 60%, transparent) 20%,
+			var(--terminal-lightGreen) 50%,
+			color-mix(in srgb, var(--terminal-lightGreen) 60%, transparent) 80%,
+			transparent 100%
+		);
+		box-shadow:
+			0 0 10px color-mix(in srgb, var(--terminal-lightGreen) 80%, transparent),
+			0 0 20px color-mix(in srgb, var(--terminal-lightGreen) 50%, transparent);
+		opacity: 0;
+		animation: grid-line-horizontal 3.5s ease-in-out;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.grid-line-vertical {
+		position: absolute;
+		top: 0;
+		width: 2px;
+		height: 100%;
+		background: linear-gradient(
+			180deg,
+			transparent 0%,
+			color-mix(in srgb, var(--terminal-lightGreen) 60%, transparent) 20%,
+			var(--terminal-lightGreen) 50%,
+			color-mix(in srgb, var(--terminal-lightGreen) 60%, transparent) 80%,
+			transparent 100%
+		);
+		box-shadow:
+			0 0 10px color-mix(in srgb, var(--terminal-lightGreen) 80%, transparent),
+			0 0 20px color-mix(in srgb, var(--terminal-lightGreen) 50%, transparent);
+		opacity: 0;
+		animation: grid-line-vertical 3.5s ease-in-out;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.blinking-cursor {
+		animation: cursor 1s step-end infinite;
+		color: var(--terminal-lightGreen);
+		font-weight: bold;
 	}
 }

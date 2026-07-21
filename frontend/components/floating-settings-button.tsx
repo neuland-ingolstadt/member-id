@@ -13,11 +13,21 @@ export function FloatingSettingsButton() {
 			<Button
 				variant="secondary"
 				onClick={() => setIsSettingsOpen(true)}
-				className="fixed bottom-8 left-8 z-50 h-14 w-14 rounded-full shadow-xl hover:shadow-2xl transition-all duration-200 bg-background border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/5 backdrop-blur-md hover:rotate-45 p-0"
+				className="fixed bottom-8 left-8 z-50 h-12 w-12 border-2 border-terminal-window-border bg-terminal-window p-0 shadow-lg transition-all duration-200 hover:border-terminal-cyan/50 hover:bg-terminal-card"
 				type="button"
 				aria-label="Open scanner settings"
 			>
-				<Settings className="h-10 w-10 text-primary" />
+				<div className="pointer-events-none absolute inset-0">
+					<div className="absolute left-0 top-0 h-3 w-3">
+						<div className="absolute left-0 top-0 h-px w-2 bg-terminal-cyan/40" />
+						<div className="absolute left-0 top-0 h-2 w-px bg-terminal-cyan/40" />
+					</div>
+					<div className="absolute bottom-0 right-0 h-3 w-3">
+						<div className="absolute bottom-0 right-0 h-px w-2 bg-terminal-cyan/30" />
+						<div className="absolute bottom-0 right-0 h-2 w-px bg-terminal-cyan/30" />
+					</div>
+				</div>
+				<Settings className="relative z-10 h-5 w-5 text-terminal-cyan transition-transform duration-200 hover:rotate-45" />
 			</Button>
 
 			<ScannerSettingsPane
