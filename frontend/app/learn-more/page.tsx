@@ -10,223 +10,246 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import NeulandLogo from '@/components/neuland-logo'
-import { TerminalWindow } from '@/components/terminal-window'
-
-const features = [
-	{
-		icon: CheckCircle,
-		title: 'Real-time Verification',
-		description:
-			'Instant validation of member passes with immediate feedback on authenticity and validity status'
-	},
-	{
-		icon: BarChart3,
-		title: 'Comprehensive Analytics',
-		description:
-			'Track scan history, attendance patterns, and export detailed reports for event management'
-	},
-	{
-		icon: Info,
-		title: 'Detailed Member Info',
-		description:
-			'View complete member profiles including name, ID, membership type, and check-in history'
-	},
-	{
-		icon: ShieldX,
-		title: 'Advanced Security',
-		description:
-			'Cryptographic signature verification prevents fraud and ensures only valid Neuland members gain access'
-	},
-	{
-		icon: Zap,
-		title: 'Duplicate Detection',
-		description:
-			'Automatically identify and flag members who have already checked in to prevent double entries'
-	},
-	{
-		icon: Users,
-		title: 'Multi-Platform Support',
-		description:
-			'Works with Apple Wallet, Android Wallet, and direct QR codes for maximum member convenience'
-	},
-	{
-		icon: Lock,
-		title: 'Offline Capability',
-		description:
-			'Verify passes even without internet connection using locally stored cryptographic keys'
-	},
-	{
-		icon: ArrowRight,
-		title: 'CSV Export',
-		description:
-			'Export scan data to CSV format for integration with other Neuland management systems'
-	}
-]
-
-const steps = [
-	{
-		n: '01',
-		title: 'Scan Neuland ID',
-		description: "Point your camera at any member's Neuland ID to capture it"
-	},
-	{
-		n: '02',
-		title: 'Verify Security',
-		description:
-			"Our system verifies the digital signature using a secure public key to ensure the Neuland ID is authentic and hasn't been tampered with"
-	},
-	{
-		n: '03',
-		title: 'View Details',
-		description: 'See member information and check-in status instantly'
-	}
-]
-
-const reasons = [
-	{
-		icon: Zap,
-		title: 'Lightning Fast',
-		description:
-			'No more waiting in long lines. Scan and verify member passes in seconds, keeping your events flowing smoothly.'
-	},
-	{
-		icon: Users,
-		title: 'Seamless Experience',
-		description:
-			'Members simply show their phone - no physical cards to carry, lose, or forget. Always accessible and always secure.'
-	},
-	{
-		icon: Lock,
-		title: 'Unbreakable Security',
-		description:
-			'Cryptographic signatures make it impossible to forge or duplicate passes. Every scan is verified using secure cryptographic keys.'
-	}
-]
+import { Button } from '@/components/ui/button'
 
 export default function LearnMorePage() {
 	return (
-		<div className="space-y-16 pb-8 font-mono">
-			<section className="space-y-6">
-				<p className="mb-1 text-sm text-terminal-text/50">
-					<span className="text-terminal-cyan">neuland@verify</span>
-					<span className="text-terminal-text/40">:</span>
-					<span className="text-terminal-lightGreen">~</span>
-					<span className="text-terminal-text/40">$</span> man member-id
-				</p>
-				<div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-					<NeulandLogo className="h-14 w-auto text-terminal-text sm:h-16" />
-					<div>
-						<h1 className="text-3xl font-bold text-terminal-text sm:text-4xl">
-							Member ID Verificator
+		<div className="pt-20 bg-background">
+			<div className="container mx-auto px-4 py-12">
+				<div className="max-w-5xl mx-auto space-y-16">
+					<section className="text-center space-y-4">
+						<div className="inline-flex w-24 h-24 items-center justify-center bg-primary text-primary-foreground mx-auto">
+							<NeulandLogo className="h-12 w-auto" />
+						</div>
+						<h1 className="text-5xl font-bold text-foreground">
+							Neuland ID Verificator
 						</h1>
-						<p className="mt-2 text-terminal-text/60">
+						<p className="text-lg text-muted-foreground">
 							Cryptographically signed digital membership cards
-							<span className="blinking-cursor ml-1">_</span>
 						</p>
-					</div>
-				</div>
-				<Link
-					href="/"
-					className="inline-flex items-center gap-2 border border-terminal-window-border bg-terminal-window px-5 py-2.5 font-semibold text-terminal-text no-underline transition-all duration-200 hover:border-terminal-cyan/50"
-				>
-					<span className="text-terminal-cyan">$</span> ./scan
-					<ArrowRight className="h-4 w-4 text-terminal-cyan transition-transform group-hover:translate-x-1" />
-				</Link>
-			</section>
+						<div className="mt-4">
+							<Button asChild className="px-8 py-4 text-lg font-semibold group">
+								<Link href="/">
+									Start Scanning
+									<ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+								</Link>
+							</Button>
+						</div>
+					</section>
 
-			<section>
-				<h2 className="mb-6 text-2xl font-bold text-terminal-text">Features</h2>
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-					{features.map((feature) => {
-						const Icon = feature.icon
-						return (
-							<div
-								key={feature.title}
-								className="group border border-terminal-window-border bg-terminal-window p-5 transition-colors hover:border-terminal-cyan/40"
-							>
-								<div className="mb-3 inline-flex border border-terminal-cyan/30 bg-terminal-cyan/10 p-2 text-terminal-cyan">
-									<Icon className="h-5 w-5" />
+					<section className="space-y-6">
+						<h2 className="text-3xl font-bold text-center text-foreground">
+							Features
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<CheckCircle className="h-6 w-6 text-primary" />
 								</div>
-								<h3 className="mb-2 font-semibold text-terminal-text">
-									{feature.title}
-								</h3>
-								<p className="text-xs text-terminal-text/50">
-									{feature.description}
+								<h4 className="font-semibold text-foreground mb-2">
+									Real-time Verification
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Instant validation of member passes with immediate feedback on
+									authenticity and validity status
 								</p>
 							</div>
-						)
-					})}
-				</div>
-			</section>
-
-			<section>
-				<h2 className="mb-6 text-2xl font-bold text-terminal-text">
-					How It Works
-				</h2>
-				<TerminalWindow title="neuland@verify:~/pipeline">
-					<div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
-						{steps.map((step) => (
-							<div key={step.n} className="space-y-3">
-								<div className="font-mono text-3xl font-bold text-terminal-cyan/40">
-									{step.n}
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<BarChart3 className="h-6 w-6 text-primary" />
 								</div>
-								<h3 className="font-semibold text-terminal-text">
-									{step.title}
-								</h3>
-								<p className="text-sm text-terminal-text/50">
-									{step.description}
+								<h4 className="font-semibold text-foreground mb-2">
+									Comprehensive Analytics
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Track scan history, attendance patterns, and export detailed
+									reports for event management
 								</p>
 							</div>
-						))}
-					</div>
-					<p className="border-t border-terminal-window-border px-6 py-4 text-center text-sm text-terminal-text/40">
-						Each QR code contains encrypted member data that can only be
-						verified with our secure system. This prevents fraud and ensures
-						only valid members can access events.
-					</p>
-				</TerminalWindow>
-			</section>
-
-			<section>
-				<h2 className="mb-6 text-2xl font-bold text-terminal-text">
-					Why Neuland Uses Digital Verification
-				</h2>
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-					{reasons.map((reason) => {
-						const Icon = reason.icon
-						return (
-							<div
-								key={reason.title}
-								className="border border-terminal-window-border bg-terminal-window p-6 transition-colors hover:border-terminal-cyan/40"
-							>
-								<div className="mb-4 inline-flex border border-terminal-cyan/30 bg-terminal-cyan/10 p-3 text-terminal-cyan">
-									<Icon className="h-6 w-6" />
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<Info className="h-6 w-6 text-primary" />
 								</div>
-								<h3 className="mb-2 text-xl font-bold text-terminal-text">
-									{reason.title}
-								</h3>
-								<p className="text-terminal-text/60">{reason.description}</p>
+								<h4 className="font-semibold text-foreground mb-2">
+									Detailed Member Info
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									View complete member profiles including name, ID, membership
+									type, and check-in history
+								</p>
 							</div>
-						)
-					})}
-				</div>
-			</section>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<ShieldX className="h-6 w-6 text-primary" />
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Advanced Security
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Cryptographic signature verification prevents fraud and
+									ensures only valid Neuland members gain access
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<Zap className="h-6 w-6 text-primary" />
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Duplicate Detection
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Automatically identify and flag members who have already
+									checked in to prevent double entries
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<Users className="h-6 w-6 text-primary" />
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Multi-Platform Support
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Works with Apple Wallet, Android Wallet, and direct QR codes
+									for maximum member convenience
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<Lock className="h-6 w-6 text-primary" />
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Offline Capability
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Verify passes even without internet connection using locally
+									stored cryptographic keys
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<ArrowRight className="h-6 w-6 text-primary" />
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									CSV Export
+								</h4>
+								<p className="text-xs text-muted-foreground">
+									Export scan data to CSV format for integration with other
+									Neuland management systems
+								</p>
+							</div>
+						</div>
+					</section>
 
-			<section className="border border-terminal-window-border bg-terminal-window p-8 text-center">
-				<h2 className="mb-2 text-2xl font-bold text-terminal-text">
-					Ready to Start?
-				</h2>
-				<p className="mb-6 text-terminal-text/60">
-					Begin scanning Neuland IDs to verify their authenticity
-				</p>
-				<Link
-					href="/"
-					className="inline-flex items-center gap-2 border border-terminal-cyan/40 bg-terminal-cyan px-6 py-3 font-semibold text-terminal-onAccent no-underline transition-colors hover:bg-terminal-highlight"
-				>
-					Get Started
-					<ArrowRight className="h-4 w-4" />
-				</Link>
-			</section>
+					<section className="space-y-6">
+						<h2 className="text-3xl font-bold text-center text-foreground">
+							How It Works
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<span className="text-xl font-bold text-primary">1</span>
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Scan Neuland ID
+								</h4>
+								<p className="text-sm text-muted-foreground">
+									Point your camera at any member's Neuland ID to capture it
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<span className="text-xl font-bold text-primary">2</span>
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									Verify Security
+								</h4>
+								<p className="text-sm text-muted-foreground">
+									Our system verifies the digital signature using a secure
+									public key to ensure the Neuland ID is authentic and hasn't
+									been tampered with
+								</p>
+							</div>
+							<div className="text-center p-6 border border-border bg-card transition-all duration-300 ease-in-out  hover:border-primary/40">
+								<div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-primary/10">
+									<span className="text-xl font-bold text-primary">3</span>
+								</div>
+								<h4 className="font-semibold text-foreground mb-2">
+									View Details
+								</h4>
+								<p className="text-sm text-muted-foreground">
+									See member information and check-in status instantly
+								</p>
+							</div>
+						</div>
+						<p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
+							Each QR code contains encrypted member data that can only be
+							verified with our secure system. This prevents fraud and ensures
+							only valid members can access events.
+						</p>
+					</section>
+
+					<section className="space-y-8">
+						<h2 className="text-3xl font-bold text-center text-foreground">
+							Why Neuland Uses Digital Verification
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+							<div className="text-center space-y-4 transition-all duration-300 ease-in-out  hover:border-primary/40 p-6 ">
+								<div className="mx-auto flex h-16 w-16 items-center justify-center bg-primary/10">
+									<Zap className="h-8 w-8 text-primary" />
+								</div>
+								<h3 className="text-xl font-bold text-foreground">
+									Lightning Fast
+								</h3>
+								<p className="text-muted-foreground">
+									No more waiting in long lines. Scan and verify member passes
+									in seconds, keeping your events flowing smoothly.
+								</p>
+							</div>
+							<div className="text-center space-y-4 transition-all duration-300 ease-in-out  hover:border-primary/40 p-6 ">
+								<div className="mx-auto flex h-16 w-16 items-center justify-center bg-primary/10">
+									<Users className="h-8 w-8 text-primary" />
+								</div>
+								<h3 className="text-xl font-bold text-foreground">
+									Seamless Experience
+								</h3>
+								<p className="text-muted-foreground">
+									Members simply show their phone - no physical cards to carry,
+									lose, or forget. Always accessible and always secure.
+								</p>
+							</div>
+							<div className="text-center space-y-4 transition-all duration-300 ease-in-out  hover:border-primary/40 p-6 ">
+								<div className="mx-auto flex h-16 w-16 items-center justify-center bg-primary/10">
+									<Lock className="h-8 w-8 text-primary" />
+								</div>
+								<h3 className="text-xl font-bold text-foreground">
+									Unbreakable Security
+								</h3>
+								<p className="text-muted-foreground">
+									Cryptographic signatures make it impossible to forge or
+									duplicate passes. Every scan is verified using secure
+									cryptographic keys.
+								</p>
+							</div>
+						</div>
+					</section>
+
+					<section className="text-center space-y-4">
+						<h2 className="text-3xl font-bold text-foreground">
+							Ready to Start?
+						</h2>
+						<p className="text-muted-foreground">
+							Begin scanning Neuland IDs to verify their authenticity
+						</p>
+						<Button asChild className="px-8 py-4 text-lg font-semibold group">
+							<Link href="/">
+								Get Started
+								<ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+							</Link>
+						</Button>
+					</section>
+				</div>
+			</div>
 		</div>
 	)
 }

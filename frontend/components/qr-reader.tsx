@@ -215,12 +215,12 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 
 	if (error) {
 		return (
-			<div className="flex flex-col items-center justify-center p-8 text-center font-mono">
-				<p className="mb-4 text-destructive">{error}</p>
+			<div className="flex flex-col items-center justify-center p-8 text-center">
+				<p className="text-red-500 mb-4">{error}</p>
 				<button
 					type="button"
 					onClick={startCamera}
-					className="border border-terminal-window-border bg-terminal-window px-4 py-2 text-terminal-text transition-colors hover:border-terminal-cyan/50"
+					className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 dark:border-gray-600 transition-colors"
 				>
 					Try Again
 				</button>
@@ -230,57 +230,60 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 
 	return (
 		<div ref={containerRef} className="relative w-full">
-			<div className="relative mx-auto max-w-md overflow-hidden border border-terminal-window-border bg-black">
+			<div className="relative overflow-hidden shadow-lg bg-black mx-auto max-w-md">
 				<video
 					ref={videoRef}
 					autoPlay
 					playsInline
 					muted
 					aria-label="Neuland ID camera feed"
-					className="aspect-[4/3] w-full object-cover"
+					className="w-full aspect-[4/3] object-cover"
 				/>
 				<canvas ref={canvasRef} className="hidden" />
 
+				{/* Minimal status overlay */}
 				{isScanning && (
-					<div className="absolute right-3 top-3">
+					<div className="absolute top-3 right-3">
 						<div
-							className={`h-3 w-3 shadow-lg ${
-								isVisible
-									? 'animate-pulse bg-terminal-cyan'
-									: 'bg-terminal-paper'
+							className={`w-3 h-3 rounded-full shadow-lg ${
+								isVisible ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'
 							}`}
-						/>
+						></div>
 					</div>
 				)}
 
+				{/* Camera initializing overlay */}
 				{!isScanning && (
-					<div className="absolute inset-0 flex items-center justify-center bg-black/80">
-						<div className="text-center font-mono text-white">
-							<div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-terminal-cyan/30 border-t-terminal-cyan" />
-							<p className="text-sm font-medium">
-								<span className="text-terminal-cyan">&gt;</span> Starting camera
-								<span className="blinking-cursor">_</span>
-							</p>
+					<div className="absolute inset-0 bg-black/80 flex items-center justify-center">
+						<div className="text-center text-white">
+							<div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-3"></div>
+							<p className="text-sm font-medium">Starting camera...</p>
 						</div>
 					</div>
 				)}
 
+				{/* QR Code targeting frame - only show if enabled in settings */}
 				{settings.showScanFrame && isVisible && (
-					<div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+					<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 						<div className="relative">
-							<div className="relative h-60 w-60 overflow-hidden border-2 border-white/30 shadow-lg">
-								<div className="absolute -left-1 -top-1 h-8 w-8 animate-pulse-corner border-l-4 border-t-4 border-terminal-cyan" />
-								<div className="absolute -right-1 -top-1 h-8 w-8 animate-pulse-corner border-r-4 border-t-4 border-terminal-cyan" />
-								<div className="absolute -bottom-1 -left-1 h-8 w-8 animate-pulse-corner border-b-4 border-l-4 border-terminal-cyan" />
-								<div className="absolute -bottom-1 -right-1 h-8 w-8 animate-pulse-corner border-b-4 border-r-4 border-terminal-cyan" />
-								<div className="absolute inset-6 border border-dashed border-white/20" />
+							{/* Main scanner frame */}
+							<div className="w-60 h-60 border-2 border-white/30 shadow-lg relative overflow-hidden">
+								{/* Corner indicators with pulse animation */}
+								<div className="absolute -top-1 -left-1 w-8 h-8 border-l-4 border-t-4 border-green-500 rounded-tl-lg animate-pulse-corner"></div>
+								<div className="absolute -top-1 -right-1 w-8 h-8 border-r-4 border-t-4 border-green-500 rounded-tr-lg animate-pulse-corner"></div>
+								<div className="absolute -bottom-1 -left-1 w-8 h-8 border-l-4 border-b-4 border-green-500 rounded-bl-lg animate-pulse-corner"></div>
+								<div className="absolute -bottom-1 -right-1 w-8 h-8 border-r-4 border-b-4 border-green-500 rounded-br-lg animate-pulse-corner"></div>
+
+								{/* Inner focus guide */}
+								<div className="absolute inset-6 border border-dashed border-white/20 rounded"></div>
 							</div>
 						</div>
 					</div>
 				)}
 
+				{/* Debug info overlay - only show if enabled in settings */}
 				{settings.showDebugInfo && isScanning && (
-					<div className="absolute bottom-3 left-3 border border-terminal-cyan/30 bg-black/80 p-2 font-mono text-xs text-terminal-cyan">
+					<div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs p-2 rounded">
 						<div>FPS: {isVisible ? '~10' : '~1'}</div>
 						<div>Status: {isVisible ? 'Active' : 'Background'}</div>
 						<div>Throttle: {settings.scanThrottleMs}ms</div>
@@ -294,11 +297,12 @@ export function QRCodeReader({ onScan, deviceId }: QRCodeReaderProps) {
 				)}
 			</div>
 
-			<div className="mt-4 text-center font-mono">
-				<p className="text-sm font-medium text-terminal-text">
+			{/* Bottom instruction text */}
+			<div className="mt-4 text-center">
+				<p className="text-gray-700 dark:text-gray-300 text-sm font-medium">
 					Hold a Neuland ID up to the camera to scan it.
 				</p>
-				<p className="mt-1 text-xs text-terminal-text/50">
+				<p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
 					{settings.showScanFrame
 						? 'Position the digital code within the frame for automatic detection.'
 						: 'Point the camera at the digital code for automatic detection.'}

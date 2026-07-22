@@ -9,7 +9,6 @@ import {
 	ShieldX,
 	Users
 } from 'lucide-react'
-import { TerminalWindow } from '@/components/terminal-window'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -22,6 +21,7 @@ import {
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ScanStats } from '@/hooks/use-scan-history'
 
 interface ScanStatsDisplayProps {
@@ -43,54 +43,64 @@ export function ScanStatsDisplay({
 			: 0
 
 	return (
-		<TerminalWindow
-			title="neuland@verify:~/stats"
-			headerRight={
-				stats.totalScans > 0 ? (
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<Button
-								variant="outline"
-								size="sm"
-								className="h-7 border-destructive/40 px-2 text-xs text-destructive hover:bg-destructive/10"
-							>
-								<RotateCcw className="mr-1 h-3 w-3" />
-								clear
-							</Button>
-						</AlertDialogTrigger>
-						<AlertDialogContent className="border-terminal-window-border bg-terminal-window font-mono">
-							<AlertDialogHeader>
-								<AlertDialogTitle>Clear Scan History</AlertDialogTitle>
-								<AlertDialogDescription>
-									Are you sure you want to clear all scan history? This will
-									permanently delete all scan records and cannot be undone.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction
-									onClick={onClearHistory}
-									className="bg-destructive hover:bg-destructive/90"
-								>
-									Clear All
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
-				) : undefined
-			}
-		>
-			<div className="p-4 font-mono">
-				<div className="mb-3 flex items-center gap-2 text-xs text-terminal-text/50">
-					<BarChart3 className="h-3.5 w-3.5 text-terminal-cyan" />
-					Session activity overview
-				</div>
-				<div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/40">
-						<div className="mb-2 flex items-center justify-center">
-							<Users className="h-5 w-5 text-terminal-cyan" />
+		<Card>
+			<CardHeader className="pb-4">
+				<div className="flex items-center justify-between">
+					<div className="flex items-center gap-3">
+						<div className="p-2 bg-primary text-background">
+							<BarChart3 className="h-5 w-5" />
 						</div>
-						<div className="text-2xl font-bold text-terminal-text">
+						<div>
+							<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+								Scan Statistics
+							</CardTitle>
+							<p className="text-sm text-gray-600 dark:text-gray-400">
+								Session activity overview
+							</p>
+						</div>
+					</div>
+					{stats.totalScans > 0 && (
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button
+									variant="outline"
+									size="sm"
+									className="text-destructive hover:bg-destructive/10 group"
+								>
+									<RotateCcw className="h-4 w-4 mr-1 group-hover:-rotate-12 transition-transform duration-300" />
+									Clear
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Clear Scan History</AlertDialogTitle>
+									<AlertDialogDescription>
+										Are you sure you want to clear all scan history? This will
+										permanently delete all scan records and cannot be undone.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={onClearHistory}
+										className="bg-red-600 hover:bg-red-700"
+									>
+										Clear All
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					)}
+				</div>
+			</CardHeader>
+			<CardContent className="pt-0">
+				<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+					{/* Total Scans */}
+					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-primary/20 hover:border-primary/30">
+						<div className="flex items-center justify-center mb-2">
+							<Users className="h-5 w-5 text-primary" />
+						</div>
+						<div className="text-2xl font-bold text-gray-900 dark:text-white">
 							<NumberFlow
 								value={stats.totalScans}
 								format={{ notation: 'compact' }}
@@ -98,16 +108,17 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="break-words text-xs text-terminal-text/50">
+						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Total Scans
 						</div>
 					</div>
 
-					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/40">
-						<div className="mb-2 flex items-center justify-center">
-							<CheckCircle className="h-5 w-5 text-terminal-cyan" />
+					{/* Valid Scans */}
+					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-green-500/20 hover:border-green-500/30">
+						<div className="flex items-center justify-center mb-2">
+							<CheckCircle className="h-5 w-5 text-green-500" />
 						</div>
-						<div className="text-2xl font-bold text-terminal-cyan">
+						<div className="text-2xl font-bold text-green-600 dark:text-green-500">
 							<NumberFlow
 								value={stats.validScans}
 								format={{ notation: 'compact' }}
@@ -115,16 +126,17 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="break-words text-xs text-terminal-text/50">
+						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Valid ({validRate}%)
 						</div>
 					</div>
 
-					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-destructive/40">
-						<div className="mb-2 flex items-center justify-center">
+					{/* Invalid Scans */}
+					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-red-500/20 hover:border-red-500/30">
+						<div className="flex items-center justify-center mb-2">
 							<ShieldX className="h-5 w-5 text-destructive" />
 						</div>
-						<div className="text-2xl font-bold text-destructive">
+						<div className="text-2xl font-bold text-red-600 dark:text-red-500">
 							<NumberFlow
 								value={stats.invalidScans}
 								format={{ notation: 'compact' }}
@@ -132,16 +144,17 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="break-words text-xs text-terminal-text/50">
+						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
 							Invalid ({100 - validRate}%)
 						</div>
 					</div>
 
-					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-sky-400/40">
-						<div className="mb-2 flex items-center justify-center">
-							<Copy className="h-5 w-5 text-sky-400" />
+					{/* Duplicate Scans */}
+					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-blue-500/20 hover:border-blue-500/30">
+						<div className="flex items-center justify-center mb-2">
+							<Copy className="h-5 w-5 text-blue-600" />
 						</div>
-						<div className="text-2xl font-bold text-sky-400">
+						<div className="text-2xl font-bold text-blue-600 dark:text-blue-500">
 							<NumberFlow
 								value={stats.duplicateScans}
 								format={{ notation: 'compact' }}
@@ -149,13 +162,13 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="break-words text-xs leading-tight text-terminal-text/50">
+						<div className="text-xs text-gray-600 dark:text-gray-400 break-words leading-tight">
 							<div>Duplicates</div>
 							<div>({duplicateRate}%)</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</TerminalWindow>
+			</CardContent>
+		</Card>
 	)
 }

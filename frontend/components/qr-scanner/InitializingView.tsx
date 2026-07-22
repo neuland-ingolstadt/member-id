@@ -2,7 +2,7 @@
 
 import { ScanHistoryList } from '@/components/scan-history'
 import { ScanStatsDisplay } from '@/components/scan-stats-display'
-import { TerminalWindow } from '@/components/terminal-window'
+import { Card, CardContent } from '@/components/ui/card'
 import type { ScanRecord, ScanStats } from '@/hooks/use-scan-history'
 
 interface InitializingViewProps {
@@ -19,25 +19,22 @@ export function InitializingView({
 	onRemoveScan
 }: InitializingViewProps) {
 	return (
-		<div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-			<div className="space-y-6 lg:col-span-3">
-				<TerminalWindow title="neuland@verify:~/boot">
-					<div className="flex items-center justify-center py-12">
-						<div className="text-center font-mono">
-							<div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-terminal-cyan border-t-transparent" />
-							<p className="text-sm font-medium text-terminal-text">
-								<span className="text-terminal-cyan">&gt;</span> Loading public
-								key
-								<span className="blinking-cursor">_</span>
-							</p>
-							<p className="mt-2 text-xs text-terminal-text/40">
-								Initializing QR Scanner...
-							</p>
+		<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+			<div className="lg:col-span-3 space-y-6">
+				<Card>
+					<CardContent className="p-6">
+						<div className="flex items-center justify-center py-12">
+							<div className="text-center">
+								<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+								<p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+									Initializing QR Scanner...
+								</p>
+							</div>
 						</div>
-					</div>
-				</TerminalWindow>
+					</CardContent>
+				</Card>
 			</div>
-			<div className="space-y-6 lg:col-span-2">
+			<div className="lg:col-span-2 space-y-6">
 				<ScanStatsDisplay stats={stats} onClearHistory={onClearHistory} />
 				<ScanHistoryList
 					scanHistory={scanHistory}

@@ -1,12 +1,13 @@
 'use client'
 
+import { QrCodeIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CameraSelector } from '@/components/camera-selector'
 import { FloatingSettingsButton } from '@/components/floating-settings-button'
 import { QRCodeReader } from '@/components/qr-reader'
 import { ScanHistoryList } from '@/components/scan-history'
 import { ScanStatsDisplay } from '@/components/scan-stats-display'
-import { TerminalWindow } from '@/components/terminal-window'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { useScanHistory } from '@/hooks/use-scan-history'
 import { useSettings } from '@/hooks/use-settings'
@@ -48,6 +49,7 @@ export function QRScanner() {
 	const { scanHistory, stats, addScan, clearHistory, removeScan } =
 		useScanHistory()
 
+	// Get settings
 	const settings = useSettings()
 
 	useEffect(() => {
@@ -97,9 +99,11 @@ export function QRScanner() {
 					if (scanRecord?.result?.success) {
 						setDuplicateWarning(originalScan)
 						setShowDuplicate(true)
+						// Play duplicate sound for duplicate
 						if (settings.soundOnScan) {
 							soundManager.playDuplicateSound(settings.soundVolume)
 						}
+						// Use settings for auto-close timing
 						if (settings.autoCloseResults) {
 							setTimeout(
 								() => setShowDuplicate(false),
@@ -108,6 +112,7 @@ export function QRScanner() {
 						}
 					} else {
 						setShowError(true)
+						// Play error sound
 						if (settings.soundOnScan) {
 							soundManager.playErrorSound(settings.soundVolume)
 						}
@@ -117,6 +122,7 @@ export function QRScanner() {
 					}
 				} else if (result.success) {
 					setShowSuccess(true)
+					// Play success sound for new successful scan
 					if (settings.soundOnScan) {
 						soundManager.playSuccessSound(settings.soundVolume)
 					}
@@ -125,6 +131,7 @@ export function QRScanner() {
 					}
 				} else {
 					setShowError(true)
+					// Play error sound
 					if (settings.soundOnScan) {
 						soundManager.playErrorSound(settings.soundVolume)
 					}
@@ -146,6 +153,7 @@ export function QRScanner() {
 				if (isDuplicate && originalScan?.result.success) {
 					setDuplicateWarning(originalScan)
 					setShowDuplicate(true)
+					// Play duplicate sound for duplicate
 					if (settings.soundOnScan) {
 						soundManager.playDuplicateSound(settings.soundVolume)
 					}
@@ -157,6 +165,7 @@ export function QRScanner() {
 					}
 				} else {
 					setShowError(true)
+					// Play error sound
 					if (settings.soundOnScan) {
 						soundManager.playErrorSound(settings.soundVolume)
 					}
@@ -210,19 +219,31 @@ export function QRScanner() {
 	return (
 		<>
 			<FloatingSettingsButton />
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-				<div className="space-y-6 lg:col-span-3">
-					<TerminalWindow
-						title="neuland@verify:~/scanner"
-						headerRight={
-							<CameraSelector
-								onCameraChange={handleCameraChange}
-								currentDeviceId={selectedCameraId}
-								className="h-7 border-terminal-window-border/60 bg-terminal-bg/50 px-2 text-xs hover:bg-terminal-bg/80"
-							/>
-						}
-					>
-						<div className="p-4 sm:p-6">
+			<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+				<div className="lg:col-span-3 space-y-6">
+					<Card>
+						<CardHeader className="pb-4">
+							<div className="flex items-center justify-between gap-4">
+								<div className="flex items-center gap-3">
+									<div className="p-2 bg-primary text-background">
+										<QrCodeIcon className="h-5 w-5" />
+									</div>
+									<div className="flex flex-col">
+										<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+											Neuland ID
+										</CardTitle>
+									</div>
+								</div>
+								<div className="flex justify-end">
+									<CameraSelector
+										onCameraChange={handleCameraChange}
+										currentDeviceId={selectedCameraId}
+										className="bg-background/90 backdrop-blur-md border border-border/60 shadow-lg hover:bg-background/95 transition-colors"
+									/>
+								</div>
+							</div>
+						</CardHeader>
+						<CardContent className="p-6">
 							<div className="relative">
 								<QRCodeReader
 									onScan={handleQRScan}
@@ -256,14 +277,14 @@ export function QRScanner() {
 										/>
 									)}
 							</div>
-						</div>
-					</TerminalWindow>
+						</CardContent>
+					</Card>
 					<ResultCard
 						result={verificationResult}
 						duplicateWarning={duplicateWarning}
 					/>
 				</div>
-				<div className="space-y-6 lg:col-span-2">
+				<div className="lg:col-span-2 space-y-6">
 					<ScanStatsDisplay stats={stats} onClearHistory={clearHistory} />
 					<ScanHistoryList
 						scanHistory={scanHistory}

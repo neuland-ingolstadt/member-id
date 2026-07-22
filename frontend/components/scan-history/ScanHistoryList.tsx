@@ -1,8 +1,8 @@
 'use client'
 
 import { Clock } from 'lucide-react'
-import { TerminalWindow } from '@/components/terminal-window'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { ExportCsvButton } from './ExportCsvButton'
 import { ScanHistoryItem } from './ScanHistoryItem'
@@ -18,49 +18,54 @@ export function ScanHistoryList({
 }: ScanHistoryListProps) {
 	if (scanHistory.length === 0) {
 		return (
-			<TerminalWindow title="neuland@verify:~/history">
-				<div className="p-6 text-center font-mono text-terminal-text/50">
-					<Clock className="mx-auto mb-3 h-12 w-12 opacity-50 transition-transform duration-300 hover:rotate-12" />
-					<p className="text-sm">
-						<span className="text-terminal-cyan">&gt;</span> No scans recorded
-						yet
-					</p>
-					<p className="mt-1 text-xs text-terminal-text/40">
-						Scan Neuland IDs to see them listed here
-						<span className="blinking-cursor ml-1">_</span>
-					</p>
-				</div>
-			</TerminalWindow>
+			<Card>
+				<CardHeader>
+					<CardTitle className="text-lg font-semibold flex items-center gap-2">
+						<div className="p-2 bg-primary text-background">
+							<Clock className="h-5 w-5" />
+						</div>
+						Scan History
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="text-center py-8 text-gray-500 dark:text-gray-400">
+						<Clock className="h-12 w-12 mx-auto mb-3 opacity-50 transition-transform duration-300 hover:rotate-12" />
+						<p className="text-sm">No scans recorded yet</p>
+						<p className="text-xs mt-1">
+							Scan Neuland IDs to see them listed here
+						</p>
+					</div>
+				</CardContent>
+			</Card>
 		)
 	}
 
 	return (
-		<TerminalWindow
-			title="neuland@verify:~/history"
-			headerRight={
+		<Card>
+			<CardHeader className="flex flex-row items-center">
 				<div className="flex items-center gap-2">
-					<Badge
-						variant="secondary"
-						className="border border-terminal-window-border bg-terminal-card font-mono text-xs"
-					>
-						{scanHistory.length}
-					</Badge>
+					<Clock className="h-5 w-5 transition-transform duration-300 hover:rotate-12" />
+					<CardTitle className="text-lg font-semibold">Scan History</CardTitle>
+					<Badge variant="secondary">{scanHistory.length}</Badge>
+				</div>
+				<div className="ml-auto flex items-center gap-2">
 					<ExportCsvButton scanHistory={scanHistory} />
 				</div>
-			}
-		>
-			<div className="h-[60vh] overflow-y-auto scrollbar-thin">
-				<div className="space-y-2 p-4 font-mono">
-					{scanHistory.map((scan, index) => (
-						<ScanHistoryItem
-							key={scan.id}
-							scan={scan}
-							isLast={index === scanHistory.length - 1}
-							onRemoveScan={onRemoveScan}
-						/>
-					))}
+			</CardHeader>
+			<CardContent className="p-0">
+				<div className="h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+					<div className="p-4 space-y-2">
+						{scanHistory.map((scan, index) => (
+							<ScanHistoryItem
+								key={scan.id}
+								scan={scan}
+								isLast={index === scanHistory.length - 1}
+								onRemoveScan={onRemoveScan}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
-		</TerminalWindow>
+			</CardContent>
+		</Card>
 	)
 }

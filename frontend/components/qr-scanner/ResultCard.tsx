@@ -10,8 +10,8 @@ import {
 	TriangleAlert,
 	User
 } from 'lucide-react'
-import { TerminalWindow } from '@/components/terminal-window'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { getRelativeTime } from '@/lib/date'
 import { QRType, type VerificationResult } from '@/lib/qr-verifier'
@@ -24,24 +24,22 @@ interface Props {
 
 export function ResultCard({ result, duplicateWarning }: Props) {
 	if (result) {
-		const statusTitle = result.success
-			? duplicateWarning
-				? 'neuland@verify:~/result --warn'
-				: 'neuland@verify:~/result --ok'
-			: 'neuland@verify:~/result --err'
-
 		return (
-			<TerminalWindow title={statusTitle}>
-				<div className="p-4 font-mono sm:p-6">
-					<div className="mb-6 flex items-center gap-3">
+			<Card
+				className={` ${
+					result.success
+						? duplicateWarning
+							? 'border-blue-200 bg-white dark:bg-gray-800'
+							: 'border-green-200 bg-white dark:bg-gray-800'
+						: 'border-destructive/50 bg-white dark:bg-gray-800'
+				}`}
+			>
+				<CardContent className="p-6">
+					<div className="flex items-center gap-3 mb-6">
 						{result.success ? (
 							<div className="flex items-center gap-2">
 								<div
-									className={`border p-2 ${
-										duplicateWarning
-											? 'border-sky-400/40 bg-sky-400/10 text-sky-400'
-											: 'border-terminal-cyan/40 bg-terminal-cyan/10 text-terminal-cyan'
-									}`}
+									className={`p-2 ${duplicateWarning ? 'bg-blue-600' : 'bg-green-600'} text-white`}
 								>
 									{duplicateWarning ? (
 										<Info className="h-6 w-6" />
@@ -51,15 +49,15 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 								</div>
 								<div>
 									<h3
-										className={`text-xl font-bold ${
-											duplicateWarning ? 'text-sky-400' : 'text-terminal-cyan'
-										}`}
+										className={`text-xl font-bold ${duplicateWarning ? 'text-blue-800 dark:text-blue-300' : 'text-green-800 dark:text-green-300'}`}
 									>
 										{duplicateWarning
 											? 'Already Verified'
 											: 'Verification Successful'}
 									</h3>
-									<p className="text-sm text-terminal-text/60">
+									<p
+										className={`${duplicateWarning ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'} text-sm`}
+									>
 										{duplicateWarning?.result?.payload
 											? `Originally verified with ${
 													duplicateWarning.result.payload.type === QRType.APP
@@ -78,7 +76,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 							</div>
 						) : (
 							<div className="flex items-center gap-2">
-								<div className="border border-destructive/50 bg-destructive/10 p-2 text-destructive">
+								<div className="p-2 bg-destructive text-destructive-foreground">
 									<ShieldX className="h-6 w-6" />
 								</div>
 								<div>
@@ -97,9 +95,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 											: 'default'
 										: 'destructive'
 								}
-								className={`flex items-center gap-1.5 px-3 py-1 text-sm ${
-									duplicateWarning ? 'border-sky-400 text-sky-400' : ''
-								}`}
+								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-700 dark:text-blue-300' : ''} flex items-center gap-1.5`}
 							>
 								{result.success ? (
 									duplicateWarning ? (
@@ -121,11 +117,11 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 					</div>
 
 					{result.error && (
-						<div className="mb-6 space-y-1 border border-destructive/40 bg-destructive/10 p-4">
-							<p className="text-sm font-bold text-destructive">
+						<div className="mb-6 space-y-1 p-4 bg-destructive/10 border border-destructive rounded-lg">
+							<p className="text-destructive text-sm font-medium font-bold">
 								{result.error}
 							</p>
-							<p className="text-xs text-destructive/80">
+							<p className="text-destructive text-xs">
 								{result.payload
 									? 'Even there is data returned, it is NOT a valid member pass.'
 									: 'Not a valid member pass.'}
@@ -135,55 +131,55 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 					{result.payload && (
 						<div className="space-y-6">
-							<div className="border border-terminal-window-border bg-terminal-card p-4 sm:p-6">
-								<div className="mb-4 flex items-center gap-4">
-									<div className="border border-terminal-cyan/30 bg-terminal-cyan/10 p-3 text-terminal-cyan">
+							<div className="bg-white dark:bg-gray-800 p-6 shadow-inner border border-gray-200 dark:border-gray-700">
+								<div className="flex items-center gap-4 mb-4">
+									<div className="p-3 bg-primary text-background">
 										<User className="h-6 w-6" />
 									</div>
 									<div>
-										<h4 className="text-lg font-semibold text-terminal-text">
+										<h4 className="text-lg font-semibold text-gray-900 dark:text-white">
 											Identity Information
 										</h4>
-										<p className="text-sm text-terminal-text/50">
+										<p className="text-sm text-gray-600 dark:text-gray-400">
 											Verified credential data
 										</p>
 									</div>
 								</div>
 
-								<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<User className="h-4 w-4 text-terminal-cyan/70" />
-											<span className="text-sm font-medium text-terminal-text/70">
+											<User className="h-4 w-4 text-gray-500" />
+											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												Name
 											</span>
 										</div>
-										<p className="pl-6 text-lg font-semibold text-terminal-text">
+										<p className="text-lg font-semibold text-gray-900 dark:text-white pl-6">
 											{result.payload.name}
 										</p>
 									</div>
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<ShieldX className="h-4 w-4 text-terminal-cyan/70" />
-											<span className="text-sm font-medium text-terminal-text/70">
+											<ShieldX className="h-4 w-4 text-gray-500" />
+											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												User ID
 											</span>
 										</div>
-										<p className="break-all pl-6 font-mono text-sm text-terminal-text/60">
+										<p className="text-sm font-mono text-gray-600 dark:text-gray-400 pl-6 break-all">
 											{result.payload.sub}
 										</p>
 									</div>
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<Clock className="h-4 w-4 text-terminal-cyan/70" />
-											<span className="text-sm font-medium text-terminal-text/70">
+											<Clock className="h-4 w-4 text-gray-500" />
+											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												Issued
 											</span>
 										</div>
-										<div className="space-y-1 pl-6">
-											<p className="text-sm text-terminal-text/60">
+										<div className="pl-6 space-y-1">
+											<p className="text-sm text-gray-600 dark:text-gray-400">
 												{new Date(result.payload.iat * 1000).toLocaleDateString(
 													'en-US',
 													{
@@ -195,7 +191,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 													}
 												)}
 											</p>
-											<p className="text-xs text-terminal-text/40">
+											<p className="text-xs text-gray-500 dark:text-gray-500">
 												{getRelativeTime(new Date(result.payload.iat * 1000))}
 											</p>
 										</div>
@@ -203,13 +199,13 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<Clock className="h-4 w-4 text-terminal-cyan/70" />
-											<span className="text-sm font-medium text-terminal-text/70">
+											<Clock className="h-4 w-4 text-gray-500" />
+											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												Expires
 											</span>
 										</div>
-										<div className="space-y-1 pl-6">
-											<p className="text-sm text-terminal-text/60">
+										<div className="pl-6 space-y-1">
+											<p className="text-sm text-gray-600 dark:text-gray-400">
 												{new Date(result.payload.exp * 1000).toLocaleDateString(
 													'en-US',
 													{
@@ -221,7 +217,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 													}
 												)}
 											</p>
-											<p className="text-xs text-terminal-text/40">
+											<p className="text-xs text-gray-500 dark:text-gray-500">
 												{getRelativeTime(new Date(result.payload.exp * 1000))}
 											</p>
 										</div>
@@ -230,19 +226,19 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
 											{result.payload.type === QRType.APP ? (
-												<Smartphone className="h-4 w-4 text-terminal-cyan/70" />
+												<Smartphone className="h-4 w-4 text-gray-500" />
 											) : result.payload.type === QRType.APPLE_WALLET ? (
-												<Ticket className="h-4 w-4 text-terminal-cyan/70" />
+												<Ticket className="h-4 w-4 text-gray-500" />
 											) : result.payload.type === QRType.ANDROID_WALLET ? (
-												<Smartphone className="h-4 w-4 text-terminal-cyan/70" />
+												<Smartphone className="h-4 w-4 text-gray-500" />
 											) : (
-												<ShieldX className="h-4 w-4 text-terminal-cyan/70" />
+												<ShieldX className="h-4 w-4 text-gray-500" />
 											)}
-											<span className="text-sm font-medium text-terminal-text/70">
+											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 												QR Type
 											</span>
 										</div>
-										<p className="pl-6 text-sm text-terminal-text/60">
+										<p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
 											{result.payload.type === QRType.APP
 												? 'App Neuland ID'
 												: result.payload.type === QRType.APPLE_WALLET
@@ -258,24 +254,22 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 							{result.debugInfo && <DebugInfo info={result.debugInfo} />}
 						</div>
 					)}
-				</div>
-			</TerminalWindow>
+				</CardContent>
+			</Card>
 		)
 	}
 
 	return (
-		<TerminalWindow title="neuland@verify:~/awaiting">
-			<div className="p-6 text-center font-mono">
-				<p className="font-medium text-terminal-text">
-					<span className="text-terminal-cyan">&gt;</span> Scan a Neuland
-					Ingolstadt member&apos;s digital ID card to verify.
+		<Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+			<CardContent className="p-6 text-center">
+				<p className="font-medium text-gray-900 dark:text-white">
+					Scan a Neuland Ingolstadt member's digital ID card to verify.
 				</p>
-				<p className="mt-2 text-xs text-terminal-text/50">
+				<p className="text-xs text-gray-600 dark:text-gray-400">
 					Tap on the QR code shown in Neuland Next to view it in full-screen
 					mode.
-					<span className="blinking-cursor ml-1">_</span>
 				</p>
-			</div>
-		</TerminalWindow>
+			</CardContent>
+		</Card>
 	)
 }

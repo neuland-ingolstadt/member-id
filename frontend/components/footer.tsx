@@ -1,4 +1,6 @@
+import { ExternalLink } from 'lucide-react'
 import { GitHubIcon } from '@/components/github-icon'
+import NeulandLogo from '@/components/neuland-logo'
 
 export function Footer() {
 	const year = new Date().getFullYear()
@@ -6,108 +8,69 @@ export function Footer() {
 	const shortCommitHash = commitHash.substring(0, 7)
 
 	return (
-		<footer className="relative z-10 font-mono">
-			<div className="my-8 grid grid-cols-1 gap-4 border-t border-terminal-window-border pt-6 text-terminal-text sm:grid-cols-3">
-				<nav>
-					<ul>
-						<li className="mb-2">
-							<a
-								href="https://neuland-ingolstadt.de/legal/impressum"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
-							>
-								<span className="group-hover:animate-cyberpunk">$</span>{' '}
-								<span className="text-terminal-cyan">cat</span> impressum
-							</a>
-						</li>
-						<li className="mb-2">
-							<a
-								href="https://neuland-ingolstadt.de/legal/datenschutz"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
-							>
-								<span className="group-hover:animate-cyberpunk">$</span>{' '}
-								<span className="text-terminal-cyan">cat</span> datenschutz
-							</a>
-						</li>
-						<li className="mb-2">
-							<a
-								href="https://neuland-ingolstadt.de"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
-							>
-								<span className="group-hover:animate-cyberpunk">$</span>{' '}
-								<span className="text-terminal-cyan">cd</span> neuland.de
-							</a>
-						</li>
-					</ul>
-				</nav>
+		<footer className="my-16 text-center text-muted-foreground">
+			<div className="mx-auto max-w-7xl px-4">
+				<div className="border-t border-border pt-8">
+					<div className="mb-3 flex items-center justify-center gap-2">
+						<NeulandLogo className="h-5 w-auto text-foreground" />
+					</div>
+					<p className="mb-2 text-xs">© {year} Neuland Ingolstadt e.V.</p>
+					<p className="mb-4 text-xs text-muted-foreground/80">
+						Secure digital membership verification powered by cryptographic
+						signatures
+					</p>
 
-				<nav>
-					<ul>
-						<li className="mb-2">
-							<a
-								href="https://github.com/neuland-ingolstadt/member-id"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
-							>
-								<span className="text-terminal-cyan transition-all duration-300 group-hover:animate-cyberpunk group-hover:text-terminal-text">
-									<GitHubIcon className="inline-block h-4 w-4" />
-								</span>{' '}
-								member-id
-							</a>
-						</li>
-						<li className="mb-2">
-							<a
-								href="https://github.com/neuland-ingolstadt/"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
-							>
-								<span className="text-terminal-cyan transition-all duration-300 group-hover:animate-cyberpunk group-hover:text-terminal-text">
-									<GitHubIcon className="inline-block h-4 w-4" />
-								</span>{' '}
-								github.com
-							</a>
-						</li>
-						<li className="mb-2">
+					<div className="mb-3 flex flex-col items-center justify-center gap-2 text-xs">
+						<div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+							<div className="flex items-center gap-4">
+								<a
+									href="https://neuland-ingolstadt.de/legal/impressum"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+								>
+									<ExternalLink className="h-3 w-3" />
+									Imprint
+								</a>
+								<a
+									href="https://neuland-ingolstadt.de/legal/datenschutz"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+								>
+									<ExternalLink className="h-3 w-3" />
+									Privacy
+								</a>
+								<a
+									href="https://github.com/neuland-ingolstadt/member-id"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+								>
+									<GitHubIcon className="h-3 w-3" />
+									GitHub
+								</a>
+							</div>
+						</div>
+						<div className="flex items-center gap-1 text-muted-foreground/70">
+							<span>Build:</span>
+							<code className="bg-muted px-1 py-0.5 font-mono">
+								{shortCommitHash}
+							</code>
+						</div>
+						<div className="mt-2 flex items-center gap-1 text-muted-foreground/70">
+							Created by{' '}
 							<a
 								href="https://eggl.dev"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="group text-terminal-text no-underline"
+								className="text-muted-foreground transition-colors hover:text-foreground"
 							>
-								<span className="group-hover:animate-cyberpunk">$</span>{' '}
-								<span className="text-terminal-cyan">whoami</span> Robert Eggl
+								Robert Eggl
 							</a>
-						</li>
-					</ul>
-				</nav>
-
-				<nav>
-					<ul>
-						<li className="mb-2 text-terminal-text/70">
-							<span className="text-terminal-cyan">#</span> Member ID
-							Verificator
-						</li>
-						<li className="mb-2 text-sm text-terminal-text/50">
-							Cryptographic QR verification for Neuland membership passes
-						</li>
-						<li className="mb-2 text-xs text-terminal-text/40">
-							Build:{' '}
-							<span className="text-terminal-cyan/70" title="Git commit hash">
-								{shortCommitHash}
-							</span>
-						</li>
-					</ul>
-				</nav>
-			</div>
-			<div className="pb-8 pt-2 text-center text-sm text-terminal-text/50">
-				© {year} Neuland Ingolstadt e.V.
+						</div>
+					</div>
+				</div>
 			</div>
 		</footer>
 	)

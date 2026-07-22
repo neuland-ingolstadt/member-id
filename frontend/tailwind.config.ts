@@ -11,18 +11,18 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				mono: [
-					'var(--font-mono)',
-					'Source Code Pro',
-					'ui-monospace',
-					'monospace'
-				],
 				sans: [
 					'var(--font-sans)',
 					'Noto Sans',
 					'system-ui',
 					'-apple-system',
 					'sans-serif'
+				],
+				mono: [
+					'var(--font-mono)',
+					'Noto Sans Mono',
+					'ui-monospace',
+					'monospace'
 				]
 			},
 			colors: {
@@ -65,29 +65,11 @@ const config: Config = {
 					'3': 'hsl(var(--chart-3))',
 					'4': 'hsl(var(--chart-4))',
 					'5': 'hsl(var(--chart-5))'
-				},
-				terminal: {
-					bg: 'var(--terminal-bg)',
-					text: 'var(--terminal-text)',
-					cyan: 'var(--terminal-cyan)',
-					highlight: 'var(--terminal-highlight)',
-					darkGreen: 'var(--terminal-darkGreen)',
-					muted: 'var(--terminal-mutedGreen)',
-					lightGreen: 'var(--terminal-lightGreen)',
-					mediumGreen: 'var(--terminal-mediumGreen)',
-					window: 'var(--terminal-window)',
-					'window-border': 'var(--terminal-window-border)',
-					windowTitle: 'var(--terminal-window-title)',
-					overlay: 'var(--terminal-overlay)',
-					card: 'var(--terminal-card)',
-					onAccent: 'var(--terminal-onAccent)',
-					paper: 'var(--terminal-paper)',
-					'paper-text': 'var(--terminal-paper-text)'
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
-				md: 'calc(var(--radius) + 2px)',
+				md: 'var(--radius)',
 				sm: 'var(--radius)'
 			},
 			keyframes: {
