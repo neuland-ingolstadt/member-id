@@ -100,8 +100,9 @@
 		--card-foreground: 155 24% 12%;
 		--popover: 0 0% 100%;
 		--popover-foreground: 155 24% 12%;
-		--primary: 150 55% 40%;
-		--primary-foreground: 140 50% 98%;
+		/* Matches neuland-website light --primary / --terminal-cyan */
+		--primary: oklch(0.72 0.24 142.83);
+		--primary-foreground: #042011;
 		--secondary: 150 18% 86%;
 		--secondary-foreground: 150 28% 20%;
 		--muted: 145 26% 90%;
@@ -112,7 +113,7 @@
 		--destructive-foreground: 0 0% 98%;
 		--border: 145 20% 82%;
 		--input: 145 20% 82%;
-		--ring: 149 45% 40%;
+		--ring: oklch(0.72 0.24 142.83);
 		--radius: 0rem;
 		--chart-1: 150 55% 40%;
 		--chart-2: 149 45% 50%;
@@ -128,8 +129,9 @@
 		--card-foreground: 150 25% 95%;
 		--popover: 150 8% 6%;
 		--popover-foreground: 150 25% 95%;
-		--primary: 149 65% 52%;
-		--primary-foreground: 160 30% 12%;
+		/* Matches neuland-website --terminal-cyan / neon accent */
+		--primary: oklch(0.825 0.3281 142.83);
+		--primary-foreground: #001f12;
 		--secondary: 150 9% 22%;
 		--secondary-foreground: 160 20% 94%;
 		--muted: 150 9% 12%;
@@ -140,7 +142,7 @@
 		--destructive-foreground: 0 0% 98%;
 		--border: 150 7% 20%;
 		--input: 150 7% 20%;
-		--ring: 149 65% 52%;
+		--ring: oklch(0.825 0.3281 142.83);
 		--chart-1: 149 65% 52%;
 		--chart-2: 150 50% 45%;
 		--chart-3: 145 40% 55%;

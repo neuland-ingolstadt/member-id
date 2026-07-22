@@ -9,17 +9,17 @@ import {
 	Zap
 } from 'lucide-react'
 import Link from 'next/link'
-import NeulandLogo from '@/components/neuland-logo'
+import NeulandPalm from '@/components/neuland-palm'
 import { Button } from '@/components/ui/button'
 
 export default function LearnMorePage() {
 	return (
-		<div className="pt-20 bg-background">
+		<div className="bg-background pt-20">
 			<div className="container mx-auto px-4 py-12">
-				<div className="max-w-5xl mx-auto space-y-16">
-					<section className="text-center space-y-4">
-						<div className="inline-flex w-24 h-24 items-center justify-center bg-primary text-primary-foreground mx-auto">
-							<NeulandLogo className="h-12 w-auto" />
+				<div className="mx-auto max-w-5xl space-y-16">
+					<section className="space-y-4 text-center">
+						<div className="mx-auto inline-flex h-24 w-24 items-center justify-center bg-primary text-primary-foreground">
+							<NeulandPalm size={56} color="currentColor" />
 						</div>
 						<h1 className="text-5xl font-bold text-foreground">
 							Neuland ID Verificator
