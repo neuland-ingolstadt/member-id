@@ -1,14 +1,7 @@
 'use client'
 
 import NumberFlow from '@number-flow/react'
-import {
-	BarChart3,
-	CheckCircle,
-	Copy,
-	RotateCcw,
-	ShieldX,
-	Users
-} from 'lucide-react'
+import { CheckCircle, Copy, RotateCcw, ShieldX, Users } from 'lucide-react'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -21,7 +14,7 @@ import {
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { TerminalPanel } from '@/components/ui/terminal-panel'
 import type { ScanStats } from '@/hooks/use-scan-history'
 
 interface ScanStatsDisplayProps {
@@ -43,23 +36,10 @@ export function ScanStatsDisplay({
 			: 0
 
 	return (
-		<Card>
-			<CardHeader className="pb-4">
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-3">
-						<div className="p-2 bg-primary rounded-full text-background">
-							<BarChart3 className="h-5 w-5" />
-						</div>
-						<div>
-							<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-								Scan Statistics
-							</CardTitle>
-							<p className="text-sm text-gray-600 dark:text-gray-400">
-								Session activity overview
-							</p>
-						</div>
-					</div>
-					{stats.totalScans > 0 && (
+		<TerminalPanel title="Scan Statistics" subtitle="Session activity overview">
+			<div className="space-y-4 p-5">
+				{stats.totalScans > 0 && (
+					<div className="flex justify-end">
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
 								<Button
@@ -67,7 +47,7 @@ export function ScanStatsDisplay({
 									size="sm"
 									className="text-destructive hover:bg-destructive/10 group"
 								>
-									<RotateCcw className="h-4 w-4 mr-1 group-hover:-rotate-12 transition-transform duration-300" />
+									<RotateCcw className="group-hover:-rotate-12 transition-transform duration-300" />
 									Clear
 								</Button>
 							</AlertDialogTrigger>
@@ -83,24 +63,22 @@ export function ScanStatsDisplay({
 									<AlertDialogCancel>Cancel</AlertDialogCancel>
 									<AlertDialogAction
 										onClick={onClearHistory}
-										className="bg-red-600 hover:bg-red-700"
+										className="bg-destructive hover:bg-destructive/90"
 									>
 										Clear All
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
-					)}
-				</div>
-			</CardHeader>
-			<CardContent className="pt-0">
-				<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-					{/* Total Scans */}
-					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-primary/20 hover:border-primary/30">
-						<div className="flex items-center justify-center mb-2">
-							<Users className="h-5 w-5 text-primary" />
+					</div>
+				)}
+
+				<div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
+						<div className="mb-2 flex items-center justify-center">
+							<Users className="size-5 text-terminal-cyan" />
 						</div>
-						<div className="text-2xl font-bold text-gray-900 dark:text-white">
+						<div className="text-2xl font-bold text-terminal-text">
 							<NumberFlow
 								value={stats.totalScans}
 								format={{ notation: 'compact' }}
@@ -108,17 +86,16 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
+						<div className="break-words text-xs text-terminal-text/50">
 							Total Scans
 						</div>
 					</div>
 
-					{/* Valid Scans */}
-					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-green-500/20 hover:border-green-500/30">
-						<div className="flex items-center justify-center mb-2">
-							<CheckCircle className="h-5 w-5 text-green-500" />
+					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
+						<div className="mb-2 flex items-center justify-center">
+							<CheckCircle className="size-5 text-terminal-cyan" />
 						</div>
-						<div className="text-2xl font-bold text-green-600 dark:text-green-500">
+						<div className="text-2xl font-bold text-terminal-lightGreen">
 							<NumberFlow
 								value={stats.validScans}
 								format={{ notation: 'compact' }}
@@ -126,17 +103,16 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
+						<div className="break-words text-xs text-terminal-text/50">
 							Valid ({validRate}%)
 						</div>
 					</div>
 
-					{/* Invalid Scans */}
-					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-red-500/20 hover:border-red-500/30">
-						<div className="flex items-center justify-center mb-2">
-							<ShieldX className="h-5 w-5 text-destructive" />
+					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
+						<div className="mb-2 flex items-center justify-center">
+							<ShieldX className="size-5 text-destructive" />
 						</div>
-						<div className="text-2xl font-bold text-red-600 dark:text-red-500">
+						<div className="text-2xl font-bold text-destructive">
 							<NumberFlow
 								value={stats.invalidScans}
 								format={{ notation: 'compact' }}
@@ -144,17 +120,16 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="text-xs text-gray-600 dark:text-gray-400 break-words">
+						<div className="break-words text-xs text-terminal-text/50">
 							Invalid ({100 - validRate}%)
 						</div>
 					</div>
 
-					{/* Duplicate Scans */}
-					<div className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out  hover:shadow-lg hover:shadow-blue-500/20 hover:border-blue-500/30">
-						<div className="flex items-center justify-center mb-2">
-							<Copy className="h-5 w-5 text-blue-600" />
+					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
+						<div className="mb-2 flex items-center justify-center">
+							<Copy className="size-5 text-terminal-cyan" />
 						</div>
-						<div className="text-2xl font-bold text-blue-600 dark:text-blue-500">
+						<div className="text-2xl font-bold text-terminal-cyan">
 							<NumberFlow
 								value={stats.duplicateScans}
 								format={{ notation: 'compact' }}
@@ -162,13 +137,13 @@ export function ScanStatsDisplay({
 								spinTiming={{ duration: 800, easing: 'ease-out' }}
 							/>
 						</div>
-						<div className="text-xs text-gray-600 dark:text-gray-400 break-words leading-tight">
+						<div className="break-words text-xs leading-tight text-terminal-text/50">
 							<div>Duplicates</div>
 							<div>({duplicateRate}%)</div>
 						</div>
 					</div>
 				</div>
-			</CardContent>
-		</Card>
+			</div>
+		</TerminalPanel>
 	)
 }

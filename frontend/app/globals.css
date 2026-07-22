@@ -2,6 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	color-scheme: dark;
+
+	--background: 150 9% 4%;
+	--foreground: 150 25% 95%;
+	--muted: 150 9% 12%;
+	--muted-foreground: 150 9% 70%;
+	--border: 150 7% 20%;
+	--input: 150 7% 20%;
+	--ring: 149 65% 52%;
+	--primary: 149 65% 52%;
+	--primary-foreground: 160 30% 12%;
+	--secondary: 150 9% 22%;
+	--secondary-foreground: 160 20% 94%;
+	--accent: 149 80% 55%;
+	--accent-foreground: 160 35% 12%;
+	--destructive: 0 70% 45%;
+	--destructive-foreground: 0 0% 98%;
+	--radius: 0;
+
+	--card: var(--terminal-window);
+	--card-foreground: var(--terminal-text);
+	--popover: var(--terminal-window);
+	--popover-foreground: var(--terminal-text);
+
+	--terminal-bg: #020302;
+	--terminal-text: #f6fff8;
+	--terminal-cyan: oklch(0.825 0.3281 142.83);
+	--terminal-highlight: oklch(0.8544 0.3379 142.83);
+	--terminal-lightGreen: oklch(0.79 0.2935 142.83);
+	--terminal-mutedGreen: #0a4f2b;
+	--terminal-window: #0b0b0b;
+	--terminal-window-border: #333333;
+	--terminal-window-title: #414141;
+	--terminal-card: #101413;
+	--terminal-nav: #0b0f0c;
+	--terminal-onAccent: #001f12;
+
+	--ambient-background: #010101;
+	--ambient-grid-line: rgba(156, 163, 175, 0.12);
+	--ambient-glow: rgba(74, 222, 128, 0.08);
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme]) {
+		color-scheme: light;
+
+		--background: 145 40% 97%;
+		--foreground: 155 24% 12%;
+		--muted: 145 26% 90%;
+		--muted-foreground: 150 20% 32%;
+		--border: 145 20% 82%;
+		--input: 145 20% 82%;
+		--ring: 149 45% 40%;
+		--primary: 150 55% 40%;
+		--primary-foreground: 140 50% 98%;
+		--secondary: 150 18% 86%;
+		--secondary-foreground: 150 28% 20%;
+		--accent: 150 55% 40%;
+		--accent-foreground: 140 40% 96%;
+		--destructive: 0 70% 40%;
+		--destructive-foreground: 0 0% 98%;
+
+		--terminal-bg: #f5f8f5;
+		--terminal-text: #0b1d14;
+		--terminal-cyan: oklch(0.72 0.24 142.83);
+		--terminal-highlight: oklch(0.64 0.2 142.83);
+		--terminal-lightGreen: #0d8f5c;
+		--terminal-mutedGreen: #1a6b40;
+		--terminal-window: #ffffff;
+		--terminal-window-border: #c7d3c8;
+		--terminal-window-title: #e3ede6;
+		--terminal-card: #eff4ef;
+		--terminal-nav: #ffffff;
+		--terminal-onAccent: #042011;
+
+		--ambient-background: #fafafa;
+		--ambient-grid-line: rgba(13, 50, 36, 0.08);
+		--ambient-glow: rgba(25, 141, 94, 0.12);
+	}
+}
+
+:root[data-theme='light'] {
+	color-scheme: light;
+
+	--background: 145 40% 97%;
+	--foreground: 155 24% 12%;
+	--muted: 145 26% 90%;
+	--muted-foreground: 150 20% 32%;
+	--border: 145 20% 82%;
+	--input: 145 20% 82%;
+	--ring: 149 45% 40%;
+	--primary: 150 55% 40%;
+	--primary-foreground: 140 50% 98%;
+	--secondary: 150 18% 86%;
+	--secondary-foreground: 150 28% 20%;
+	--accent: 150 55% 40%;
+	--accent-foreground: 140 40% 96%;
+	--destructive: 0 70% 40%;
+	--destructive-foreground: 0 0% 98%;
+
+	--terminal-bg: #f5f8f5;
+	--terminal-text: #0b1d14;
+	--terminal-cyan: oklch(0.72 0.24 142.83);
+	--terminal-highlight: oklch(0.64 0.2 142.83);
+	--terminal-lightGreen: #0d8f5c;
+	--terminal-mutedGreen: #1a6b40;
+	--terminal-window: #ffffff;
+	--terminal-window-border: #c7d3c8;
+	--terminal-window-title: #e3ede6;
+	--terminal-card: #eff4ef;
+	--terminal-nav: #ffffff;
+	--terminal-onAccent: #042011;
+
+	--ambient-background: #fafafa;
+	--ambient-grid-line: rgba(13, 50, 36, 0.08);
+	--ambient-glow: rgba(25, 141, 94, 0.12);
+}
+
+@layer base {
+	* {
+		@apply border-border;
+		box-sizing: border-box;
+	}
+
+	html,
+	body {
+		min-height: 100%;
+	}
+
+	body {
+		@apply bg-terminal-bg text-terminal-text antialiased;
+		font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		color: var(--terminal-lightGreen);
+		font-family: var(--font-mono), ui-monospace, monospace;
+		letter-spacing: 0.02em;
+	}
+}
+
+.neuland-grid-bg {
+	background-color: var(--ambient-background);
+	background-image:
+		linear-gradient(var(--ambient-grid-line) 1px, transparent 1px),
+		linear-gradient(90deg, var(--ambient-grid-line) 1px, transparent 1px);
+	background-size: 72px 72px;
+}
+
+.neuland-glow {
+	background:
+		radial-gradient(
+			ellipse 80% 50% at 50% -20%,
+			var(--ambient-glow),
+			transparent 70%
+		),
+		radial-gradient(
+			ellipse 60% 40% at 100% 100%,
+			rgba(74, 222, 128, 0.04),
+			transparent 60%
+		);
+}
+
 @layer utilities {
 	.animate-fade-in {
 		animation: fadeIn 0.3s ease-in-out;
@@ -89,71 +260,5 @@
 			opacity: 1;
 			transform: scale(1.1);
 		}
-	}
-}
-
-@layer base {
-	:root {
-		--background: 210 20% 98%;
-		--foreground: 215 15% 15%;
-		--card: 0 0% 100%;
-		--card-foreground: 215 15% 15%;
-		--popover: 0 0% 100%;
-		--popover-foreground: 215 15% 15%;
-		--primary: 0 0% 0%;
-		--primary-foreground: 0 0% 100%;
-		--secondary: 210 20% 95%;
-		--secondary-foreground: 215 15% 20%;
-		--muted: 210 15% 92%;
-		--muted-foreground: 215 10% 40%;
-		--accent: 210 20% 95%;
-		--accent-foreground: 215 15% 20%;
-		--destructive: 0 80% 65%;
-		--destructive-foreground: 0 0% 100%;
-		--border: 210 16% 86%;
-		--input: 210 16% 86%;
-		--ring: 222 47% 50%;
-		--radius: 0.5rem;
-		--chart-1: 222 47% 50%;
-		--chart-2: 220 21% 45%;
-		--chart-3: 215 16% 60%;
-		--chart-4: 210 24% 70%;
-		--chart-5: 220 11% 30%;
-	}
-
-	.dark {
-		--background: 215 20% 12%;
-		--foreground: 210 15% 90%;
-		--card: 215 25% 16%;
-		--card-foreground: 210 15% 90%;
-		--popover: 215 25% 16%;
-		--popover-foreground: 210 15% 90%;
-		--primary: 0 0% 89.4%;
-		--primary-foreground: 0 0% 100%;
-		--secondary: 215 15% 25%;
-		--secondary-foreground: 210 15% 90%;
-		--muted: 215 15% 25%;
-		--muted-foreground: 210 10% 65%;
-		--accent: 215 15% 25%;
-		--accent-foreground: 210 15% 90%;
-		--destructive: 0 68.9% 46.7%;
-		--destructive-foreground: 0 0% 100%;
-		--border: 215 20% 30%;
-		--input: 215 20% 30%;
-		--ring: 222 47% 50%;
-		--chart-1: 217 90% 60%;
-		--chart-2: 210 50% 70%;
-		--chart-3: 220 20% 80%;
-		--chart-4: 215 15% 60%;
-		--chart-5: 210 15% 40%;
-	}
-}
-
-@layer base {
-	* {
-		@apply border-border;
-	}
-	body {
-		@apply bg-background text-foreground;
 	}
 }

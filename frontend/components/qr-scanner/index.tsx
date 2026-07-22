@@ -1,13 +1,12 @@
 'use client'
 
-import { QrCodeIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CameraSelector } from '@/components/camera-selector'
 import { FloatingSettingsButton } from '@/components/floating-settings-button'
 import { QRCodeReader } from '@/components/qr-reader'
 import { ScanHistoryList } from '@/components/scan-history'
 import { ScanStatsDisplay } from '@/components/scan-stats-display'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { TerminalPanel } from '@/components/ui/terminal-panel'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { useScanHistory } from '@/hooks/use-scan-history'
 import { useSettings } from '@/hooks/use-settings'
@@ -221,29 +220,15 @@ export function QRScanner() {
 			<FloatingSettingsButton />
 			<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 				<div className="lg:col-span-3 space-y-6">
-					<Card>
-						<CardHeader className="pb-4">
-							<div className="flex items-center justify-between gap-4">
-								<div className="flex items-center gap-3">
-									<div className="p-2 bg-primary rounded-full text-background">
-										<QrCodeIcon className="h-5 w-5" />
-									</div>
-									<div className="flex flex-col">
-										<CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-											Neuland ID
-										</CardTitle>
-									</div>
-								</div>
-								<div className="flex justify-end">
-									<CameraSelector
-										onCameraChange={handleCameraChange}
-										currentDeviceId={selectedCameraId}
-										className="bg-background/90 backdrop-blur-md border border-border/60 shadow-lg hover:bg-background/95 transition-colors"
-									/>
-								</div>
+					<TerminalPanel title="Neuland ID" subtitle="Scan member passes">
+						<div className="p-5">
+							<div className="mb-4 flex items-center justify-end">
+								<CameraSelector
+									onCameraChange={handleCameraChange}
+									currentDeviceId={selectedCameraId}
+									className="border border-terminal-window-border bg-terminal-card text-terminal-text"
+								/>
 							</div>
-						</CardHeader>
-						<CardContent className="p-6">
 							<div className="relative">
 								<QRCodeReader
 									onScan={handleQRScan}
@@ -277,8 +262,8 @@ export function QRScanner() {
 										/>
 									)}
 							</div>
-						</CardContent>
-					</Card>
+						</div>
+					</TerminalPanel>
 					<ResultCard
 						result={verificationResult}
 						duplicateWarning={duplicateWarning}

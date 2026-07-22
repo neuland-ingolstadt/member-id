@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import SvgIcon from '@/components/neuland-palm'
+import { NeulandPalm } from '@/components/neuland-palm'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 
@@ -10,40 +10,40 @@ export function Navbar() {
 	const pathname = usePathname()
 	const onInfoPage = pathname === '/learn-more'
 
+	const logo = (
+		<>
+			<NeulandPalm className="h-9 w-auto text-terminal-text" />
+			<div className="font-mono leading-tight">
+				<span className="block text-sm font-semibold tracking-wide text-terminal-text">
+					Neuland
+				</span>
+				<span className="block text-[10px] uppercase tracking-[0.25em] text-terminal-text/50">
+					ID Verificator
+				</span>
+			</div>
+		</>
+	)
+
 	return (
-		<nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-			<div className="container mx-auto px-4 py-3">
-				<div className="flex items-center justify-between">
-					<Link
-						href="/"
-						className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-					>
-						<div className="w-8 h-8 bg-gradient-to-br from-purple-700 to-purple-900 text-white rounded-lg flex items-center justify-center shadow-md">
-							<SvgIcon size={20} color="currentColor" />
-						</div>
-						<div className="hidden sm:block">
-							<h1 className="font-semibold text-gray-900 dark:text-white text-lg">
-								Neuland ID Verificator
-							</h1>
-							<p className="text-xs text-gray-600 dark:text-gray-400">
-								Neuland Ingolstadt e.V.
-							</p>
-						</div>
-					</Link>
-					<div className="flex items-center gap-2">
-						{onInfoPage ? (
-							<Button variant="outline" asChild>
-								<Link href="/">Back to Scanner</Link>
-							</Button>
-						) : (
-							<Button variant="outline" asChild>
-								<Link href="/learn-more">Learn More</Link>
-							</Button>
-						)}
-						<ThemeToggle />
-					</div>
+		<header className="sticky top-0 z-50 border-b border-terminal-window-border bg-terminal-nav shadow-[0_1px_0_0_rgba(74,222,128,0.06)]">
+			<div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+				<Link href="/" className="group flex items-center gap-3 no-underline">
+					{logo}
+				</Link>
+
+				<div className="flex items-center gap-3">
+					{onInfoPage ? (
+						<Button variant="outline" size="sm" asChild>
+							<Link href="/">Back to Scanner</Link>
+						</Button>
+					) : (
+						<Button variant="outline" size="sm" asChild>
+							<Link href="/learn-more">Learn More</Link>
+						</Button>
+					)}
+					<ThemeToggle />
 				</div>
 			</div>
-		</nav>
+		</header>
 	)
 }
