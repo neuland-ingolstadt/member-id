@@ -26,6 +26,11 @@
           cp ${./resources}/* $out/resources/
         '';
 
+        # Prefer GITHUB_SHA from CI (--impure); fall back to flake git rev locally.
+        imageRevision =
+          let sha = builtins.getEnv "GITHUB_SHA";
+          in if sha != "" then sha else (self.rev or self.dirtyRev or "unknown");
+
         dockerImage = pkgs.dockerTools.buildImage {
           name = name;
           tag = "latest";
@@ -37,6 +42,10 @@
             Env = [
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
             ];
+            Labels = {
+              "org.opencontainers.image.source" = "https://github.com/neuland-ingolstadt/member-id";
+              "org.opencontainers.image.revision" = imageRevision;
+            };
           };
         };
       in

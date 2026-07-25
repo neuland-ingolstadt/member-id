@@ -47,7 +47,9 @@ jobs:
             nix-${{ runner.os }}-
 
       - name: Build Docker image
-        run: nix build ".#dockerImage" --out-link result
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: nix build ".#dockerImage" --impure --out-link result
 
       - id: repository
         name: Generate Registry String
