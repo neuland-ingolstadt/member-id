@@ -144,6 +144,9 @@ fn extract_token(req: &HttpRequest) -> Result<String, HttpResponse> {
     tags(
         (name = "Member-ID API", description = "Member ID API endpoints")
     ),
+    servers(
+        (url = "/api", description = "API behind nginx reverse proxy")
+    ),
     info(
         title = "Member-ID API",
         version = "1.0.0",
