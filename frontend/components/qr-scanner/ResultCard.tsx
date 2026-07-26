@@ -39,7 +39,11 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 						{result.success ? (
 							<div className="flex items-center gap-2">
 								<div
-									className={`p-2 ${duplicateWarning ? 'bg-blue-600' : 'bg-terminal-cyan'} rounded-full text-terminal-onAccent`}
+									className={`p-2 rounded-full ${
+										duplicateWarning
+											? 'bg-blue-600 text-white'
+											: 'bg-terminal-cyan text-terminal-onAccent'
+									}`}
 								>
 									{duplicateWarning ? (
 										<Info className="h-6 w-6" />
@@ -95,7 +99,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 											: 'default'
 										: 'destructive'
 								}
-								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-300' : ''} flex items-center gap-1.5`}
+								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-700 dark:text-blue-300' : ''} flex items-center gap-1.5`}
 							>
 								{result.success ? (
 									duplicateWarning ? (
@@ -133,7 +137,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 						<div className="space-y-6">
 							<div className="rounded-none border border-terminal-window-border bg-terminal-card p-6">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="p-3 bg-primary rounded-full text-primary-foreground">
+									<div className="p-3 rounded-full bg-terminal-cyan text-terminal-onAccent">
 										<User className="h-6 w-6" />
 									</div>
 									<div>
