@@ -113,7 +113,7 @@ export default function LearnMorePage() {
 					<p className="font-mono text-xs uppercase tracking-[0.2em] text-terminal-lightGreen">
 						Member ID Verification
 					</p>
-					<h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+					<h1 className="text-2xl font-bold tracking-tight text-terminal-text sm:text-3xl">
 						Neuland ID Verificator
 					</h1>
 					<p className="text-sm text-terminal-text/60">
