@@ -5,14 +5,12 @@ type TerminalCornersProps = {
 	className?: string
 }
 
-const corners = ['tl', 'tr', 'bl', 'br'] as const
-
 export function TerminalCorners({
 	size = 'md',
 	className
 }: TerminalCornersProps) {
-	const box = size === 'sm' ? 'h-3 w-3' : 'h-12 w-12'
-	const arm = size === 'sm' ? 8 : 24
+	const box = size === 'sm' ? 'h-8 w-8' : 'h-12 w-12'
+	const arm = size === 'sm' ? 16 : 24
 	const colorClass =
 		'bg-terminal-cyan/30 transition-colors duration-200 group-hover:bg-terminal-cyan/55'
 
@@ -24,26 +22,26 @@ export function TerminalCorners({
 			)}
 			aria-hidden="true"
 		>
-			{corners.map(corner => (
-				<div
-					key={corner}
-					className={cn('absolute', box, {
-						'top-0 left-0': corner === 'tl',
-						'top-0 right-0': corner === 'tr',
-						'bottom-0 left-0': corner === 'bl',
-						'bottom-0 right-0': corner === 'br'
-					})}
-				>
-					<div
-						className={cn('absolute w-px', colorClass, {
-							'top-0 left-0': corner === 'tl' || corner === 'tr',
-							'bottom-0 left-0': corner === 'bl',
-							'bottom-0 right-0': corner === 'br'
-						})}
-						style={{ height: arm }}
-					/>
-				</div>
-			))}
+			{/* top-left */}
+			<div className={cn('absolute top-0 left-0', box)}>
+				<div className={cn('absolute top-0 left-0 h-px', colorClass)} style={{ width: arm }} />
+				<div className={cn('absolute top-0 left-0 w-px', colorClass)} style={{ height: arm }} />
+			</div>
+			{/* top-right */}
+			<div className={cn('absolute top-0 right-0', box)}>
+				<div className={cn('absolute top-0 right-0 h-px', colorClass)} style={{ width: arm }} />
+				<div className={cn('absolute top-0 right-0 w-px', colorClass)} style={{ height: arm }} />
+			</div>
+			{/* bottom-left */}
+			<div className={cn('absolute bottom-0 left-0', box)}>
+				<div className={cn('absolute bottom-0 left-0 h-px', colorClass)} style={{ width: arm }} />
+				<div className={cn('absolute bottom-0 left-0 w-px', colorClass)} style={{ height: arm }} />
+			</div>
+			{/* bottom-right */}
+			<div className={cn('absolute bottom-0 right-0', box)}>
+				<div className={cn('absolute bottom-0 right-0 h-px', colorClass)} style={{ width: arm }} />
+				<div className={cn('absolute bottom-0 right-0 w-px', colorClass)} style={{ height: arm }} />
+			</div>
 		</div>
 	)
 }

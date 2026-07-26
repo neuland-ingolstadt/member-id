@@ -93,9 +93,9 @@ export function ScanStatsDisplay({
 
 					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
 						<div className="mb-2 flex items-center justify-center">
-							<CheckCircle className="size-5 text-terminal-cyan" />
+							<CheckCircle className="size-5 text-terminal-text/60" />
 						</div>
-						<div className="text-2xl font-bold text-terminal-lightGreen">
+						<div className="text-2xl font-bold text-terminal-text">
 							<NumberFlow
 								value={stats.validScans}
 								format={{ notation: 'compact' }}
@@ -127,9 +127,9 @@ export function ScanStatsDisplay({
 
 					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
 						<div className="mb-2 flex items-center justify-center">
-							<Copy className="size-5 text-terminal-cyan" />
+							<Copy className="size-5 text-blue-400" />
 						</div>
-						<div className="text-2xl font-bold text-terminal-cyan">
+						<div className="text-2xl font-bold text-blue-400">
 							<NumberFlow
 								value={stats.duplicateScans}
 								format={{ notation: 'compact' }}

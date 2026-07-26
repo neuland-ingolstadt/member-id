@@ -131,20 +131,26 @@ export default function LearnMorePage() {
 					<h2 className="font-mono text-xs uppercase tracking-[0.2em] text-terminal-lightGreen">
 						Features
 					</h2>
-					<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-						{FEATURES.map((feature) => (
-							<TerminalPanel key={feature.title} title={feature.title}>
-								<div className="space-y-3 p-5">
-									<div className="flex size-10 items-center justify-center border border-terminal-window-border bg-terminal-card">
-										<feature.icon className="size-5 text-terminal-cyan" />
+					<TerminalPanel title="Capabilities">
+						<div className="grid grid-cols-1 gap-px bg-terminal-window-border sm:grid-cols-2 lg:grid-cols-4">
+							{FEATURES.map((feature) => (
+								<div
+									key={feature.title}
+									className="relative min-h-[160px] bg-terminal-window p-5"
+								>
+									<div className="absolute top-4 right-4 flex size-9 items-center justify-center border border-terminal-window-border bg-terminal-card">
+										<feature.icon className="size-4 text-terminal-text/70" />
 									</div>
-									<p className="text-xs leading-relaxed text-terminal-text/50">
+									<h3 className="pr-12 font-mono text-sm font-semibold text-terminal-lightGreen">
+										{feature.title}
+									</h3>
+									<p className="mt-2 pr-12 text-xs leading-relaxed text-terminal-text/50">
 										{feature.description}
 									</p>
 								</div>
-							</TerminalPanel>
-						))}
-					</div>
+							))}
+						</div>
+					</TerminalPanel>
 				</section>
 
 				<section className="space-y-5">
@@ -181,20 +187,26 @@ export default function LearnMorePage() {
 					<h2 className="font-mono text-xs uppercase tracking-[0.2em] text-terminal-lightGreen">
 						Why Digital Verification
 					</h2>
-					<div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-						{BENEFITS.map((benefit) => (
-							<TerminalPanel key={benefit.title} title={benefit.title}>
-								<div className="space-y-3 p-5">
-									<div className="flex size-10 items-center justify-center border border-terminal-window-border bg-terminal-card">
-										<benefit.icon className="size-5 text-terminal-cyan" />
+					<TerminalPanel title="Benefits">
+						<div className="grid grid-cols-1 gap-px bg-terminal-window-border md:grid-cols-3">
+							{BENEFITS.map((benefit) => (
+								<div
+									key={benefit.title}
+									className="relative min-h-[160px] bg-terminal-window p-5"
+								>
+									<div className="absolute top-4 right-4 flex size-9 items-center justify-center border border-terminal-window-border bg-terminal-card">
+										<benefit.icon className="size-4 text-terminal-text/70" />
 									</div>
-									<p className="text-xs leading-relaxed text-terminal-text/50">
+									<h3 className="pr-12 font-mono text-sm font-semibold text-terminal-lightGreen">
+										{benefit.title}
+									</h3>
+									<p className="mt-2 pr-12 text-xs leading-relaxed text-terminal-text/50">
 										{benefit.description}
 									</p>
 								</div>
-							</TerminalPanel>
-						))}
-					</div>
+							))}
+						</div>
+					</TerminalPanel>
 				</section>
 
 				<section className="text-center space-y-4">
