@@ -22,7 +22,7 @@ struct TokenQuery {
 }
 
 use utoipa::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
+use utoipa_swagger_ui::{Config, SwaggerUi};
 
 #[utoipa::path(
     get,
@@ -193,8 +193,11 @@ async fn main() -> std::io::Result<()> {
             .route("/public-key", web::get().to(public_key_endpoint))
             .route("/health", web::get().to(health))
             .service(
-                SwaggerUi::new("/api/swagger-ui/{_:.*}")
-                    .url("/api/api-docs/openapi.json", ApiDoc::openapi()),
+                // Mounted without `/api` — nginx strips that prefix when proxying.
+                // Config URL is what the browser fetches (still under `/api/...`).
+                SwaggerUi::new("/swagger-ui/{_:.*}")
+                    .url("/api-docs/openapi.json", ApiDoc::openapi())
+                    .config(Config::new(["/api/api-docs/openapi.json"])),
             )
     })
     .bind(("0.0.0.0", 8000))?
