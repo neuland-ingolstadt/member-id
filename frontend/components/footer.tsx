@@ -1,83 +1,86 @@
-import { ExternalLink } from 'lucide-react'
-import { GitHubIcon } from '@/components/github-icon'
-import SvgIcon from '@/components/neuland-palm'
+import { NeulandPalm } from '@/components/neuland-palm'
+import { EXTERNAL_LINKS } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 
-export function Footer() {
+type FooterProps = {
+	className?: string
+}
+
+export function Footer({ className }: FooterProps) {
 	const year = new Date().getFullYear()
-
-	// Get commit hash from environment variable (set during build)
 	const commitHash = process.env.NEXT_PUBLIC_COMMIT_HASH || 'development'
 	const shortCommitHash = commitHash.substring(0, 7)
 
 	return (
-		<footer className="my-16 text-center text-gray-500 dark:text-gray-400">
-			<div className="max-w-7xl mx-auto">
-				<div className="border-t border-gray-200 dark:border-gray-700 pt-8">
-					<div className="flex items-center justify-center gap-2 mb-3">
-						<SvgIcon size={20} color="currentColor" />
-						<span className="text-sm font-medium">
-							Neuland ID Verification System
-						</span>
-					</div>
-					<p className="text-xs mb-2">© {year} Neuland Ingolstadt e.V.</p>
-					<p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
-						Secure digital membership verification powered by cryptographic
-						signatures
-					</p>
-
-					{/* Links and additional info */}
-					<div className="flex items-center justify-center gap-2 mb-3  text-xs flex-col">
-						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-							<div className="flex items-center gap-4">
-								<a
-									href="https://neuland-ingolstadt.de/legal/impressum"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-								>
-									<ExternalLink className="h-3 w-3" />
-									Imprint
-								</a>
-								<a
-									href="https://neuland-ingolstadt.de/legal/datenschutz"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-								>
-									<ExternalLink className="h-3 w-3" />
-									Privacy
-								</a>
-								<a
-									href="https://github.com/neuland-ingolstadt/member-id"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-								>
-									<GitHubIcon className="h-3 w-3" />
-									GitHub
-								</a>
-							</div>
-						</div>
-						{/* Version info */}
-						<div className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
-							<span>Build:</span>
-							<code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">
-								{shortCommitHash}
-							</code>
-						</div>
-						<div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 mt-2">
-							Created by{' '}
-							<a
-								href="https://eggl.dev"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-							>
-								Robert Eggl
-							</a>
-						</div>
-					</div>
+		<footer
+			className={cn(
+				'border-t border-terminal-window-border/60 py-8 text-center font-mono text-xs text-terminal-text/45',
+				className
+			)}
+		>
+			<div className="mx-auto flex max-w-7xl flex-col items-center gap-3">
+				<div className="flex items-center gap-2 text-sm font-medium text-terminal-text/70">
+					<NeulandPalm className="h-5 w-auto" />
+					<span>Neuland ID Verification System</span>
 				</div>
+
+				<p>© {year} Neuland Ingolstadt e.V.</p>
+				<p className="max-w-md text-terminal-text/35">
+					Secure digital membership verification powered by cryptographic
+					signatures
+				</p>
+
+				<nav className="mt-1 flex flex-wrap items-center justify-center gap-4">
+					<a
+						href={EXTERNAL_LINKS.IMPRESSUM}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="transition-colors hover:text-terminal-cyan"
+					>
+						Imprint
+					</a>
+					<span aria-hidden="true" className="text-terminal-window-border">
+						|
+					</span>
+					<a
+						href={EXTERNAL_LINKS.DATENSCHUTZ}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="transition-colors hover:text-terminal-cyan"
+					>
+						Privacy
+					</a>
+					<span aria-hidden="true" className="text-terminal-window-border">
+						|
+					</span>
+					<a
+						href={EXTERNAL_LINKS.REPOSITORY}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="transition-colors hover:text-terminal-cyan"
+					>
+						GitHub
+					</a>
+				</nav>
+
+				<div className="flex items-center gap-1 text-terminal-text/35">
+					<span>Build:</span>
+					<code className="rounded border border-terminal-window-border/50 bg-terminal-window-bg/40 px-1.5 py-0.5 font-mono">
+						{shortCommitHash}
+					</code>
+				</div>
+
+				<p className="text-terminal-text/35">
+					Created by{' '}
+					<a
+						href="https://eggl.dev"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-terminal-text/45 transition-colors hover:text-terminal-cyan"
+					>
+						Robert Eggl
+					</a>
+				</p>
 			</div>
 		</footer>
 	)

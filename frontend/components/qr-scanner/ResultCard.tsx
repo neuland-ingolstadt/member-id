@@ -26,20 +26,20 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 	if (result) {
 		return (
 			<Card
-				className={` ${
+				className={
 					result.success
 						? duplicateWarning
-							? 'border-blue-200 bg-white dark:bg-gray-800'
-							: 'border-green-200 bg-white dark:bg-gray-800'
-						: 'border-destructive/50 bg-white dark:bg-gray-800'
-				}`}
+							? 'border-blue-500/40 bg-terminal-window'
+							: 'border-terminal-cyan/40 bg-terminal-window'
+						: 'border-destructive/50 bg-terminal-window'
+				}
 			>
 				<CardContent className="p-6">
 					<div className="flex items-center gap-3 mb-6">
 						{result.success ? (
 							<div className="flex items-center gap-2">
 								<div
-									className={`p-2 ${duplicateWarning ? 'bg-blue-600' : 'bg-green-600'} rounded-full text-white`}
+									className={`p-2 ${duplicateWarning ? 'bg-blue-600' : 'bg-terminal-cyan'} rounded-full text-terminal-onAccent`}
 								>
 									{duplicateWarning ? (
 										<Info className="h-6 w-6" />
@@ -49,14 +49,14 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 								</div>
 								<div>
 									<h3
-										className={`text-xl font-bold ${duplicateWarning ? 'text-blue-800 dark:text-blue-300' : 'text-green-800 dark:text-green-300'}`}
+										className={`text-xl font-bold ${duplicateWarning ? 'text-blue-400' : 'text-terminal-lightGreen'}`}
 									>
 										{duplicateWarning
 											? 'Already Verified'
 											: 'Verification Successful'}
 									</h3>
 									<p
-										className={`${duplicateWarning ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'} text-sm`}
+										className={`${duplicateWarning ? 'text-blue-400/80' : 'text-terminal-cyan/80'} text-sm`}
 									>
 										{duplicateWarning?.result?.payload
 											? `Originally verified with ${
@@ -95,7 +95,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 											: 'default'
 										: 'destructive'
 								}
-								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-700 dark:text-blue-300' : ''} flex items-center gap-1.5`}
+								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-300' : ''} flex items-center gap-1.5`}
 							>
 								{result.success ? (
 									duplicateWarning ? (
@@ -131,16 +131,16 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 					{result.payload && (
 						<div className="space-y-6">
-							<div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-inner border border-gray-200 dark:border-gray-700">
+							<div className="rounded-none border border-terminal-window-border bg-terminal-card p-6">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="p-3 bg-primary rounded-full text-background">
+									<div className="p-3 bg-primary rounded-full text-primary-foreground">
 										<User className="h-6 w-6" />
 									</div>
 									<div>
-										<h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+										<h4 className="text-lg font-semibold text-terminal-lightGreen">
 											Identity Information
 										</h4>
-										<p className="text-sm text-gray-600 dark:text-gray-400">
+										<p className="text-sm text-terminal-text/50">
 											Verified credential data
 										</p>
 									</div>
@@ -149,37 +149,37 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<User className="h-4 w-4 text-gray-500" />
-											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+											<User className="h-4 w-4 text-terminal-text/45" />
+											<span className="text-sm font-medium text-terminal-text/70">
 												Name
 											</span>
 										</div>
-										<p className="text-lg font-semibold text-gray-900 dark:text-white pl-6">
+										<p className="text-lg font-semibold text-terminal-text pl-6">
 											{result.payload.name}
 										</p>
 									</div>
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<ShieldX className="h-4 w-4 text-gray-500" />
-											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+											<ShieldX className="h-4 w-4 text-terminal-text/45" />
+											<span className="text-sm font-medium text-terminal-text/70">
 												User ID
 											</span>
 										</div>
-										<p className="text-sm font-mono text-gray-600 dark:text-gray-400 pl-6 break-all">
+										<p className="text-sm font-mono text-terminal-text/55 pl-6 break-all">
 											{result.payload.sub}
 										</p>
 									</div>
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<Clock className="h-4 w-4 text-gray-500" />
-											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+											<Clock className="h-4 w-4 text-terminal-text/45" />
+											<span className="text-sm font-medium text-terminal-text/70">
 												Issued
 											</span>
 										</div>
 										<div className="pl-6 space-y-1">
-											<p className="text-sm text-gray-600 dark:text-gray-400">
+											<p className="text-sm text-terminal-text/55">
 												{new Date(result.payload.iat * 1000).toLocaleDateString(
 													'en-US',
 													{
@@ -191,7 +191,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 													}
 												)}
 											</p>
-											<p className="text-xs text-gray-500 dark:text-gray-500">
+											<p className="text-xs text-terminal-text/40">
 												{getRelativeTime(new Date(result.payload.iat * 1000))}
 											</p>
 										</div>
@@ -199,13 +199,13 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
-											<Clock className="h-4 w-4 text-gray-500" />
-											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+											<Clock className="h-4 w-4 text-terminal-text/45" />
+											<span className="text-sm font-medium text-terminal-text/70">
 												Expires
 											</span>
 										</div>
 										<div className="pl-6 space-y-1">
-											<p className="text-sm text-gray-600 dark:text-gray-400">
+											<p className="text-sm text-terminal-text/55">
 												{new Date(result.payload.exp * 1000).toLocaleDateString(
 													'en-US',
 													{
@@ -217,7 +217,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 													}
 												)}
 											</p>
-											<p className="text-xs text-gray-500 dark:text-gray-500">
+											<p className="text-xs text-terminal-text/40">
 												{getRelativeTime(new Date(result.payload.exp * 1000))}
 											</p>
 										</div>
@@ -226,19 +226,19 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
 											{result.payload.type === QRType.APP ? (
-												<Smartphone className="h-4 w-4 text-gray-500" />
+												<Smartphone className="h-4 w-4 text-terminal-text/45" />
 											) : result.payload.type === QRType.APPLE_WALLET ? (
-												<Ticket className="h-4 w-4 text-gray-500" />
+												<Ticket className="h-4 w-4 text-terminal-text/45" />
 											) : result.payload.type === QRType.ANDROID_WALLET ? (
-												<Smartphone className="h-4 w-4 text-gray-500" />
+												<Smartphone className="h-4 w-4 text-terminal-text/45" />
 											) : (
-												<ShieldX className="h-4 w-4 text-gray-500" />
+												<ShieldX className="h-4 w-4 text-terminal-text/45" />
 											)}
-											<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+											<span className="text-sm font-medium text-terminal-text/70">
 												QR Type
 											</span>
 										</div>
-										<p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
+										<p className="text-sm text-terminal-text/55 pl-6">
 											{result.payload.type === QRType.APP
 												? 'App Neuland ID'
 												: result.payload.type === QRType.APPLE_WALLET
@@ -260,12 +260,12 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 	}
 
 	return (
-		<Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+		<Card className="border border-terminal-window-border bg-terminal-window">
 			<CardContent className="p-6 text-center">
-				<p className="font-medium text-gray-900 dark:text-white">
+				<p className="font-medium text-terminal-text">
 					Scan a Neuland Ingolstadt member's digital ID card to verify.
 				</p>
-				<p className="text-xs text-gray-600 dark:text-gray-400">
+				<p className="text-xs text-terminal-text/50">
 					Tap on the QR code shown in Neuland Next to view it in full-screen
 					mode.
 				</p>

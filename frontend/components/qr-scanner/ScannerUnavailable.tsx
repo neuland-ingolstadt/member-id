@@ -3,7 +3,7 @@
 import { AlertTriangle } from 'lucide-react'
 import { ScanHistoryList } from '@/components/scan-history'
 import { ScanStatsDisplay } from '@/components/scan-stats-display'
-import { Card, CardContent } from '@/components/ui/card'
+import { TerminalPanel } from '@/components/ui/terminal-panel'
 import type { ScanRecord, ScanStats } from '@/hooks/use-scan-history'
 
 interface ScannerUnavailableProps {
@@ -24,34 +24,32 @@ export function ScannerUnavailable({
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 			<div className="lg:col-span-3 space-y-6">
-				<Card className="border-destructive/50 bg-white dark:bg-gray-800">
-					<CardContent className="p-6">
-						<div className="flex items-center justify-center py-12">
-							<div className="text-center max-w-md">
-								<div className="mb-4 bg-destructive/10 rounded-full p-3 w-20 h-20 flex items-center justify-center mx-auto">
-									<AlertTriangle className="h-12 w-12 text-destructive" />
-								</div>
-								<h3 className="text-xl font-bold text-destructive mb-2">
-									QR Scanner Unavailable
-								</h3>
-								<p className="text-gray-600 dark:text-gray-400 mb-4">
-									The public key required for verification could not be loaded.
-								</p>
-								{errorMessage && (
-									<div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-										<p className="text-destructive text-sm">
-											<strong>Error:</strong> {errorMessage}
-										</p>
-									</div>
-								)}
-								<p className="text-sm text-gray-500 dark:text-gray-500 mt-4">
-									Please check your internet connection and try refreshing the
-									page.
-								</p>
+				<TerminalPanel title="Scanner Unavailable">
+					<div className="flex items-center justify-center p-6 py-12">
+						<div className="max-w-md text-center">
+							<div className="mx-auto mb-4 flex size-20 items-center justify-center border border-destructive/30 bg-destructive/10">
+								<AlertTriangle className="size-12 text-destructive" />
 							</div>
+							<h3 className="mb-2 text-xl font-bold text-destructive">
+								QR Scanner Unavailable
+							</h3>
+							<p className="mb-4 text-terminal-text/60">
+								The public key required for verification could not be loaded.
+							</p>
+							{errorMessage && (
+								<div className="border border-destructive/20 bg-destructive/10 p-4">
+									<p className="text-sm text-destructive">
+										<strong>Error:</strong> {errorMessage}
+									</p>
+								</div>
+							)}
+							<p className="mt-4 text-sm text-terminal-text/45">
+								Please check your internet connection and try refreshing the
+								page.
+							</p>
 						</div>
-					</CardContent>
-				</Card>
+					</div>
+				</TerminalPanel>
 			</div>
 			<div className="lg:col-span-2 space-y-6">
 				<ScanStatsDisplay stats={stats} onClearHistory={onClearHistory} />

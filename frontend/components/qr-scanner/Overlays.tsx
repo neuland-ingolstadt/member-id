@@ -7,10 +7,10 @@ import { QRType, type VerificationResult } from '@/lib/qr-verifier'
 
 export function VerifyingOverlay() {
 	return (
-		<div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-			<div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center space-y-4">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
-				<p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+		<div className="absolute inset-0 z-10 flex items-center justify-center bg-terminal-bg/70">
+			<div className="flex flex-col items-center space-y-4 border border-terminal-window-border bg-terminal-window p-6">
+				<div className="size-8 animate-spin border-b-2 border-terminal-cyan" />
+				<p className="font-mono text-sm font-medium text-terminal-text">
 					Verifying Neuland ID...
 				</p>
 			</div>

@@ -1,12 +1,24 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google'
+import Script from 'next/script'
 import type React from 'react'
 import './globals.css'
-import { ThemeProvider } from 'next-themes'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
+import { PageShell } from '@/components/page-shell'
+import { clientShellScript } from '@/lib/client-shell'
 
-const inter = Inter({ subsets: ['latin'] })
+const notoSans = Noto_Sans({
+	subsets: ['latin'],
+	variable: '--font-sans',
+	weight: ['400', '500', '600', '700']
+})
+
+const notoSansMono = Noto_Sans_Mono({
+	subsets: ['latin'],
+	variable: '--font-mono',
+	weight: ['400', '500', '600', '700']
+})
 
 export const metadata: Metadata = {
 	title: 'Neuland Ingolstadt Member ID Verification',
@@ -20,18 +32,20 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body className={`${inter.className} min-h-screen bg-background`}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
+		<html
+			lang="en"
+			suppressHydrationWarning
+			className={`${notoSans.variable} ${notoSansMono.variable}`}
+		>
+			<body className="min-h-screen bg-terminal-bg font-sans text-terminal-text antialiased">
+				<Script id="client-shell" strategy="beforeInteractive">
+					{clientShellScript}
+				</Script>
+				<PageShell>
 					<Navbar />
 					{children}
-					<Footer />
-				</ThemeProvider>
+					<Footer className="px-4" />
+				</PageShell>
 			</body>
 		</html>
 	)

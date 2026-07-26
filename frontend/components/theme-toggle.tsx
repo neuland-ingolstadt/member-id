@@ -1,39 +1,26 @@
-'use client'
-
-import { Moon, Sun } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Laptop, MoonStar, SunMedium } from 'lucide-react'
 
 export function ThemeToggle() {
-	const [mounted, setMounted] = useState(false)
-	const { setTheme, resolvedTheme } = useTheme()
-
-	useEffect(() => {
-		setMounted(true)
-	}, [])
-
-	if (!mounted) {
-		return (
-			<Button variant="outline" size="icon" disabled>
-				<Sun className="h-[1.2rem] w-[1.2rem]" />
-				<span className="sr-only">Toggle theme</span>
-			</Button>
-		)
-	}
-
-	const toggleTheme = () => {
-		setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
-	}
-
 	return (
-		<Button variant="outline" size="icon" onClick={toggleTheme}>
-			{resolvedTheme === 'light' ? (
-				<Moon className="h-[1.2rem] w-[1.2rem]" />
-			) : (
-				<Sun className="h-[1.2rem] w-[1.2rem]" />
-			)}
-			<span className="sr-only">Toggle theme</span>
-		</Button>
+		<button
+			type="button"
+			data-theme-toggle
+			data-theme-mode="system"
+			aria-label="System theme"
+			title="System theme"
+			className="inline-flex size-8 cursor-pointer items-center justify-center border border-terminal-window-border/70 bg-terminal-bg/40 text-terminal-text/90 shadow-sm transition-colors hover:border-terminal-cyan/40"
+		>
+			<Laptop data-theme-icon="system" className="size-3.5" aria-hidden />
+			<SunMedium
+				data-theme-icon="light"
+				className="hidden size-3.5"
+				aria-hidden
+			/>
+			<MoonStar
+				data-theme-icon="dark"
+				className="hidden size-3.5"
+				aria-hidden
+			/>
+		</button>
 	)
 }
