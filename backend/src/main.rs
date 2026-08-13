@@ -180,7 +180,7 @@ async fn main() -> std::io::Result<()> {
                 Cors::default()
                     .allowed_origin("https://dev.neuland.app")
                     .allowed_origin("https://web.neuland.app")
-                    .allowed_origin("http://localhost:3000")
+                    .allowed_origin("http://localhost:8081")
                     .allowed_origin("http://localhost:8540")
                     .allowed_methods(vec!["GET", "OPTIONS"])
                     .allowed_headers(vec![
