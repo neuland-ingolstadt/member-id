@@ -203,7 +203,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
         description: "Neuland Mitgliedsausweis".into(),
         pass_type_identifier,
         team_identifier,
-        serial_number: token_data.claims.sub,
+        serial_number: format!("{}.{}", token_data.claims.sub, semester_name),
     })
     .expiration_date(expiration_date)
     .fields(field_type)
