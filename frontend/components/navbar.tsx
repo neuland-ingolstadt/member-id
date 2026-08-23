@@ -25,7 +25,7 @@ export function Navbar() {
 	)
 
 	return (
-		<header className="sticky top-0 z-50 border-b border-terminal-window-border bg-terminal-nav/90 backdrop-blur-sm">
+		<header className="sticky top-0 z-50 border-b border-terminal-window-border bg-terminal-nav shadow-[0_1px_0_0_rgba(74,222,128,0.06)]">
 			<div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
 				<Link
 					href="/"

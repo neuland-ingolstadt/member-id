@@ -79,7 +79,7 @@
 		--terminal-window-border: rgba(11, 29, 20, 0.12);
 		--terminal-window-title: #e3ede6;
 		--terminal-card: #f3f7f4;
-		--terminal-nav: rgba(255, 255, 255, 0.9);
+		--terminal-nav: #ffffff;
 		--terminal-onAccent: #042011;
 
 		--ambient-background: #f5f8f5;
@@ -117,7 +117,7 @@
 	--terminal-window-border: rgba(11, 29, 20, 0.12);
 	--terminal-window-title: #e3ede6;
 	--terminal-card: #f3f7f4;
-	--terminal-nav: rgba(255, 255, 255, 0.9);
+	--terminal-nav: #ffffff;
 	--terminal-onAccent: #042011;
 
 	--ambient-background: #f5f8f5;
