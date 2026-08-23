@@ -49,9 +49,8 @@ export const clientShellScript = `
     });
   }
 
-  function initThemeToggles() {
+  function syncToggles() {
     var mode = readMode();
-    applyMode(mode);
     document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
       syncToggle(button, mode);
     });
@@ -71,7 +70,9 @@ export const clientShellScript = `
     });
   });
 
-  initThemeToggles();
-  document.addEventListener('DOMContentLoaded', initThemeToggles);
+  // Apply data-theme immediately to avoid a color flash. Do not touch the
+  // toggle markup here — React hydrates against the SSR default ("system").
+  applyMode(readMode());
+  document.addEventListener('neuland:theme-hydrate', syncToggles);
 })();
 `

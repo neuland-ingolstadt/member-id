@@ -127,9 +127,9 @@ export function ScanStatsDisplay({
 
 					<div className="border border-terminal-window-border bg-terminal-card p-3 text-center transition-colors hover:border-terminal-cyan/30">
 						<div className="mb-2 flex items-center justify-center">
-							<Copy className="size-5 text-blue-400" />
+							<Copy className="size-5 text-sky-300" />
 						</div>
-						<div className="text-2xl font-bold text-blue-400">
+						<div className="text-2xl font-bold text-sky-300">
 							<NumberFlow
 								value={stats.duplicateScans}
 								format={{ notation: 'compact' }}

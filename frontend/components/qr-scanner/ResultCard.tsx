@@ -11,7 +11,7 @@ import {
 	User
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { TerminalPanel } from '@/components/ui/terminal-panel'
 import type { ScanRecord } from '@/hooks/use-scan-history'
 import { getRelativeTime } from '@/lib/date'
 import { QRType, type VerificationResult } from '@/lib/qr-verifier'
@@ -25,24 +25,31 @@ interface Props {
 export function ResultCard({ result, duplicateWarning }: Props) {
 	if (result) {
 		return (
-			<Card
+			<TerminalPanel
+				title={
+					result.success
+						? duplicateWarning
+							? 'Already Verified'
+							: 'Verification Successful'
+						: 'Verification Failed'
+				}
 				className={
 					result.success
 						? duplicateWarning
-							? 'border-blue-500/40 bg-terminal-window'
-							: 'border-terminal-cyan/40 bg-terminal-window'
-						: 'border-destructive/50 bg-terminal-window'
+							? 'border-sky-500/40'
+							: 'border-terminal-cyan/40'
+						: 'border-destructive/50'
 				}
 			>
-				<CardContent className="p-6">
-					<div className="flex items-center gap-3 mb-6">
+				<div className="p-6">
+					<div className="mb-6 flex items-center gap-3">
 						{result.success ? (
 							<div className="flex items-center gap-2">
 								<div
-									className={`p-2 rounded-full ${
+									className={`border p-2 ${
 										duplicateWarning
-											? 'bg-blue-600 text-white'
-											: 'bg-terminal-cyan text-terminal-onAccent'
+											? 'border-sky-500/40 bg-sky-500/15 text-sky-300'
+											: 'border-terminal-cyan/40 bg-terminal-cyan text-terminal-onAccent'
 									}`}
 								>
 									{duplicateWarning ? (
@@ -53,14 +60,14 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 								</div>
 								<div>
 									<h3
-										className={`text-xl font-bold ${duplicateWarning ? 'text-blue-400' : 'text-terminal-lightGreen'}`}
+										className={`text-xl font-bold ${duplicateWarning ? 'text-sky-300' : 'text-terminal-lightGreen'}`}
 									>
 										{duplicateWarning
 											? 'Already Verified'
 											: 'Verification Successful'}
 									</h3>
 									<p
-										className={`${duplicateWarning ? 'text-blue-400/80' : 'text-terminal-cyan/80'} text-sm`}
+										className={`${duplicateWarning ? 'text-sky-300/80' : 'text-terminal-cyan/80'} text-sm`}
 									>
 										{duplicateWarning?.result?.payload
 											? `Originally verified with ${
@@ -80,7 +87,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 							</div>
 						) : (
 							<div className="flex items-center gap-2">
-								<div className="p-2 bg-destructive rounded-full text-destructive-foreground">
+								<div className="border border-destructive/50 bg-destructive p-2 text-destructive-foreground">
 									<ShieldX className="h-6 w-6" />
 								</div>
 								<div>
@@ -99,7 +106,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 											: 'default'
 										: 'destructive'
 								}
-								className={`text-sm px-3 py-1 ${duplicateWarning ? 'border-blue-400 text-blue-700 dark:text-blue-300' : ''} flex items-center gap-1.5`}
+								className={`flex items-center gap-1.5 px-3 py-1 text-sm ${duplicateWarning ? 'border-sky-400/50 text-sky-300' : ''}`}
 							>
 								{result.success ? (
 									duplicateWarning ? (
@@ -121,11 +128,11 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 					</div>
 
 					{result.error && (
-						<div className="mb-6 space-y-1 p-4 bg-destructive/10 border border-destructive rounded-lg">
-							<p className="text-destructive text-sm font-medium font-bold">
+						<div className="mb-6 space-y-1 border border-destructive/50 bg-destructive/10 p-4">
+							<p className="font-mono text-sm font-bold text-destructive">
 								{result.error}
 							</p>
-							<p className="text-destructive text-xs">
+							<p className="text-xs text-destructive">
 								{result.payload
 									? 'Even there is data returned, it is NOT a valid member pass.'
 									: 'Not a valid member pass.'}
@@ -135,9 +142,9 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 
 					{result.payload && (
 						<div className="space-y-6">
-							<div className="rounded-none border border-terminal-window-border bg-terminal-card p-6">
-								<div className="flex items-center gap-4 mb-4">
-									<div className="p-3 rounded-full bg-terminal-cyan text-terminal-onAccent">
+							<div className="border border-terminal-window-border bg-terminal-card p-6">
+								<div className="mb-4 flex items-center gap-4">
+									<div className="border border-terminal-cyan/40 bg-terminal-cyan p-3 text-terminal-onAccent">
 										<User className="h-6 w-6" />
 									</div>
 									<div>
@@ -150,7 +157,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 									</div>
 								</div>
 
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+								<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 									<div className="space-y-2">
 										<div className="flex items-center gap-2">
 											<User className="h-4 w-4 text-terminal-text/45" />
@@ -158,7 +165,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 												Name
 											</span>
 										</div>
-										<p className="text-lg font-semibold text-terminal-text pl-6">
+										<p className="pl-6 text-lg font-semibold text-terminal-text">
 											{result.payload.name}
 										</p>
 									</div>
@@ -170,7 +177,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 												User ID
 											</span>
 										</div>
-										<p className="text-sm font-mono text-terminal-text/55 pl-6 break-all">
+										<p className="break-all pl-6 font-mono text-sm text-terminal-text/55">
 											{result.payload.sub}
 										</p>
 									</div>
@@ -182,7 +189,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 												Issued
 											</span>
 										</div>
-										<div className="pl-6 space-y-1">
+										<div className="space-y-1 pl-6">
 											<p className="text-sm text-terminal-text/55">
 												{new Date(result.payload.iat * 1000).toLocaleDateString(
 													'en-US',
@@ -208,7 +215,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 												Expires
 											</span>
 										</div>
-										<div className="pl-6 space-y-1">
+										<div className="space-y-1 pl-6">
 											<p className="text-sm text-terminal-text/55">
 												{new Date(result.payload.exp * 1000).toLocaleDateString(
 													'en-US',
@@ -242,7 +249,7 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 												QR Type
 											</span>
 										</div>
-										<p className="text-sm text-terminal-text/55 pl-6">
+										<p className="pl-6 text-sm text-terminal-text/55">
 											{result.payload.type === QRType.APP
 												? 'App Neuland ID'
 												: result.payload.type === QRType.APPLE_WALLET
@@ -258,22 +265,22 @@ export function ResultCard({ result, duplicateWarning }: Props) {
 							{result.debugInfo && <DebugInfo info={result.debugInfo} />}
 						</div>
 					)}
-				</CardContent>
-			</Card>
+				</div>
+			</TerminalPanel>
 		)
 	}
 
 	return (
-		<Card className="border border-terminal-window-border bg-terminal-window">
-			<CardContent className="p-6 text-center">
+		<TerminalPanel title="Awaiting Scan">
+			<div className="p-6 text-center">
 				<p className="font-medium text-terminal-text">
 					Scan a Neuland Ingolstadt member's digital ID card to verify.
 				</p>
-				<p className="text-xs text-terminal-text/50">
+				<p className="mt-1 text-xs text-terminal-text/50">
 					Tap on the QR code shown in Neuland Next to view it in full-screen
 					mode.
 				</p>
-			</CardContent>
-		</Card>
+			</div>
+		</TerminalPanel>
 	)
 }

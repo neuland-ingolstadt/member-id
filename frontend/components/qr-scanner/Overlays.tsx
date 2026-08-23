@@ -30,33 +30,35 @@ export function SuccessOverlay({
 	showCloseButton
 }: SuccessProps) {
 	return (
-		<div className="absolute inset-0 bg-gradient-to-b from-green-500/90 to-green-600/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-lg shadow-lg animate-fade-in">
+		<div className="absolute inset-0 z-20 flex animate-fade-in items-center justify-center bg-terminal-cyan/90 backdrop-blur-sm">
 			{showCloseButton && onClose && (
 				<Button
 					variant="ghost"
 					size="icon"
 					onClick={onClose}
-					className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full"
+					className="absolute top-4 right-4 text-terminal-onAccent hover:bg-terminal-onAccent/10"
 					type="button"
 					aria-label="Close success message"
 				>
 					<X className="h-5 w-5" />
 				</Button>
 			)}
-			<div className="text-center text-white max-w-xs mx-auto p-6 animate-scale-up">
-				<div className="mb-4 bg-white/20 rounded-full p-3 w-20 h-20 flex items-center justify-center mx-auto animate-bounce-gentle">
+			<div className="mx-auto max-w-xs animate-scale-up p-6 text-center text-terminal-onAccent">
+				<div className="mx-auto mb-4 flex size-20 animate-bounce-gentle items-center justify-center border border-terminal-onAccent/25 bg-terminal-onAccent/15 p-3">
 					<CheckCircle className="h-12 w-12" strokeWidth={2.5} />
 				</div>
-				<h3 className="text-2xl font-bold mb-1">Verified!</h3>
-				<p className="text-white/90 text-base">
+				<h3 className="mb-1 font-mono text-2xl font-bold text-terminal-onAccent">
+					Verified!
+				</h3>
+				<p className="text-base text-terminal-onAccent/90">
 					Neuland ID is valid and authenticated
 				</p>
 				{result.payload && (
-					<div className="mt-3 pt-3 border-t border-white/20">
-						<p className="text-white font-semibold text-lg">
+					<div className="mt-3 border-t border-terminal-onAccent/20 pt-3">
+						<p className="text-lg font-semibold text-terminal-onAccent">
 							{result.payload.name}
 						</p>
-						<p className="text-white/80 text-sm mt-1">
+						<p className="mt-1 text-sm text-terminal-onAccent/80">
 							{result.payload.type === QRType.APP
 								? 'App Neuland ID'
 								: result.payload.type === QRType.APPLE_WALLET
@@ -84,38 +86,40 @@ export function DuplicateOverlay({
 	showCloseButton
 }: DuplicateProps) {
 	return (
-		<div className="absolute inset-0 bg-gradient-to-b from-blue-400/90 to-blue-500/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-lg shadow-lg animate-fade-in">
+		<div className="absolute inset-0 z-20 flex animate-fade-in items-center justify-center bg-sky-600/90 backdrop-blur-sm">
 			{showCloseButton && onClose && (
 				<Button
 					variant="ghost"
 					size="icon"
 					onClick={onClose}
-					className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full"
+					className="absolute top-4 right-4 text-white hover:bg-white/10"
 					type="button"
 					aria-label="Close duplicate message"
 				>
 					<X className="h-5 w-5" />
 				</Button>
 			)}
-			<div className="text-center text-white max-w-xs mx-auto p-6 animate-scale-up">
-				<div className="mb-4 bg-white/20 rounded-full p-3 w-20 h-20 flex items-center justify-center mx-auto animate-bounce-gentle">
+			<div className="mx-auto max-w-xs animate-scale-up p-6 text-center text-white">
+				<div className="mx-auto mb-4 flex size-20 animate-bounce-gentle items-center justify-center border border-white/25 bg-white/15 p-3">
 					<Info className="h-12 w-12" strokeWidth={2.5} />
 				</div>
-				<h3 className="text-2xl font-bold mb-1">Already Verified!</h3>
+				<h3 className="mb-1 font-mono text-2xl font-bold text-white">
+					Already Verified!
+				</h3>
 				{warning.result.success && warning.result.payload ? (
-					<p className="text-white/90 text-base">
-						<span className="font-semibold text-lg">
+					<p className="text-base text-white/90">
+						<span className="text-lg font-semibold">
 							{warning.result.payload.name}
 						</span>
 					</p>
 				) : (
-					<p className="text-white/90 text-base">
+					<p className="text-base text-white/90">
 						This user has already been verified with another Neuland ID
 					</p>
 				)}
 				{warning.result.success && warning.result.payload && (
-					<div className="mt-3 pt-3 border-t border-white/20">
-						<p className="text-white/80 text-sm">
+					<div className="mt-3 border-t border-white/20 pt-3">
+						<p className="text-sm text-white/80">
 							Originally verified with{' '}
 							<span className="font-semibold">
 								{warning.result.payload.type === QRType.APP
@@ -127,7 +131,7 @@ export function DuplicateOverlay({
 											: warning.result.payload.type}
 							</span>
 						</p>
-						<p className="text-white/80 text-xs mt-1">
+						<p className="mt-1 text-xs text-white/80">
 							{new Date(warning.timestamp).toLocaleTimeString()}
 						</p>
 					</div>
@@ -149,28 +153,30 @@ export function ErrorOverlay({
 	showCloseButton
 }: ErrorProps) {
 	return (
-		<div className="absolute inset-0 bg-gradient-to-b from-destructive/85 to-destructive/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-lg shadow-lg animate-fade-in">
+		<div className="absolute inset-0 z-20 flex animate-fade-in items-center justify-center bg-destructive/90 backdrop-blur-sm">
 			{showCloseButton && onClose && (
 				<Button
 					variant="ghost"
 					size="icon"
 					onClick={onClose}
-					className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full"
+					className="absolute top-4 right-4 text-destructive-foreground hover:bg-white/10"
 					type="button"
 					aria-label="Close error message"
 				>
 					<X className="h-5 w-5" />
 				</Button>
 			)}
-			<div className="text-center text-white max-w-xs mx-auto p-6 animate-scale-up">
-				<div className="mb-4 bg-white/20 rounded-full p-3 w-20 h-20 flex items-center justify-center mx-auto animate-bounce-gentle">
+			<div className="mx-auto max-w-xs animate-scale-up p-6 text-center text-destructive-foreground">
+				<div className="mx-auto mb-4 flex size-20 animate-bounce-gentle items-center justify-center border border-white/25 bg-white/15 p-3">
 					<ShieldX className="h-12 w-12" strokeWidth={2.5} />
 				</div>
-				<h3 className="text-2xl font-bold mb-1">Invalid!</h3>
-				<p className="text-white/90 text-base">
+				<h3 className="mb-1 font-mono text-2xl font-bold text-destructive-foreground">
+					Invalid!
+				</h3>
+				<p className="text-base text-destructive-foreground/90">
 					Neuland ID verification failed
 				</p>
-				<p className="text-white/90 text-xs mt-1">{message}</p>
+				<p className="mt-1 text-xs text-destructive-foreground/90">{message}</p>
 			</div>
 		</div>
 	)

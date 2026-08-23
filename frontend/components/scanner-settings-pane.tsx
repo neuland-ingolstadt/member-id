@@ -50,12 +50,14 @@ export function ScannerSettingsPane({
 			/>
 
 			{/* Settings Panel */}
-			<div className="relative w-full max-w-sm h-full bg-background border-l shadow-xl animate-in slide-in-from-right duration-300 flex flex-col">
+			<div className="relative flex h-full w-full max-w-sm animate-in flex-col border-l border-terminal-window-border bg-terminal-window shadow-xl slide-in-from-right duration-300">
 				{/* Header */}
-				<div className="flex items-center justify-between p-4 border-b bg-background sticky top-0 z-10">
+				<div className="sticky top-0 z-10 flex items-center justify-between border-b border-terminal-window-border bg-terminal-window p-4">
 					<div className="flex items-center gap-2">
-						<Settings className="h-5 w-5 text-primary" />
-						<h2 className="text-lg font-semibold">Scanner Settings</h2>
+						<Settings className="h-5 w-5 text-terminal-cyan" />
+						<h2 className="font-mono text-lg font-semibold text-terminal-lightGreen">
+							Scanner Settings
+						</h2>
 					</div>
 					<Button variant="ghost" size="sm" onClick={onClose} type="button">
 						<X className="h-4 w-4" />
@@ -63,17 +65,17 @@ export function ScannerSettingsPane({
 				</div>
 
 				{/* Navigation Tabs */}
-				<div className="flex border-b bg-background sticky top-14 z-10">
+				<div className="sticky top-14 z-10 flex border-b border-terminal-window-border bg-terminal-window">
 					{sections.map((section) => {
 						const Icon = section.icon
 						return (
 							<button
 								key={section.id}
 								onClick={() => setActiveSection(section.id)}
-								className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 text-sm font-medium transition-colors ${
+								className={`flex flex-1 items-center justify-center gap-2 px-2 py-3 font-mono text-sm font-medium uppercase tracking-wide transition-colors ${
 									activeSection === section.id
-										? 'text-primary border-b-2 border-primary bg-primary/5'
-										: 'text-muted-foreground hover:text-foreground'
+										? 'border-b-2 border-terminal-cyan bg-terminal-cyan/5 text-terminal-cyan'
+										: 'text-terminal-text/50 hover:text-terminal-text'
 								}`}
 								type="button"
 							>
@@ -261,8 +263,8 @@ export function ScannerSettingsPane({
 									</div>
 
 									{!settings.autoCloseResults && (
-										<div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-											<p className="text-xs text-amber-700 dark:text-amber-300">
+										<div className="border border-amber-500/30 bg-amber-500/10 p-3">
+											<p className="text-xs text-amber-200/90">
 												<strong>Manual close enabled:</strong> Result overlays
 												will stay open until manually closed with the X button.
 											</p>

@@ -44,7 +44,7 @@ export default function RootLayout({
 				<PageShell>
 					<Navbar />
 					{children}
-					<Footer className="px-4" />
+					<Footer />
 				</PageShell>
 			</body>
 		</html>

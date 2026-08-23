@@ -25,13 +25,16 @@ export function Navbar() {
 	)
 
 	return (
-		<header className="sticky top-0 z-50 border-b border-terminal-window-border bg-terminal-nav shadow-[0_1px_0_0_rgba(74,222,128,0.06)]">
-			<div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-				<Link href="/" className="group flex items-center gap-3 no-underline">
+		<header className="sticky top-0 z-50 border-b border-terminal-window-border bg-terminal-nav/90 backdrop-blur-sm">
+			<div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+				<Link
+					href="/"
+					className="group flex shrink-0 items-center gap-3 no-underline"
+				>
 					{logo}
 				</Link>
 
-				<div className="flex items-center gap-3">
+				<div className="flex shrink-0 items-center gap-2 sm:gap-3">
 					{onInfoPage ? (
 						<Button variant="outline" size="sm" asChild>
 							<Link href="/">Back to Scanner</Link>

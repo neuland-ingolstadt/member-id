@@ -106,14 +106,14 @@ const BENEFITS = [
 
 export default function LearnMorePage() {
 	return (
-		<main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
+		<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
 			<div className="space-y-10">
 				<section className="text-center space-y-4">
 					<NeulandPalm className="mx-auto h-20 w-auto text-terminal-text" />
-					<p className="font-mono text-xs uppercase tracking-[0.2em] text-terminal-lightGreen">
+					<p className="font-mono text-xs uppercase tracking-[0.2em] text-terminal-text/50">
 						Member ID Verification
 					</p>
-					<h1 className="text-2xl font-bold tracking-tight text-terminal-text sm:text-3xl">
+					<h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
 						Neuland ID Verificator
 					</h1>
 					<p className="text-sm text-terminal-text/60">

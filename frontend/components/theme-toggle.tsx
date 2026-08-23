@@ -1,26 +1,27 @@
+'use client'
+
 import { Laptop, MoonStar, SunMedium } from 'lucide-react'
+import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 
 export function ThemeToggle() {
+	useEffect(() => {
+		document.dispatchEvent(new Event('neuland:theme-hydrate'))
+	}, [])
+
 	return (
-		<button
+		<Button
 			type="button"
+			variant="outline"
+			size="icon-sm"
 			data-theme-toggle
 			data-theme-mode="system"
 			aria-label="System theme"
 			title="System theme"
-			className="inline-flex size-8 cursor-pointer items-center justify-center border border-terminal-window-border/70 bg-terminal-bg/40 text-terminal-text/90 shadow-sm transition-colors hover:border-terminal-cyan/40"
 		>
-			<Laptop data-theme-icon="system" className="size-3.5" aria-hidden />
-			<SunMedium
-				data-theme-icon="light"
-				className="hidden size-3.5"
-				aria-hidden
-			/>
-			<MoonStar
-				data-theme-icon="dark"
-				className="hidden size-3.5"
-				aria-hidden
-			/>
-		</button>
+			<Laptop data-theme-icon="system" aria-hidden />
+			<SunMedium data-theme-icon="light" className="hidden" aria-hidden />
+			<MoonStar data-theme-icon="dark" className="hidden" aria-hidden />
+		</Button>
 	)
 }

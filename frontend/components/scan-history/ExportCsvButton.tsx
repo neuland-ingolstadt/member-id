@@ -152,7 +152,7 @@ export function ExportCsvButton({ scanHistory }: ExportCsvButtonProps) {
 					>
 						{isExporting ? (
 							<>
-								<div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-primary"></div>
+								<div className="size-4 animate-spin border-2 border-terminal-window-border border-t-terminal-cyan" />
 								<span className="hidden sm:inline">Exporting...</span>
 							</>
 						) : (

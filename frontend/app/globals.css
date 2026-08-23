@@ -11,13 +11,13 @@
 	--muted-foreground: 150 9% 70%;
 	--border: 150 7% 20%;
 	--input: 150 7% 20%;
-	--ring: 149 65% 52%;
-	--primary: 149 65% 52%;
+	--ring: 149 42% 46%;
+	--primary: 149 42% 46%;
 	--primary-foreground: 160 30% 12%;
 	--secondary: 150 9% 22%;
 	--secondary-foreground: 160 20% 94%;
-	--accent: 149 80% 55%;
-	--accent-foreground: 160 35% 12%;
+	--accent: 149 48% 48%;
+	--accent-foreground: 160 28% 14%;
 	--destructive: 0 70% 45%;
 	--destructive-foreground: 0 0% 98%;
 	--radius: 0;
@@ -29,20 +29,20 @@
 
 	--terminal-bg: #020302;
 	--terminal-text: #f6fff8;
-	--terminal-cyan: oklch(0.825 0.3281 142.83);
-	--terminal-highlight: oklch(0.8544 0.3379 142.83);
-	--terminal-lightGreen: oklch(0.79 0.2935 142.83);
+	--terminal-cyan: oklch(0.74 0.17 142.83);
+	--terminal-highlight: oklch(0.78 0.15 142.83);
+	--terminal-lightGreen: oklch(0.7 0.14 142.83);
 	--terminal-mutedGreen: #0a4f2b;
-	--terminal-window: #0b0b0b;
-	--terminal-window-border: #333333;
+	--terminal-window: #060807;
+	--terminal-window-border: rgba(246, 255, 248, 0.1);
 	--terminal-window-title: #414141;
-	--terminal-card: #101413;
-	--terminal-nav: #0b0f0c;
+	--terminal-card: #080a09;
+	--terminal-nav: #050605;
 	--terminal-onAccent: #001f12;
 
-	--ambient-background: #010101;
-	--ambient-grid-line: rgba(156, 163, 175, 0.12);
-	--ambient-glow: rgba(74, 222, 128, 0.08);
+	--ambient-background: #020302;
+	--ambient-grid-line: rgba(156, 163, 175, 0.06);
+	--ambient-glow: rgba(74, 180, 110, 0.025);
 }
 
 :root[data-theme='dark'] {
@@ -75,16 +75,16 @@
 		--terminal-highlight: oklch(0.64 0.2 142.83);
 		--terminal-lightGreen: #0d8f5c;
 		--terminal-mutedGreen: #1a6b40;
-		--terminal-window: #ffffff;
-		--terminal-window-border: #c7d3c8;
+		--terminal-window: #fafcfa;
+		--terminal-window-border: rgba(11, 29, 20, 0.12);
 		--terminal-window-title: #e3ede6;
-		--terminal-card: #eff4ef;
-		--terminal-nav: #ffffff;
+		--terminal-card: #f3f7f4;
+		--terminal-nav: rgba(255, 255, 255, 0.9);
 		--terminal-onAccent: #042011;
 
-		--ambient-background: #fafafa;
-		--ambient-grid-line: rgba(13, 50, 36, 0.08);
-		--ambient-glow: rgba(25, 141, 94, 0.12);
+		--ambient-background: #f5f8f5;
+		--ambient-grid-line: rgba(13, 50, 36, 0.05);
+		--ambient-glow: rgba(25, 141, 94, 0.04);
 	}
 }
 
@@ -113,16 +113,16 @@
 	--terminal-highlight: oklch(0.64 0.2 142.83);
 	--terminal-lightGreen: #0d8f5c;
 	--terminal-mutedGreen: #1a6b40;
-	--terminal-window: #ffffff;
-	--terminal-window-border: #c7d3c8;
+	--terminal-window: #fafcfa;
+	--terminal-window-border: rgba(11, 29, 20, 0.12);
 	--terminal-window-title: #e3ede6;
-	--terminal-card: #eff4ef;
-	--terminal-nav: #ffffff;
+	--terminal-card: #f3f7f4;
+	--terminal-nav: rgba(255, 255, 255, 0.9);
 	--terminal-onAccent: #042011;
 
-	--ambient-background: #fafafa;
-	--ambient-grid-line: rgba(13, 50, 36, 0.08);
-	--ambient-glow: rgba(25, 141, 94, 0.12);
+	--ambient-background: #f5f8f5;
+	--ambient-grid-line: rgba(13, 50, 36, 0.05);
+	--ambient-glow: rgba(25, 141, 94, 0.04);
 }
 
 @layer base {
@@ -156,21 +156,50 @@
 	background-image:
 		linear-gradient(var(--ambient-grid-line) 1px, transparent 1px),
 		linear-gradient(90deg, var(--ambient-grid-line) 1px, transparent 1px);
-	background-size: 72px 72px;
+	background-size: 48px 48px;
 }
 
 .neuland-glow {
-	background:
-		radial-gradient(
-			ellipse 80% 50% at 50% -20%,
-			var(--ambient-glow),
-			transparent 70%
-		),
-		radial-gradient(
-			ellipse 60% 40% at 100% 100%,
-			rgba(74, 222, 128, 0.04),
-			transparent 60%
-		);
+	background: radial-gradient(
+		ellipse 70% 40% at 50% -10%,
+		var(--ambient-glow),
+		transparent 65%
+	);
+}
+
+.terminal-corner {
+	position: absolute;
+	z-index: 2;
+	width: 8px;
+	height: 8px;
+	border-color: var(--terminal-cyan);
+	border-style: solid;
+	opacity: 0.55;
+	pointer-events: none;
+}
+
+.terminal-corner--tl {
+	top: -1px;
+	left: -1px;
+	border-width: 2px 0 0 2px;
+}
+
+.terminal-corner--tr {
+	top: -1px;
+	right: -1px;
+	border-width: 2px 2px 0 0;
+}
+
+.terminal-corner--bl {
+	bottom: -1px;
+	left: -1px;
+	border-width: 0 0 2px 2px;
+}
+
+.terminal-corner--br {
+	right: -1px;
+	bottom: -1px;
+	border-width: 0 2px 2px 0;
 }
 
 @layer utilities {
