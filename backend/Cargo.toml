@@ -25,4 +25,4 @@ utoipa = { version = "5", features = ["actix_extras"] }
 utoipa-swagger-ui = { version = "9", features = ["actix-web", "vendored"] }
 actix-governor = "0.10"
 google-walletobjects1 = "7"
-pem = "3"
+pem = "4"
