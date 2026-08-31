@@ -36,7 +36,7 @@
     "autoprefixer": "^10.5.4",
     "babel-plugin-react-compiler": "^1.0.0",
     "base45": "^2.0.1",
-    "cborg": "^5.1.8",
+    "cborg": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -66,13 +66,13 @@
     "@biomejs/biome": "^2.5.5",
     "@types/base45": "^2.0.2",
     "@types/node": "^26.1.1",
-    "@types/pako": "^2.0.4",
+    "@types/pako": "^3.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/react-window": "^2.0.0",
     "postcss": "^8.5.23",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^6.0.3"
+    "tailwindcss": "^4.0.0",
+    "typescript": "^7.0.0"
   },
   "overrides": {
     "@types/react": "19.2.18",
