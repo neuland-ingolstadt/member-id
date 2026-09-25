@@ -147,6 +147,7 @@
 	h4 {
 		color: var(--terminal-lightGreen);
 		font-family: var(--font-mono), ui-monospace, monospace;
+		font-weight: 600;
 		letter-spacing: 0.02em;
 	}
 }
