@@ -183,23 +183,70 @@ pub async fn generate_qr(
     })
 }
 
-pub fn capitalize_groups(groups: &[String]) -> Vec<String> {
-    groups
-        .iter()
-        .map(|group| {
-            let mut chars: Vec<char> = group.chars().collect();
+fn capitalize_group(group: &str) -> String {
+    match group {
+        "design-pr" => "Design-PR".into(),
+        "hr" => "HR".into(),
+        other => {
+            let mut chars: Vec<char> = other.chars().collect();
             if let Some(first_char) = chars.first_mut() {
                 *first_char = first_char.to_uppercase().next().unwrap_or(*first_char);
             }
             chars.into_iter().collect()
-        })
+        }
+    }
+}
+
+/// Role groups shown on Wallet passes, in display priority order.
+const DISPLAY_GROUPS: &[&str] = &[
+    "vorstand",
+    "ehrenmitglied",
+    "management",
+    "organisation",
+    "engineering",
+    "design-pr",
+    "hr",
+    "events",
+];
+
+/// Keep only the known display roles (if present), in canonical order.
+pub fn filter_groups(groups: &[String]) -> Vec<String> {
+    DISPLAY_GROUPS
+        .iter()
+        .filter(|&&allowed| groups.iter().any(|g| g.eq_ignore_ascii_case(allowed)))
+        .map(|&allowed| capitalize_group(allowed))
         .collect()
 }
 
-pub fn filter_groups(groups: &[String]) -> Vec<String> {
-    groups
-        .iter()
-        .filter(|g| !g.starts_with("Authentik"))
-        .map(|g| g.to_string())
-        .collect()
+#[cfg(test)]
+mod filter_groups_tests {
+    use super::filter_groups;
+
+    #[test]
+    fn keeps_only_allowlisted_groups_in_order() {
+        let input = vec![
+            "mitglieder".into(),
+            "events".into(),
+            "Authentik Admins".into(),
+            "vorstand".into(),
+            "organisation".into(),
+            "management".into(),
+            "design-pr".into(),
+            "hr".into(),
+            "engineering".into(),
+            "random".into(),
+        ];
+        assert_eq!(
+            filter_groups(&input),
+            vec![
+                "Vorstand",
+                "Management",
+                "Organisation",
+                "Engineering",
+                "Design-PR",
+                "HR",
+                "Events",
+            ]
+        );
+    }
 }

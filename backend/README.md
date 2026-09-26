@@ -104,6 +104,14 @@ the QR code valid for the current semester. Up to three roles are listed on the
 front of the pass followed by a "+N" suffix when more roles exist. The complete
 list is available on the back of the pass.
 
+On iOS 27+, the pass includes two `featuredActions` (membership benefits + office
+place). Override defaults with:
+
+```
+export PKPASS_FEATURED_CONNECT_URL=https://connect.neuland.ing
+export PKPASS_FEATURED_PLACE_IDENTIFIER=IDE6D929DA63F7A57
+```
+
 ## Google Wallet Pass
 
 You can also create a Google Wallet pass. Configure your service account credentials:

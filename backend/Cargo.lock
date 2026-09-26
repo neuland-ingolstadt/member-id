@@ -1948,6 +1948,7 @@ dependencies = [
  "hex",
  "jsonwebtoken",
  "log",
+ "openssl",
  "p256",
  "passes",
  "pem 4.0.0",
@@ -1958,6 +1959,7 @@ dependencies = [
  "tokio",
  "utoipa",
  "utoipa-swagger-ui",
+ "zip 0.6.6",
 ]
 
 [[package]]

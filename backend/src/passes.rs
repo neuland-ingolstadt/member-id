@@ -1,5 +1,5 @@
 use crate::utils::filter_groups;
-use crate::utils::{Claims, capitalize_groups, current_semester, generate_qr, verify_token};
+use crate::utils::{Claims, current_semester, generate_qr, verify_token};
 use chrono::Utc;
 use google_walletobjects1::api::{
     Barcode as GBarcode, CardRowTemplateInfo, CardRowTwoItems, CardTemplateOverride,
@@ -8,6 +8,7 @@ use google_walletobjects1::api::{
 };
 use log::debug;
 use passes::beacon;
+use passes::manifest::Manifest;
 use passes::sign;
 use passes::visual_appearance;
 use passes::{
@@ -20,7 +21,7 @@ use passes::{
 use serde_json::json;
 use std::env;
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Seek, Write};
 use std::path::Path;
 
 fn remove_nulls(value: &mut serde_json::Value) {
@@ -44,6 +45,75 @@ fn remove_nulls(value: &mut serde_json::Value) {
         }
         _ => {}
     }
+}
+
+/// iOS 27+ featured actions. Injected into pass.json because upstream `passes`
+/// does not model this field yet.
+fn featured_actions() -> serde_json::Value {
+    let connect_url = env::var("PKPASS_FEATURED_CONNECT_URL")
+        .unwrap_or_else(|_| "https://connect.neuland.ing".into());
+    let place_id =
+        env::var("PKPASS_FEATURED_PLACE_IDENTIFIER").unwrap_or_else(|_| "IDE6D929DA63F7A57".into());
+    json!([
+        {
+            "identifier": "connect",
+            "type": "membershipBenefits",
+            "url": connect_url,
+        },
+        {
+            "identifier": "office",
+            "type": "place",
+            "placeIdentifier": place_id,
+        }
+    ])
+}
+
+/// Write a signed .pkpass, injecting `featuredActions` into pass.json.
+fn write_pkpass_with_featured_actions<W: Write + Seek>(
+    package: &Package,
+    writer: W,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut pass_value: serde_json::Value = serde_json::from_str(&package.pass.make_json()?)?;
+    pass_value["featuredActions"] = featured_actions();
+    let pass_json = serde_json::to_string_pretty(&pass_value)?;
+
+    let mut manifest = Manifest::new();
+    let mut zip = zip::ZipWriter::new(writer);
+    let options =
+        zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
+
+    zip.start_file("pass.json", options)?;
+    zip.write_all(pass_json.as_bytes())?;
+    manifest.add_item("pass.json", pass_json.as_bytes());
+
+    for resource in &package.resources {
+        zip.start_file(resource.filename(), options)?;
+        zip.write_all(resource.as_bytes())?;
+        manifest.add_item(resource.filename().as_str(), resource.as_bytes());
+    }
+
+    zip.start_file("manifest.json", options)?;
+    let manifest_json = manifest.make_json()?;
+    zip.write_all(manifest_json.as_bytes())?;
+
+    if let Some(sign_config) = &package.sign_config {
+        let flags = openssl::pkcs7::Pkcs7Flags::DETACHED;
+        let mut certs = openssl::stack::Stack::new()?;
+        certs.push(sign_config.cert.clone())?;
+        let pkcs7 = openssl::pkcs7::Pkcs7::sign(
+            &sign_config.sign_cert,
+            &sign_config.sign_key,
+            &certs,
+            manifest_json.as_bytes(),
+            flags,
+        )?;
+        let signature_data = pkcs7.to_der()?;
+        zip.start_file("signature", options)?;
+        zip.write_all(&signature_data)?;
+    }
+
+    zip.finish()?;
+    Ok(())
 }
 
 pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
@@ -100,8 +170,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     ));
 
     let groups: Vec<String> = token_data.claims.groups.clone();
-    let capitalized_groups = capitalize_groups(&groups);
-    let front_groups = filter_groups(&capitalized_groups);
+    let front_groups = filter_groups(&groups);
 
     let groups_label = if front_groups.len() > 3 {
         let first_groups = front_groups[..3].join(", ");
@@ -157,7 +226,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     field_type = field_type.add_back_field(Content::new(
         "groups",
-        &capitalized_groups.join(", "),
+        &front_groups.join(", "),
         ContentOptions {
             label: Some("Gruppen".into()),
             ..Default::default()
@@ -273,7 +342,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     package.add_certificates(sign_config);
 
     let mut cursor = std::io::Cursor::new(Vec::new());
-    package.write(&mut cursor)?;
+    write_pkpass_with_featured_actions(&package, &mut cursor)?;
     debug!("PKPASS issued.");
     Ok(cursor.into_inner())
 }
@@ -307,7 +376,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
         issuer_id, token_data.claims.sub, semester_name
     );
 
-    let groups = filter_groups(&capitalize_groups(&token_data.claims.groups)).join(", ");
+    let groups = filter_groups(&token_data.claims.groups).join(", ");
 
     let card_title = LocalizedString {
         default_value: Some(TranslatedString {
