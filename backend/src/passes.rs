@@ -211,7 +211,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     .add_barcode(barcode)
     .logo_text("Neuland Ingolstadt".into())
     .appearance(visual_appearance::VisualAppearance {
-        label_color: visual_appearance::Color::new(0, 221, 0),
+        label_color: visual_appearance::Color::new(0x23, 0xff, 0x88),
         foreground_color: visual_appearance::Color::white(),
         background_color: visual_appearance::Color::black(),
     })
