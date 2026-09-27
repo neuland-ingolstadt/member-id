@@ -8,7 +8,9 @@
   "packageRules": [
     {
       "description": "Group GitHub Actions updates",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "github-actions",
       "semanticCommitType": "chore",
       "semanticCommitScope": "ci",
@@ -16,8 +18,14 @@
     },
     {
       "description": "Group frontend dependency updates",
-      "matchManagers": ["bun", "npm", "custom.jsonata"],
-      "matchFileNames": ["frontend/**"],
+      "matchManagers": [
+        "bun",
+        "npm",
+        "custom.jsonata"
+      ],
+      "matchFileNames": [
+        "frontend/**"
+      ],
       "groupName": "frontend",
       "semanticCommitType": "chore",
       "semanticCommitScope": "frontend",
@@ -25,7 +33,9 @@
     },
     {
       "description": "Keep Biome package and biome.json schema version in sync",
-      "matchPackageNames": ["@biomejs/biome"],
+      "matchPackageNames": [
+        "@biomejs/biome"
+      ],
       "groupName": "frontend",
       "semanticCommitType": "chore",
       "semanticCommitScope": "frontend",
@@ -33,8 +43,13 @@
     },
     {
       "description": "Group backend dependency updates",
-      "matchManagers": ["cargo", "rust-toolchain"],
-      "matchFileNames": ["backend/**"],
+      "matchManagers": [
+        "cargo",
+        "rust-toolchain"
+      ],
+      "matchFileNames": [
+        "backend/**"
+      ],
       "groupName": "backend",
       "semanticCommitType": "chore",
       "semanticCommitScope": "backend",
@@ -42,11 +57,18 @@
     },
     {
       "description": "Group Docker image updates",
-      "matchManagers": ["docker-compose", "dockerfile"],
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
       "groupName": "docker",
       "semanticCommitType": "chore",
       "semanticCommitScope": "docker",
       "automerge": true
     }
-  ]
+  ],
+  "platformAutomerge": false,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "automerge": true
 }
