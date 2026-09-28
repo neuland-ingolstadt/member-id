@@ -12,8 +12,9 @@ The token is verified against the JWKS endpoint
 `https://sso.informatik.sexy/application/o/neulandnextpanel/jwks/` and checked
 for membership in the `mitglied` group.
 
-The QR code data contains the token's `sub` and `given_name` claims plus a `t`
-field indicating the type (`a` for the app or `wi` for Wallet on iOS),
+The QR code data contains the token's `sub` claim and an abbreviated `name`
+(`given_name` plus the first letter of `family_name`, e.g. `Robert E.`) plus a
+`t` field indicating the type (`a` for the app or `wi` for Wallet on iOS),
 as well as `iat` (issued-at) and `exp` (expiry) timestamps. The expiration
 defaults to one week after generation. Before running the server, set an ECDSA
 signing key via
@@ -66,7 +67,7 @@ let private_hex = std::env::var("QR_PRIVATE_KEY_HEX")?;
 let verify_key = SigningKey::from_bytes(&hex::decode(private_hex)?).unwrap().verifying_key();
 verify_key.verify(cbor, &p256::ecdsa::Signature::from_slice(sig_bytes)?)?;
 let profile: QrPayload = serde_cbor::from_slice(cbor)?;
-// QrPayload contains sub, given_name, t, iat and exp fields
+// QrPayload contains sub, name (abbreviated), t, iat and exp fields
 ```
 
 ## Running the Server

@@ -33,8 +33,46 @@ pub struct QrResponse {
 pub struct Claims {
     pub sub: String,
     pub given_name: String,
+    #[serde(default)]
+    pub family_name: String,
     pub preferred_username: String,
     pub groups: Vec<String>,
+}
+
+/// Format a display name for QR payloads: "Vorname N." (first letter of Nachname).
+///
+/// Prefer separate `given_name` / `family_name` claims. If `family_name` is empty
+/// but `given_name` looks like a full name, abbreviate the last whitespace-separated
+/// part instead.
+pub fn abbreviated_name(given_name: &str, family_name: &str) -> String {
+    let given_name = given_name.trim();
+    let family_name = family_name.trim();
+
+    if let Some(initial) = family_name.chars().next() {
+        let initial = initial.to_uppercase().to_string();
+        return if given_name.is_empty() {
+            format!("{initial}.")
+        } else {
+            format!("{given_name} {initial}.")
+        };
+    }
+
+    match given_name.rsplit_once(char::is_whitespace) {
+        Some((vorname, nachname)) => {
+            let vorname = vorname.trim_end();
+            let initial = nachname
+                .chars()
+                .next()
+                .map(|c| c.to_uppercase().to_string())
+                .unwrap_or_default();
+            if initial.is_empty() {
+                vorname.to_string()
+            } else {
+                format!("{vorname} {initial}.")
+            }
+        }
+        None => given_name.to_string(),
+    }
 }
 
 #[derive(Deserialize)]
@@ -150,7 +188,10 @@ pub async fn generate_qr(
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
     let payload = QrPayload {
         sub: token_data.claims.sub,
-        name: token_data.claims.given_name,
+        name: abbreviated_name(
+            &token_data.claims.given_name,
+            &token_data.claims.family_name,
+        ),
         t: qr_type.to_string(),
         iat: now,
         exp: now + max_age,
@@ -248,5 +289,32 @@ mod filter_groups_tests {
                 "Events",
             ]
         );
+    }
+}
+
+#[cfg(test)]
+mod abbreviated_name_tests {
+    use super::abbreviated_name;
+
+    #[test]
+    fn formats_vorname_and_nachname_initial() {
+        assert_eq!(abbreviated_name("Robert", "Eggl"), "Robert E.");
+    }
+
+    #[test]
+    fn uppercases_initial() {
+        assert_eq!(abbreviated_name("Anna", "mueller"), "Anna M.");
+    }
+
+    #[test]
+    fn abbreviates_fullname_in_given_name_when_family_missing() {
+        assert_eq!(abbreviated_name("Robert Eggl", ""), "Robert E.");
+        assert_eq!(abbreviated_name("Maria Anna Schmidt", "   "), "Maria Anna S.");
+    }
+
+    #[test]
+    fn falls_back_when_only_one_name_part() {
+        assert_eq!(abbreviated_name("Robert", ""), "Robert");
+        assert_eq!(abbreviated_name("Robert", "   "), "Robert");
     }
 }
