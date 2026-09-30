@@ -20,9 +20,7 @@ use passes::{
 };
 use serde_json::json;
 use std::env;
-use std::fs::File;
-use std::io::{Read, Seek, Write};
-use std::path::Path;
+use std::io::{Cursor, Seek, Write};
 
 fn remove_nulls(value: &mut serde_json::Value) {
     match value {
@@ -134,14 +132,6 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let cert_path = env::var("PKPASS_SIGN_CERT_PATH")?;
     let key_path = env::var("PKPASS_SIGN_KEY_PATH")?;
     let beacon_proximity_uuid = env::var("PKPASS_BEACON_PROXIMITY_UUID")?;
-
-    let mut file_sign_cert = std::fs::File::open(std::path::Path::new(&cert_path))?;
-    let mut sign_cert_data = Vec::new();
-    std::io::Read::read_to_end(&mut file_sign_cert, &mut sign_cert_data)?;
-
-    let mut file_sign_key = std::fs::File::open(std::path::Path::new(&key_path))?;
-    let mut sign_key_data = Vec::new();
-    std::io::Read::read_to_end(&mut file_sign_key, &mut sign_key_data)?;
 
     let expiration_date = semester_end;
 
@@ -300,43 +290,38 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
     let icon_path_2x = "./resources/icon@2x.png";
     let icon_path_3x = "./resources/icon@3x.png";
 
-    let icon_file = File::open(Path::new(&icon_path))?;
-    package.add_resource(resource::Type::Icon(resource::Version::Standard), icon_file)?;
-    let icon_file_2x = File::open(Path::new(&icon_path_2x))?;
+    package.add_resource(
+        resource::Type::Icon(resource::Version::Standard),
+        Cursor::new(tokio::fs::read(icon_path).await?),
+    )?;
     package.add_resource(
         resource::Type::Icon(resource::Version::Size2X),
-        icon_file_2x,
+        Cursor::new(tokio::fs::read(icon_path_2x).await?),
     )?;
-    let icon_file_3x = File::open(Path::new(&icon_path_3x))?;
     package.add_resource(
         resource::Type::Icon(resource::Version::Size3X),
-        icon_file_3x,
+        Cursor::new(tokio::fs::read(icon_path_3x).await?),
     )?;
 
     let logo_path = "./resources/logo.png";
     let logo_path_2x = "./resources/logo@2x.png";
     let logo_path_3x = "./resources/logo@3x.png";
 
-    let logo_file = File::open(Path::new(logo_path))?;
-    package.add_resource(resource::Type::Logo(resource::Version::Standard), logo_file)?;
-    let logo_file_2x = File::open(Path::new(logo_path_2x))?;
+    package.add_resource(
+        resource::Type::Logo(resource::Version::Standard),
+        Cursor::new(tokio::fs::read(logo_path).await?),
+    )?;
     package.add_resource(
         resource::Type::Logo(resource::Version::Size2X),
-        logo_file_2x,
+        Cursor::new(tokio::fs::read(logo_path_2x).await?),
     )?;
-    let logo_file_3x = File::open(Path::new(logo_path_3x))?;
     package.add_resource(
         resource::Type::Logo(resource::Version::Size3X),
-        logo_file_3x,
+        Cursor::new(tokio::fs::read(logo_path_3x).await?),
     )?;
 
-    let mut file_sign_cert = File::open(Path::new(&cert_path))?;
-    let mut sign_cert_data = Vec::new();
-    std::io::Read::read_to_end(&mut file_sign_cert, &mut sign_cert_data)?;
-
-    let mut file_sign_key = File::open(Path::new(&key_path))?;
-    let mut sign_key_data = Vec::new();
-    std::io::Read::read_to_end(&mut file_sign_key, &mut sign_key_data)?;
+    let sign_cert_data = tokio::fs::read(&cert_path).await?;
+    let sign_key_data = tokio::fs::read(&key_path).await?;
 
     let sign_config = sign::SignConfig::new(WWDR::G4, &sign_cert_data, &sign_key_data)?;
     package.add_certificates(sign_config);
@@ -363,9 +348,7 @@ pub async fn generate_gpass(token: &str) -> Result<String, Box<dyn std::error::E
     let class_id = env::var("GOOGLE_WALLET_CLASS_ID")?;
     let service_account_email = env::var("GOOGLE_SERVICE_ACCOUNT_EMAIL")?;
     let private_key_path = env::var("GOOGLE_SERVICE_ACCOUNT_KEY_PATH")?;
-    let mut private_key_file = std::fs::File::open(&private_key_path)?;
-    let mut private_key_pem = String::new();
-    private_key_file.read_to_string(&mut private_key_pem)?;
+    let private_key_pem = tokio::fs::read_to_string(&private_key_path).await?;
     let logo_url = "https://id.neuland-ingolstadt.de/gpass-logo.png".to_string();
     let hero_image_url = "https://id.neuland-ingolstadt.de/gpass-hero.png".to_string();
 
