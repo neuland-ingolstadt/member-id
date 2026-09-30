@@ -2,8 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    ":semanticCommits",
-    "customManagers:biomeVersions"
+    ":semanticCommits"
   ],
   "packageRules": [
     {
@@ -17,42 +16,14 @@
       "automerge": true
     },
     {
-      "description": "Group frontend dependency updates",
-      "matchManagers": [
-        "bun",
-        "npm",
-        "custom.jsonata"
-      ],
-      "matchFileNames": [
-        "frontend/**"
-      ],
-      "groupName": "frontend",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "frontend",
-      "automerge": true
-    },
-    {
-      "description": "Keep Biome package and biome.json schema version in sync",
-      "matchPackageNames": [
-        "@biomejs/biome"
-      ],
-      "groupName": "frontend",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "frontend",
-      "automerge": true
-    },
-    {
-      "description": "Group backend dependency updates",
+      "description": "Group Rust dependency updates",
       "matchManagers": [
         "cargo",
         "rust-toolchain"
       ],
-      "matchFileNames": [
-        "backend/**"
-      ],
-      "groupName": "backend",
+      "groupName": "rust",
       "semanticCommitType": "chore",
-      "semanticCommitScope": "backend",
+      "semanticCommitScope": "deps",
       "automerge": true
     },
     {

@@ -1,15 +1,17 @@
-name: Backend Build and Deploy Docker Image
+name: Build and Deploy Docker Image
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: ['main']
     paths:
-      - ".github/workflows/backend-build.yml"
-      - "backend/src/**"
-      - "backend/Cargo.toml"
-      - "backend/Cargo.lock"
-      - "backend/flake.nix"
-      - "backend/flake.lock"
+      - '.github/workflows/build.yml'
+      - 'src/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'flake.nix'
+      - 'flake.lock'
+      - 'resources/**'
+
 env:
   REGISTRY: ghcr.io
 
@@ -20,9 +22,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    defaults:
-      run:
-        working-directory: ./backend
     steps:
       - uses: actions/checkout@v7
 
@@ -42,7 +41,7 @@ jobs:
             /nix/var/nix/gcroots
             /nix/var/nix/profiles
             /nix/var/nix/temproots
-          key: nix-${{ runner.os }}-${{ hashFiles('backend/flake.lock') }}
+          key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
           restore-keys: |
             nix-${{ runner.os }}-
 
@@ -55,7 +54,7 @@ jobs:
         name: Generate Registry String
         uses: vishalmamidi/lowercase-action@v1
         with:
-          string: ${{ env.REGISTRY}}/${{ github.repository }}-backend
+          string: ${{ env.REGISTRY }}/${{ github.repository }}-backend
 
       - name: Push Docker image to GHCR
         run: |
