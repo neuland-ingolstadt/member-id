@@ -309,7 +309,10 @@ mod abbreviated_name_tests {
     #[test]
     fn abbreviates_fullname_in_given_name_when_family_missing() {
         assert_eq!(abbreviated_name("Robert Eggl", ""), "Robert E.");
-        assert_eq!(abbreviated_name("Maria Anna Schmidt", "   "), "Maria Anna S.");
+        assert_eq!(
+            abbreviated_name("Maria Anna Schmidt", "   "),
+            "Maria Anna S."
+        );
     }
 
     #[test]
