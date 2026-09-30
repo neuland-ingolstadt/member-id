@@ -107,7 +107,11 @@ pub fn public_key_hex() -> Result<String, Box<dyn std::error::Error>> {
 }
 
 pub fn current_semester() -> (String, chrono::DateTime<Utc>, String) {
-    let today = Utc::now().date_naive();
+    semester_for_date(Utc::now().date_naive())
+}
+
+/// Semester code, end-of-semester instant (UTC), and long German label for a calendar day.
+pub fn semester_for_date(today: NaiveDate) -> (String, chrono::DateTime<Utc>, String) {
     let year = today.year();
 
     let summer_start = NaiveDate::from_ymd_opt(year, 3, 15).unwrap();
@@ -174,27 +178,19 @@ where
     Ok(decode::<C>(token, &decoding_key, &validation)?)
 }
 
-pub async fn generate_qr(
-    token: &str,
+pub fn sign_qr_payload(
+    sub: String,
+    name: String,
     qr_type: &str,
-    max_age: u64,
+    iat: u64,
+    exp: u64,
 ) -> Result<QrResponse, Box<dyn std::error::Error>> {
-    let token_data = verify_token::<Claims>(token).await?;
-
-    if !token_data.claims.groups.iter().any(|g| g == "mitglieder") {
-        return Err("token missing required 'mitglieder' group".into());
-    }
-
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
     let payload = QrPayload {
-        sub: token_data.claims.sub,
-        name: abbreviated_name(
-            &token_data.claims.given_name,
-            &token_data.claims.family_name,
-        ),
+        sub,
+        name,
         t: qr_type.to_string(),
-        iat: now,
-        exp: now + max_age,
+        iat,
+        exp,
     };
 
     let cbor = serde_cbor::to_vec(&payload)?;
@@ -222,6 +218,30 @@ pub async fn generate_qr(
         iat: payload.iat,
         exp: payload.exp,
     })
+}
+
+pub async fn generate_qr(
+    token: &str,
+    qr_type: &str,
+    max_age: u64,
+) -> Result<QrResponse, Box<dyn std::error::Error>> {
+    let token_data = verify_token::<Claims>(token).await?;
+
+    if !token_data.claims.groups.iter().any(|g| g == "mitglieder") {
+        return Err("token missing required 'mitglieder' group".into());
+    }
+
+    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+    sign_qr_payload(
+        token_data.claims.sub,
+        abbreviated_name(
+            &token_data.claims.given_name,
+            &token_data.claims.family_name,
+        ),
+        qr_type,
+        now,
+        now + max_age,
+    )
 }
 
 fn capitalize_group(group: &str) -> String {
@@ -259,65 +279,14 @@ pub fn filter_groups(groups: &[String]) -> Vec<String> {
         .collect()
 }
 
-#[cfg(test)]
-mod filter_groups_tests {
-    use super::filter_groups;
-
-    #[test]
-    fn keeps_only_allowlisted_groups_in_order() {
-        let input = vec![
-            "mitglieder".into(),
-            "events".into(),
-            "Authentik Admins".into(),
-            "vorstand".into(),
-            "organisation".into(),
-            "management".into(),
-            "design-pr".into(),
-            "hr".into(),
-            "engineering".into(),
-            "random".into(),
-        ];
-        assert_eq!(
-            filter_groups(&input),
-            vec![
-                "Vorstand",
-                "Management",
-                "Organisation",
-                "Engineering",
-                "Design-PR",
-                "HR",
-                "Events",
-            ]
-        );
-    }
-}
-
-#[cfg(test)]
-mod abbreviated_name_tests {
-    use super::abbreviated_name;
-
-    #[test]
-    fn formats_vorname_and_nachname_initial() {
-        assert_eq!(abbreviated_name("Robert", "Eggl"), "Robert E.");
-    }
-
-    #[test]
-    fn uppercases_initial() {
-        assert_eq!(abbreviated_name("Anna", "mueller"), "Anna M.");
-    }
-
-    #[test]
-    fn abbreviates_fullname_in_given_name_when_family_missing() {
-        assert_eq!(abbreviated_name("Robert Eggl", ""), "Robert E.");
-        assert_eq!(
-            abbreviated_name("Maria Anna Schmidt", "   "),
-            "Maria Anna S."
-        );
-    }
-
-    #[test]
-    fn falls_back_when_only_one_name_part() {
-        assert_eq!(abbreviated_name("Robert", ""), "Robert");
-        assert_eq!(abbreviated_name("Robert", "   "), "Robert");
+/// Short label for wallet pass front (max three groups, then "+N").
+pub fn format_groups_label(groups: &[String]) -> String {
+    let front_groups = filter_groups(groups);
+    if front_groups.len() > 3 {
+        let first_groups = front_groups[..3].join(", ");
+        let remaining = front_groups.len() - 3;
+        format!("{first_groups} +{remaining}")
+    } else {
+        front_groups.join(", ")
     }
 }

@@ -1,5 +1,5 @@
 use crate::utils::filter_groups;
-use crate::utils::{Claims, current_semester, generate_qr, verify_token};
+use crate::utils::{Claims, current_semester, format_groups_label, generate_qr, verify_token};
 use chrono::Utc;
 use google_walletobjects1::api::{
     Barcode as GBarcode, CardRowTemplateInfo, CardRowTwoItems, CardTemplateOverride,
@@ -22,7 +22,7 @@ use serde_json::json;
 use std::env;
 use std::io::{Cursor, Seek, Write};
 
-fn remove_nulls(value: &mut serde_json::Value) {
+pub fn remove_nulls(value: &mut serde_json::Value) {
     match value {
         serde_json::Value::Object(map) => {
             let keys: Vec<String> = map.keys().cloned().collect();
@@ -161,14 +161,7 @@ pub async fn generate_pkpass(token: &str) -> Result<Vec<u8>, Box<dyn std::error:
 
     let groups: Vec<String> = token_data.claims.groups.clone();
     let front_groups = filter_groups(&groups);
-
-    let groups_label = if front_groups.len() > 3 {
-        let first_groups = front_groups[..3].join(", ");
-        let remaining = front_groups.len() - 3;
-        format!("{first_groups} +{remaining}")
-    } else {
-        front_groups.join(", ")
-    };
+    let groups_label = format_groups_label(&groups);
 
     field_type = field_type.add_auxiliary_field(Content::new(
         "groups_label",
