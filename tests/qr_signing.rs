@@ -38,9 +38,7 @@ fn different_keys_yield_different_qr_strings() {
         .expect("sign")
         .qr;
 
-    set_qr_private_key_hex(
-        "2222222222222222222222222222222222222222222222222222222222222222",
-    );
+    set_qr_private_key_hex("2222222222222222222222222222222222222222222222222222222222222222");
     let other = sign_qr_payload("u".into(), "N.".into(), "a", 100, 200)
         .expect("sign")
         .qr;
