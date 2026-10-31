@@ -26,7 +26,7 @@ utoipa-swagger-ui = { version = "10", features = ["actix-web", "vendored"] }
 actix-governor = "0.10"
 google-walletobjects1 = "7"
 pem = "4"
-zip = "0.6"
+zip = "9.0"
 openssl = { version = "0.10", features = ["vendored"] }
 
 [dev-dependencies]
