@@ -1,5 +1,5 @@
 use chrono::{NaiveDate, TimeZone, Utc};
-use member_id::utils::semester_for_date;
+use member_id::utils::{current_semester, semester_for_date};
 
 #[test]
 fn summer_semester_mid_year() {
@@ -49,4 +49,14 @@ fn summer_semester_on_boundary_dates() {
     let end = NaiveDate::from_ymd_opt(2026, 9, 30).unwrap();
     assert_eq!(semester_for_date(start).0, "SS26");
     assert_eq!(semester_for_date(end).0, "SS26");
+}
+
+#[test]
+fn current_semester_matches_today() {
+    let today = Utc::now().date_naive();
+    let expected = semester_for_date(today);
+    let actual = current_semester();
+    assert_eq!(actual.0, expected.0);
+    assert_eq!(actual.1, expected.1);
+    assert_eq!(actual.2, expected.2);
 }

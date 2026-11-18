@@ -3,7 +3,7 @@ mod support;
 use actix_web::{App, test};
 use member_id::api::configure_routes;
 use serial_test::serial;
-use support::set_qr_private_key_env;
+use support::{clear_qr_private_key_env, set_qr_private_key_env};
 
 #[actix_web::test]
 async fn health_returns_ok() {
@@ -60,4 +60,41 @@ async fn pkpass_rejects_invalid_token_without_network_setup() {
     assert_eq!(resp.status(), 400);
     let body = test::read_body(resp).await;
     assert_eq!(body, "Invalid request");
+}
+
+#[actix_web::test]
+async fn qr_rejects_invalid_bearer_token() {
+    let app = test::init_service(App::new().configure(configure_routes)).await;
+    let req = test::TestRequest::get()
+        .uri("/qr")
+        .insert_header(("Authorization", "Bearer not-a-jwt"))
+        .to_request();
+    let resp = test::call_service(&app, req).await;
+    assert_eq!(resp.status(), 400);
+    let body = test::read_body(resp).await;
+    assert_eq!(body, "Invalid request");
+}
+
+#[actix_web::test]
+async fn gpass_rejects_invalid_token() {
+    let app = test::init_service(App::new().configure(configure_routes)).await;
+    let req = test::TestRequest::get()
+        .uri("/gpass?token=not-a-jwt")
+        .to_request();
+    let resp = test::call_service(&app, req).await;
+    assert_eq!(resp.status(), 400);
+    let body = test::read_body(resp).await;
+    assert_eq!(body, "Invalid request");
+}
+
+#[actix_web::test]
+#[serial]
+async fn public_key_endpoint_errors_without_env() {
+    clear_qr_private_key_env();
+    let app = test::init_service(App::new().configure(configure_routes)).await;
+    let req = test::TestRequest::get().uri("/public-key").to_request();
+    let resp = test::call_service(&app, req).await;
+    assert_eq!(resp.status(), 500);
+    let body = test::read_body(resp).await;
+    assert_eq!(body, "Internal server error");
 }
